@@ -157,6 +157,10 @@ export async function buildJettonMinterFromEnv(
     return await JettonMinterSharded.fromInit(0n, deployerAddress, content, true)
     // }
 }
-export async function buildJettonWalletFromAddress(deployerAddress: Address) {// FIXME: for upgrades only
+export async function buildJettonWalletFromAddress(deployerAddress: Address) {
     return await JettonWalletSharded.fromAddress(deployerAddress)
+}
+
+export async function buildJettonWalletFromEnv(deployerAddress: Address, minterAddress: Address) {// FIXME: for upgrades only
+    return await JettonWalletSharded.fromInit(deployerAddress, minterAddress, 0n)
 }

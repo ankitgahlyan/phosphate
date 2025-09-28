@@ -217,7 +217,7 @@ struct MaybeAddress {
 
 message(4) JettonUpdateContent {
     queryId: Int as uint64;
-    content: Cell? = null;
+    content: Cell;
 }
 
 message(0xf8a7ea5) JettonTransfer {
@@ -288,7 +288,7 @@ message(0x39) UpgradeCode {
     sender: Address;
     /// New code of the contract.
     /// Defaults to `null`, which keeps the previous code.
-    newCode: Cell? = null;
+    newCode: Cell;
 
     /// New data of the contract.
     /// Defaults to `null`, which keeps the previous data.
@@ -297,7 +297,7 @@ message(0x39) UpgradeCode {
     /// Delay in seconds before upgrade can be confirmed.
     /// Defaults to zero, which means the upgrade can be confirmed immediately.
     /// Unused in `Upgradable` trait.
-    timeout: Int = 0;
+    // timeout: Int = 0;
 }
 
 message(0x40) AccountGenerated {
@@ -322,12 +322,8 @@ message(0x43) CitizenAdded {
 message(0x44) InviteApproval {
     approved: Bool; // = true;// need default? 
     invitee: Address;
-    // sender: Address;
-    // amount: Int as coins;
 }
 
-// sender: Address;
-// amount: Int as coins;
 message(0xcb862902) ChangeMetadataUri {
     queryId: Int as uint64;
     metadata: Slice as remaining;

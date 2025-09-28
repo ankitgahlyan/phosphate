@@ -46,7 +46,7 @@ contract JettonMinterSharded {
         self.totalSupply = totalSupply;
         self.owner = owner;
         self.jettonContent = jettonContent;
-        self.mintable = mintable;
+        self.mintable = true; // even if someone accidently  pass false
         self.jettonWalletCode = codeOf JettonWalletSharded;
     }
 
@@ -88,13 +88,8 @@ contract JettonMinterSharded {
         // Workchain 0 is basechain
         throwUnless(UNAUTHORIZED_BURN, sender.workchain == Basechain && sender.address == wallet.hash!!); // unauthorized burn/sender
 
-        if (msg.sender == emptyAddress()) { // custom use for mint notify
-            self.totalSupply += msg.amount;
-        } else {
+        if (msg.responseDestination != null) { // custom use for mint notify
             self.totalSupply -= msg.amount;
-        }
-
-        //if (msg.responseDestination != null) {
         MessageParameters {
             to: msg.responseDestination!!, // maybe change msg signature from null if does not interfere with spec, explorers
             body: JettonExcesses { queryId: msg.queryId }.toCell(),
@@ -102,7 +97,9 @@ contract JettonMinterSharded {
             bounce: false,
             mode: SendRemainingValue | SendIgnoreErrors, // ignore errors, because supply has already been updated
         }.send();
-        //}
+        } else {
+            self.totalSupply += msg.amount;
+        }
     }
 
     // Owner of this contract may be masterchain address,
@@ -133,7 +130,7 @@ contract JettonMinterSharded {
 
         self.totalSupply += msg.mintMessage.amount; // + ton("1000"); // invitation by minter
         self.totalAccounts += 1; // only mints to owner just once
-        //self.mintable = false;
+        self.mintable = false;
 
         // basechain destination is calculated inside deploy function
         DeployParameters {
@@ -158,10 +155,8 @@ contract JettonMinterSharded {
 
     receive(msg: JettonUpdateContent) { // metadata update and wallet code upgrade
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
-        if (msg.content != null) {
-            self.jettonContent = msg.content!!;
+            self.jettonContent = msg.content;
             // self.version = + 1;// noNeed 2 change version
-        }
 
         cashback(sender());
     }
@@ -183,7 +178,7 @@ contract JettonMinterSharded {
             bounce: false,
             value: 0,
             body: UpgradeCode {
-                sender: myAddress(),// self.owner,
+                sender: self.owner, // myAddress()
                 newCode: self.jettonWalletCode,
             }.toCell(),
         }.send();
@@ -269,6 +264,8 @@ contract JettonMinterSharded {
             // so let us stop the execution now to prevent a secondary call to setData().
             throw(0);
         }
+
+        // cashback(sender());
     }
 
     bounced(msg: bounced<JettonTransferInternal>) {

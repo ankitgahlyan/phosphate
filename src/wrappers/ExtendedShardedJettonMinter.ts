@@ -14,7 +14,14 @@ import {
     ProvideWalletAddress,
     storeMint,
 } from "../output/Shard_JettonMinterSharded"
-import {Address, beginCell, Cell, ContractProvider, Sender, toNano} from "@ton/core"
+import {Op} from "./GovernanceJettonConstants"
+import {Address, beginCell, Cell, ContractProvider, Sender, Slice, SendMode, toNano} from "@ton/core"
+
+export function endParse(slice: Slice) {
+    if (slice.remainingBits > 0 || slice.remainingRefs > 0) {
+        throw new Error("remaining bits in data")
+    }
+}
 
 export class ExtendedShardedJettonMinter extends JettonMinterSharded {
     constructor(address: Address, init?: {code: Cell; data: Cell}) {
@@ -36,6 +43,51 @@ export class ExtendedShardedJettonMinter extends JettonMinterSharded {
             data: base.init.data,
         })
     }
+
+    
+
+    static upgradeMessage(new_code: Cell, newWalletCode: Cell, new_data: Cell, query_id: bigint | number = 0) {
+            return beginCell()
+                .storeUint(Op.upgrade, 32)
+                .storeUint(query_id, 64)
+                .storeRef(new_data)
+                .storeRef(new_code)
+                .storeRef(newWalletCode)
+                .endCell()
+        }
+    
+        static parseUpgrade(slice: Slice) {
+            const op = slice.loadUint(32)
+            if (op !== Op.upgrade) throw new Error("Invalid op")
+            const queryId = slice.loadUint(64)
+            const newData = slice.loadRef()
+            const newCode = slice.loadRef()
+            const newWalletCode = slice.loadRef()
+            endParse(slice)
+            return {
+                queryId,
+                newData,
+                newCode,
+                newWalletCode,
+            }
+        }
+    
+        async sendUpgrade(
+            provider: ContractProvider,
+            via: Sender,
+            new_code: Cell,
+            newWalletCode: Cell,
+            new_data: Cell,
+            value: bigint = toNano("0.1"),
+            query_id: bigint | number = 0,
+        ) {
+            await provider.internal(via, {
+                sendMode: SendMode.PAY_GAS_SEPARATELY,
+                body: ExtendedShardedJettonMinter.upgradeMessage(new_code, newWalletCode, new_data, query_id),
+                value,
+            })
+        }
+    
 
     async getTotalSupply(provider: ContractProvider): Promise<bigint> {
         const res = await this.getGetJettonData(provider)

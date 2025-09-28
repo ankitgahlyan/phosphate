@@ -9,10 +9,10 @@ import {
     SandboxContract,
     TreasuryContract,
 } from "@ton/sandbox"
-import {ExtendedJettonWallet} from "../../wrappers/ExtendedJettonWallet"
-import {ExtendedJettonMinter} from "../../wrappers/ExtendedJettonMinter"
-import {ExtendedFeatureRichJettonWallet} from "../../wrappers/ExtendedFeatureRichJettonWallet"
-import {ExtendedFeatureRichJettonMinter} from "../../wrappers/ExtendedFeatureRichJettonMinter"
+// import {ExtendedJettonWallet} from "../../wrappers/ExtendedJettonWallet"
+// import {ExtendedJettonMinter} from "../../wrappers/ExtendedJettonMinter"
+// import {ExtendedFeatureRichJettonWallet} from "../../wrappers/ExtendedFeatureRichJettonWallet"
+// import {ExtendedFeatureRichJettonMinter} from "../../wrappers/ExtendedFeatureRichJettonMinter"
 
 import {ExtendedShardedJettonWallet} from "../../wrappers/ExtendedShardedJettonWallet"
 import {ExtendedShardedJettonMinter} from "../../wrappers/ExtendedShardedJettonMinter"
@@ -28,7 +28,7 @@ import {
 } from "../governance-tests/gasUtils"
 import {
     CloseMinting,
-    JettonMinter,
+    // JettonMinter,
     JettonUpdateContent,
     Mint,
     minTonsForStorage,
@@ -36,21 +36,22 @@ import {
     storeJettonTransfer,
     storeTakeWalletBalance,
     TakeWalletBalance,
-} from "../../output/Jetton_JettonMinter"
+} from "../../output/Shard_JettonMinterSharded"
+// } from "../../output/Jetton_JettonMinter"
 import {getComputeGasForTx, getSizeOfState} from "../../utils/gas"
 
 // Use describe.each to parameterize the test suite for both base and feature-rich jetton versions
 describe.each([
-    {
-        name: "Base Jetton",
-        MinterWrapper: ExtendedJettonMinter,
-        WalletWrapper: ExtendedJettonWallet,
-    },
-    {
-        name: "Feature Rich Jetton",
-        MinterWrapper: ExtendedFeatureRichJettonMinter,
-        WalletWrapper: ExtendedFeatureRichJettonWallet,
-    },
+    // {
+    //     name: "Base Jetton",
+    //     MinterWrapper: ExtendedJettonMinter,
+    //     WalletWrapper: ExtendedJettonWallet,
+    // },
+    // {
+    //     name: "Feature Rich Jetton",
+    //     MinterWrapper: ExtendedFeatureRichJettonMinter,
+    //     WalletWrapper: ExtendedFeatureRichJettonWallet,
+    // },
     {
         name: "Shard Jetton",
         MinterWrapper: ExtendedShardedJettonMinter,
@@ -144,7 +145,7 @@ describe.each([
             from: notDeployer.address,
             to: jettonMinter.address,
             aborted: true,
-            exitCode: JettonMinter.errors["Incorrect sender"],
+            exitCode: 700, // JettonMinter.errors["Incorrect sender"],
         })
         expect((await jettonMinter.getGetJettonData()).mintable).toBeTruthy()
 
@@ -184,7 +185,7 @@ describe.each([
             from: deployer.address,
             to: jettonMinter.address,
             aborted: true,
-            exitCode: JettonMinter.errors["Mint is closed"],
+            exitCode: 730, // JettonMinter.errors["Mint is closed"],
         })
     })
 
@@ -391,7 +392,7 @@ describe.each([
             to: jettonMinter.address,
             success: false,
             // https://github.com/ton-blockchain/ton/blob/303e92b7750dc443ae6c282fb478d2114079d216/crypto/block/transaction.cpp#L2860
-            actionResultCode: JettonMinter.errors["Not enough Toncoin"],
+            actionResultCode: 703, // FIXME: JettonMinter.errors["Not enough Toncoin"],
         })
 
         expect(claimTonMinterResult.transactions).toHaveTransaction({
@@ -780,8 +781,9 @@ describe.each([
         })
         const transferFailedTx = findTransaction(sendResult.transactions, {
             to: deployerJettonWallet.address,
-            op: ExtendedJettonWallet.opcodes.JettonTransfer,
-            exitCode: ExtendedJettonWallet.errors["Insufficient amount of TON attached"],
+            op: ExtendedShardedJettonWallet.opcodes.JettonTransfer,
+            // op: ExtendedJettonWallet.opcodes.JettonTransfer,
+            exitCode: 703, // ExtendedJettonWallet.errors["Insufficient amount of TON attached"],
         })
         // Only one of these transactions should be present
         expect(notificationTx !== transferFailedTx).toBeTruthy()

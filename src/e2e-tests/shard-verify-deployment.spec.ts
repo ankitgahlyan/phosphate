@@ -59,7 +59,7 @@ describe("Contract Deployment Verification", () => {
                 "https://raw.githubusercontent.com/tact-lang/tact/refs/heads/main/docs/public/logomark-light.svg",
         }
 
-        jettonMinter = await buildJettonMinterFromEnv(deployerWalletAddress, "shard")
+        jettonMinter = await buildJettonMinterFromEnv(deployerWalletAddress)
         jettonParams = {
             address: jettonMinter.address,
             metadata: metadata,

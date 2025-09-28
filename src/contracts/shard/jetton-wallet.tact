@@ -189,19 +189,10 @@ contract JettonWalletSharded {
     }
 
     receive(msg: JettonTransferInternal) {
-        let amount = 3 * MBRP_AMOUNT;
-        let mint = 0;
-        if (msg.amount == ton("0.23")) {
-            mint = 1;
-        } else if (msg.amount == ton("0.24")) {
-            mint = 2;
-        } else {
-            amount = msg.amount;
-        } // propagate amount 3x 
         //auto upgrade both sides, not sent by default to reduce payload size (upgrades r few anyways when stable)
-        self._compatibleVersion(msg.version); // FIXME: add to all internal receivers/msg
-
-        self.checkInternal(msg.sender, amount, mint, msg.forwardPayload);
+        //self._compatibleVersion(msg.version); // FIXME: add to all internal receivers/msg
+        throwUnless(705, self.version == msg.version);
+        self._correctSender(msg.sender);
 
         if (msg.amount > ton("1")) {
             self.mintInternal(msg.amount);
@@ -227,6 +218,7 @@ contract JettonWalletSharded {
                 self.internalDeActivate(msg.sender, approved); // redundant? use reports instead
             }
         }
+        self.sendNotifs(msg.sender, msg.amount, 0, msg.forwardPayload);
     }
 
     // receive("invite") {
@@ -261,7 +253,8 @@ contract JettonWalletSharded {
         throwUnless(ALREADY_INVITED, !self.active);
 
         let forwardPayload = msg.forwardPayload;
-        self.checkInternal(msg.sender, msg.amount, 0, forwardPayload);
+        self._correctSender(msg.sender);
+        self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
 
         self.invitor = msg.sender;
         self.nominee = msg.sender;
@@ -273,18 +266,32 @@ contract JettonWalletSharded {
         // approved ? self.mintInternal(MBRP_AMOUNT) : self.burnForce(sender, MBRP_AMOUNT);
         if (approved) {
             self.mintInternal(MBRP_AMOUNT);
+            self.connections += 1;
         } else {
             self.burnForce(sender, MBRP_AMOUNT);
+            self.connections -= 1;
         }
+        self.lastMsgTo = self.invitor;
         MessageParameters {
             value: ton("0.005"),
             mode: SendBounceIfActionFail,
-            to: self.invitor,
+            to: contractAddress(self.getInit(self.invitor)),
             body: InviteApproval {
                 approved,
                 invitee: self.owner,
             }.toCell(),
         }.send();
+    }
+
+    bounced(msg: bounced<InviteApproval>) {
+        self.active = !msg.approved;
+        if (!msg.approved) {
+            self.mintInternal(MBRP_AMOUNT);
+            self.connections += 1;
+        } else {
+            self.burnForce(self.lastMsgTo, MBRP_AMOUNT);
+            self.connections -= 1;
+        }
     }
 
     receive(msg: InviteApproval) {
@@ -300,7 +307,7 @@ contract JettonWalletSharded {
             self.burnForce(msg.invitee, amount);
             self.connections -= 1;
         }
-        // cashback is already sent in checkInternal
+        // cashback is already sent in sendNotifs
     }
 
     inline fun unInvite(receiver: Address, msg: JettonTransfer) { // TODO: just use reports for control n inviter for whereabouts
@@ -335,7 +342,9 @@ contract JettonWalletSharded {
 
     receive(msg: UnInviteInternal) {
         let forwardPayload = msg.forwardPayload;
-        self.checkInternal(msg.sender, msg.amount, 2, forwardPayload);
+        self._correctSender(msg.sender);
+
+        self.sendNotifs(msg.sender, msg.amount, 2, forwardPayload);
 
         throwUnless(NOT_INVITOR, self.invitor == msg.sender); //redundant bothSide check for unBounced s
         self.active = false;
@@ -363,7 +372,9 @@ contract JettonWalletSharded {
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS); // MAX_CONNECTIONS
 
         let forwardPayload = msg.forwardPayload;
-        self.checkInternal(msg.sender, msg.amount, 0, forwardPayload);
+        self._correctSender(msg.sender);
+
+        self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
 
         self.pendingRequests.set(msg.sender, msg.amount);
     }
@@ -405,8 +416,9 @@ contract JettonWalletSharded {
 
     receive(msg: ConfirmRequestInternal) {
         let forwardPayload = msg.forwardPayload;
+        self._correctSender(msg.sender);
 
-        self.checkInternal(msg.sender, msg.amount, 1, forwardPayload);
+        self.sendNotifs(msg.sender, msg.amount, 1, forwardPayload);
 
         self.mintInternal(msg.amount);
         self.friends.set(msg.sender, msg.amount);
@@ -445,8 +457,9 @@ contract JettonWalletSharded {
 
     receive(msg: UnfriendInternal) {
         let forwardPayload = msg.forwardPayload;
+        self._correctSender(msg.sender);
 
-        self.checkInternal(msg.sender, msg.amount, 2, forwardPayload);
+        self.sendNotifs(msg.sender, msg.amount, 2, forwardPayload);
 
         let _ = self.friends.del(msg.sender);
         self.burnForce(msg.sender, msg.amount);
@@ -488,8 +501,9 @@ contract JettonWalletSharded {
     receive(msg: FollowInternal) {
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS);
         let forwardPayload = msg.forwardPayload;
+        self._correctSender(msg.sender);
 
-        self.checkInternal(msg.sender, msg.amount, 1, forwardPayload);
+        self.sendNotifs(msg.sender, msg.amount, 1, forwardPayload);
 
         self.balance += MBRP_AMOUNT;
 
@@ -527,8 +541,9 @@ contract JettonWalletSharded {
 
     receive(msg: UnfollowInternal) {
         let forwardPayload = msg.forwardPayload;
+        self._correctSender(msg.sender);
 
-        self.checkInternal(msg.sender, msg.amount, 2, forwardPayload);
+        self.sendNotifs(msg.sender, msg.amount, 2, forwardPayload);
 
         self.unfollowInternal(msg.sender, msg.amount);
     }
@@ -569,19 +584,15 @@ contract JettonWalletSharded {
 
     receive(msg: ReportInternal) {
         let forwardPayload = msg.forwardPayload;
+        self._correctSender(msg.sender);
 
-        self.checkInternal(msg.sender, msg.amount, 0, forwardPayload);
-        self.reportInternal(msg.sender, msg.reason, msg);
-    }
-
-    inline fun reportInternal(sender: Address, reason: Bool, msg: ReportInternal) {
         //TODO: invitor auto disputes or noNeed (consider disputed implicitly)
-        if (reason) { // default false
-            self.reportReason = reason;
+        if (msg.reason) { // default false
+            self.reportReason = msg.reason;
         }
         throwUnless(ACCOUNT_INACTIVE, self.active);
-        throwUnless(ALREADY_REPORTED, !self.reports.exists(sender)); // alreadyReported & democracy
-        self.reports.set(sender, true);
+        throwUnless(ALREADY_REPORTED, !self.reports.exists(msg.sender)); // alreadyReported & democracy
+        self.reports.set(msg.sender, true);
         self.reporterCount += 1;
         self.reportResolutionTime = now() + CLOSURE_WAIT; //TODO: INC time onlyIf this overtakes others(disputers)
 
@@ -591,8 +602,8 @@ contract JettonWalletSharded {
             self.terminated = true;
             MessageParameters {
                 to: contractAddress(self.getInit(self.invitor)),
-                value: 0,
-                mode: SendRemainingValue,
+                value: ton("0.004"),
+                // mode: SendBounceIfActionFails, // FIXME NEED SEParate msg
                 body: JettonTransferInternal { //TODO if s=r then burn maybe, bounce? inThisApproach?/reuse
                     queryId: 0,
                     amount: ton("0.02"),
@@ -604,6 +615,8 @@ contract JettonWalletSharded {
                 }.toCell(),
             }.send();
         }
+
+        self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
     }
 
     inline fun dispute(sender: Address, amount: Int, receiver: Address, msg: JettonTransfer) {
@@ -627,10 +640,12 @@ contract JettonWalletSharded {
 
     receive(msg: DisputeInternal) {
         let forwardPayload = msg.forwardPayload;
+        
+        self._correctSender(msg.sender);
 
-        self.checkInternal(msg.sender, msg.amount, 0, forwardPayload);
 
         self.disputeInternal(msg.sender);
+        self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
     }
 
     inline fun disputeInternal(sender: Address) {
@@ -658,9 +673,11 @@ contract JettonWalletSharded {
     receive(msg: ResolutionInternal) {
         let forwardPayload = msg.forwardPayload;
 
-        self.checkInternal(msg.sender, msg.amount, 0, forwardPayload);
+        self._correctSender(msg.sender);
+        
 
         self.reportResolutionInternal(msg);
+        self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
     }
 
     inline fun reportResolutionInternal(msg: ResolutionInternal) {
@@ -926,7 +943,9 @@ contract JettonWalletSharded {
     }
 
     bounced(msg: bounced<JettonTransferInternal>) {
-        self.balance += msg.amount; // symantic bounces too TODO
+        if (msg.amount >= ton("1")) { // avoid symantic bounces
+            self.balance += msg.amount;
+        }
         cashback(self.owner); // need ?
     }
 
@@ -1030,11 +1049,10 @@ contract JettonWalletSharded {
     receive(msg: UpgradeCode) {
         self._correctSender(msg.sender);
 
-        if (msg.newCode != null) { // msg.code!!
-            setCode(msg.newCode!!);
-            self.version += 1;
-            //emit("upgraded".toCell());
-        }
+        setCode(msg.newCode); // FIXME: upgrades are throwing incorrect_sender in destination contracts (has old code) 
+        self.version += 1;
+        //emit("upgraded".toCell());
+
         // if (msg.sender == self.minter) {
         MessageParameters { // TODO: handle fees correctly
             to: self.owner,
@@ -1102,7 +1120,7 @@ contract JettonWalletSharded {
 
     fun _correctSender(sender: Address) {
         let wallet: StateInit = self.getInit(sender);
-        if (!(wallet.hasSameBasechainAddressWithoutShard(sender()))) {
+        if (!(wallet.hasSameBasechainAddressWithoutShard(sender()))) { // FIXME upgrade issue coz of same shard?
             throwUnless(INCORRECT_SENDER, self.minter == sender());
         }
     }
@@ -1129,17 +1147,21 @@ contract JettonWalletSharded {
         ); //ACCOUNT EXISTS
     }
 
-    fun checkInternal(sender: Address, amount: Int, mint: Int, forwardPayload: Slice) {
-        //throwUnless(ACCOUNT_TERMINATED, !self.terminated);
-        self._correctSender(sender);
+    fun sendNotifs(sender: Address, amount: Int, mint: Int, forwardPayload: Slice) {
         // need active account or invite or activating/unfreezing or recovery topup action,
-        throwUnless(ACCOUNT_INACTIVE, self.active || amount == ton("0.1") || amount == ton("0.23") || amount == ton("0.98"));
+        // throwUnless(ACCOUNT_INACTIVE, self.active || amount == ton("0.1") || amount == ton("0.23") || amount == ton("0.98"));
 
         // let masterMsgSlice = msg.masterMsg.beginParse();
         // let op = masterMsgSlice.preloadUint(32);
 
         // if (op == JettonTransfer.opcode()) {
         //     let msgToSend = JettonTransfer.fromSlice(masterMsgSlice);// It also validates the message, throws 9
+
+        if (amount == ton("0.23")) {
+            mint = 1;
+        } else if (amount == ton("0.24")) {
+            mint = 2;
+        }
 
         let ctx: Context = context();
         let msgValue: Int = ctx.value;
@@ -1152,7 +1174,8 @@ contract JettonWalletSharded {
             bounce: false,
             body: JettonNotification { // 0x7362d09c -- Remind the new Owner
                 queryId: 0,
-                amount,
+                amount: mint != 0 ? MBRP_AMOUNT : amount,
+                // amount: (amount == ton("0.23") || amount == ton("0.24")) ? MBRP_AMOUNT : amount,
                 sender,
                 forwardPayload,
             }.toCell(),
@@ -1160,11 +1183,6 @@ contract JettonWalletSharded {
 
         // reusing burnNotify for minting
         if (mint != 0) { // || sender == self.minter in case minter mints > 0
-            let finalSender = emptyAddress();
-            if (mint == 2) {
-                finalSender = sender; //use emptyAddress()
-            }
-
             MessageParameters {
                 to: self.minter,
                 value: ton("0.005"),
@@ -1172,9 +1190,9 @@ contract JettonWalletSharded {
                 bounce: false,
                 body: JettonBurnNotification { //JettonMintBurnNotify maybe traitViolationOccursThen
                     queryId: 0,
-                    amount,
-                    sender: finalSender,
-                    responseDestination: sender, // to identify mint or burn
+                    amount: 3 * MBRP_AMOUNT,
+                    sender: self.owner, // mint to or burn from FIXME: 724 , 9
+                    responseDestination: mint == 2 ? sender : null,
                 }.toCell(),
             }.send();
         }
@@ -1194,7 +1212,7 @@ contract JettonWalletSharded {
         let unAccountedDebt = self.debt; // NOTE: yes! i suck at naming 
         let noDebts = self.debts.isEmpty();
         // nothing to do
-        if (remaining <= 0 || unAccountedDebt == 0 && noDebts) {
+        if (remaining <= 0 || (unAccountedDebt == 0 && noDebts)) {
             return remaining;
         }
         if (unAccountedDebt > 0) {
@@ -1282,12 +1300,12 @@ contract JettonWalletSharded {
         throwUnless(INSUFFICIENT_BALANCE, self.balance >= amount);
         self.balance -= amount;
         self.turnover += amount;
-        //TODO: notify treasury/minter
     }
 
     inline fun changeInvitor(new: Address) {
         // FIXME
         throwUnless(INCORRECT_SENDER, new != ZERO_ADDRESS); // used zeroA just for misti
+        throwUnless(ACCOUNT_INACTIVE, self.active);
     }
 
     inline fun applyGrant(sender: Address, amount: Int) {

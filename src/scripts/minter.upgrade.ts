@@ -66,7 +66,7 @@ const main = async () => {
     // const walletAddress = await readContractAddress()
     const minterAddress = await readContractAddress()
     const jettonMinter = client.open(JettonMinterSharded.fromAddress(minterAddress))
-    const jettonMinterNew = await buildJettonMinterFromEnv(deployerWalletContract.address, "shard")
+    const jettonMinterNew = await buildJettonMinterFromEnv(deployerWalletContract.address)
     // const wallet = client.open(JettonWalletSharded.fromAddress(walletAddress))
     const deployAmount = toNano("0.2")
 
@@ -75,8 +75,7 @@ const main = async () => {
     const msg: JettonUpdateContent = {
         $$type: "JettonUpdateContent",
         queryId: 0n,
-        content: jettonMinterNew!!.init!!.code, // FIXME this is content field not code
-        jettonWalletCode: null,
+        content: jettonMinterNew!.init!.code, // FIXME this is content field not code
     }
 
     const seqno: number = await deployerWalletContract.getSeqno()
@@ -119,8 +118,8 @@ const main = async () => {
     //         }),
     //     ],
     // })
-    console.log("====== UPGRADE message sent to =======\n", jettonMinter!!.address)
-    const link = getJettonHttpLink(network, jettonMinter!!.address, "tonviewer")
+    console.log("====== UPGRADE message sent to =======\n", jettonMinter!.address)
+    const link = getJettonHttpLink(network, jettonMinter!.address, "tonviewer")
     console.log(`You can soon check your upgraded contract at ${link}`)
 }
 
