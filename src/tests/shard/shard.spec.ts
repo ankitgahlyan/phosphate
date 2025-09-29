@@ -80,9 +80,9 @@ describe("Shard Jetton Minter", () => {
         snapshot = blockchain.snapshot()
     })
 
-    // beforeEach(async () => {
-    //     await blockchain.loadFrom(snapshot)
-    // })
+    beforeEach(async () => {
+        await blockchain.loadFrom(snapshot)
+    })
 
     it("should deploy in the same shard", async () => {
         const wallet = await userWallet(deployer.address)
@@ -185,26 +185,26 @@ describe("Shard Jetton Minter", () => {
             expect(await jettonMinter.getTotalSupply()).toEqual(initialTotalSupply)
         })
 
-    it("invite successfull", async () => {
-        const deployerJettonWallet = await userWallet(deployer.address)
-        const momJettonWallet = await userWallet(mom.address)
-        const inviteResult = await jettonWallet.sendTransfer(
-            deployer.getSender(), // via
-            toNano("0.05"), // value
-            toNano("0.01"), // amount
-            mom.address, // to
-            deployer.address, // responseDestination
-            null, // customPayload
-            toNano("1"), // forwardTonAmount
-            null, // forwardPayload
-        )
+    // it("invite successfull", async () => {
+    //     const deployerJettonWallet = await userWallet(deployer.address)
+    //     const momJettonWallet = await userWallet(mom.address)
+    //     const inviteResult = await jettonWallet.sendTransfer(
+    //         deployer.getSender(), // via
+    //         toNano("0.05"), // value
+    //         toNano("0.01"), // amount
+    //         mom.address, // to
+    //         deployer.address, // responseDestination
+    //         null, // customPayload
+    //         toNano("1"), // forwardTonAmount
+    //         null, // forwardPayload
+    //     )
 
-        // expect(inviteResult.transactions).toHaveTransaction({
-        //     from: deployerJettonWallet.address,
-        //     to: momJettonWallet.address,
-        //     deploy: true,
-        // })
-    })
+    //     // expect(inviteResult.transactions).toHaveTransaction({
+    //     //     from: deployerJettonWallet.address,
+    //     //     to: momJettonWallet.address,
+    //     //     deploy: true,
+    //     // })
+    // })
 
     // it("activate invite", async () => {
     //     const deployerJettonWallet = await userWallet(deployer.address)

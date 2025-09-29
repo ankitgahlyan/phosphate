@@ -2,7 +2,7 @@
 //  Copyright © 2025 TON Studio
 
 // import { Address, toNano, fromNano } from "@ton/core"
-import {Address, TonClient, WalletContractV4, toNano, fromNano} from "@ton/ton"
+import {Address, TonClient, WalletContractV4, toNano, fromNano, Cell} from "@ton/ton"
 import {getHttpEndpoint} from "@orbs-network/ton-access"
 import {mnemonicToPrivateKey} from "@ton/crypto"
 // import {storeMint} from "../output/Jetton_JettonMinter"
@@ -11,7 +11,7 @@ import {JettonMinterSharded, Upgrade} from "../output/Shard_JettonMinterSharded"
 import {printSeparator} from "../utils/print"
 import "dotenv/config"
 import {getJettonHttpLink, getNetworkFromEnv} from "../utils/utils"
-import {buildJettonWalletFromEnv} from "../utils/jetton-helpers"
+import {buildJettonMinterFromEnv, buildJettonWalletFromEnv} from "../utils/jetton-helpers"
 
 // import {createInterface} from "readline/promises"
 // import { client, deployerWalletContract, network, secretKey } from "./shard.deploy"
@@ -66,19 +66,37 @@ const main = async () => {
     const minterAddress = Address.parse(SHARD_JETTON_MINTER_ADDRESS)
     // const minterAddress = await readContractAddress()
     const jettonMinter = client.open(JettonMinterSharded.fromAddress(minterAddress))
-    // const jettonMinterNew = await buildJettonMinterFromEnv(deployerWalletContract.address, "shard")
+    const jettonMinterNew = await buildJettonMinterFromEnv(deployerWalletContract.address)
     const jettonWalletNew = await buildJettonWalletFromEnv(deployerWalletContract.address, minterAddress)
     // const wallet = client.open(JettonWalletSharded.fromAddress(walletAddress))
     const deployAmount = toNano("0.2")
 
-    // const supply = toNano(Number(process.env.JETTON_SUPPLY ?? 1000000000)) // 1_000_000_000 jettons
-    // const supply = toNano(parseFloat("0.1")) // 1_000_000_000 jettons
+    // Ask user which contract(s) to upgrade
+    const { createInterface } = await import("readline/promises")
+    const rl = createInterface({ input: process.stdin, output: process.stdout })
+
+    let choice: string
+    while (true) {
+        choice = (await rl.question("Which contract to upgrade? (minter / wallet / both / m / w / b): ")).trim().toLowerCase()
+        if (["minter", "wallet", "both", "m", "w", "b"].includes(choice)) break
+        console.log("Invalid choice. Please type 'm', 'w', 'b', 'minter', 'wallet' or 'both'.")
+    }
+    await rl.close()
+
+    const upgradeMinter = choice === "m" || choice === "b" || choice === "minter" || choice === "both"
+    const upgradeWallet = choice === "w" || choice === "b" || choice === "wallet" || choice === "both"
+
+    const minterCode: Cell | null = upgradeMinter ? jettonMinterNew!.init!.code : null
+    const walletCode: Cell | null = upgradeWallet ? jettonWalletNew!.init!.code : null
+
+    console.log("Upgrade selection:", upgradeMinter ? "minter" : "", upgradeWallet ? "wallet" : "")
+    
     const msg: Upgrade = {
         $$type: "Upgrade",
         queryId: 0n,
         newData: null,
-        newCode: null,
-        newWalletCode: jettonWalletNew!.init!.code,
+        newCode: minterCode,
+        newWalletCode: walletCode,
     }
 
     const seqno: number = await deployerWalletContract.getSeqno()

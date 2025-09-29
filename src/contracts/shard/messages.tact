@@ -286,18 +286,8 @@ message(0x38) RequestUpgradeCode {
 
 message(0x39) UpgradeCode {
     sender: Address;
-    /// New code of the contract.
-    /// Defaults to `null`, which keeps the previous code.
+    version: Int as uint10;
     newCode: Cell;
-
-    /// New data of the contract.
-    /// Defaults to `null`, which keeps the previous data.
-    // newdata: Cell? = null;
-
-    /// Delay in seconds before upgrade can be confirmed.
-    /// Defaults to zero, which means the upgrade can be confirmed immediately.
-    /// Unused in `Upgradable` trait.
-    // timeout: Int = 0;
 }
 
 message(0x40) AccountGenerated {

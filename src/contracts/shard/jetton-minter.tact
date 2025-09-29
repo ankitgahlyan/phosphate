@@ -90,13 +90,13 @@ contract JettonMinterSharded {
 
         if (msg.responseDestination != null) { // custom use for mint notify
             self.totalSupply -= msg.amount;
-        MessageParameters {
-            to: msg.responseDestination!!, // maybe change msg signature from null if does not interfere with spec, explorers
-            body: JettonExcesses { queryId: msg.queryId }.toCell(),
-            value: 0,
-            bounce: false,
-            mode: SendRemainingValue | SendIgnoreErrors, // ignore errors, because supply has already been updated
-        }.send();
+            MessageParameters {
+                to: msg.responseDestination!!, // maybe change msg signature from null if does not interfere with spec, explorers
+                body: JettonExcesses { queryId: msg.queryId }.toCell(),
+                value: 0,
+                bounce: false,
+                mode: SendRemainingValue | SendIgnoreErrors, // ignore errors, because supply has already been updated
+            }.send();
         } else {
             self.totalSupply += msg.amount;
         }
@@ -155,8 +155,8 @@ contract JettonMinterSharded {
 
     receive(msg: JettonUpdateContent) { // metadata update and wallet code upgrade
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
-            self.jettonContent = msg.content;
-            // self.version = + 1;// noNeed 2 change version
+        self.jettonContent = msg.content;
+        // self.version = + 1;// noNeed 2 change version
 
         cashback(sender());
     }
@@ -178,7 +178,8 @@ contract JettonMinterSharded {
             bounce: false,
             value: 0,
             body: UpgradeCode {
-                sender: self.owner, // myAddress()
+                sender: myAddress(),
+                version: self.walletVersion,
                 newCode: self.jettonWalletCode,
             }.toCell(),
         }.send();
@@ -243,9 +244,9 @@ contract JettonMinterSharded {
 
     receive(msg: Upgrade) {
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
-        self.version += 1;
         if (msg.newCode != null) {
             setCode(msg.newCode!!);
+            self.version += 1;
         }
 
         if (msg.newWalletCode != null) {
