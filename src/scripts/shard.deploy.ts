@@ -13,8 +13,7 @@ import {
 import {getHttpEndpoint} from "@orbs-network/ton-access"
 import {mnemonicToPrivateKey} from "@ton/crypto"
 import {buildJettonMinterFromEnv} from "../utils/jetton-helpers"
-// import {storeMint} from "../output/Jetton_JettonMinter"
-import {storeMint} from "../output/Shard_JettonMinterSharded"
+import {storeInviteInternal} from "../output/Shard_JettonMinterSharded"
 
 import {printSeparator} from "../utils/print"
 import "dotenv/config"
@@ -51,25 +50,36 @@ const main = async () => {
 
     const supply = toNano(Number(process.env.JETTON_SUPPLY ?? 1000000000)) // 1_000_000_000 jettons
     // const supply = toNano(parseFloat("0.1"))
+    // const packed_msg = beginCell()
+    //     .store(
+    //         storeMint({
+    //             $$type: "Mint",
+    //             queryId: 0n,
+    //             mintMessage: {
+    //                 $$type: "JettonTransferInternal",
+    //                 amount: supply,
+    //                 version: 0n,
+    //                 sender: deployerWalletContract.address,
+    //                 responseDestination: deployerWalletContract.address,
+    //                 queryId: 0n,
+    //                 forwardTonAmount: 0n,
+    //                 forwardPayload: beginCell().storeUint(0, 1).asSlice(),
+    //             },
+    //             receiver: deployerWalletContract.address,
+    //         }),
+    //     )
+    //     .endCell()
+
     const packed_msg = beginCell()
         .store(
-            storeMint({
-                $$type: "Mint",
-                queryId: 0n,
-                mintMessage: {
-                    $$type: "JettonTransferInternal",
-                    amount: supply,
-                    version: 0n,
-                    sender: deployerWalletContract.address,
-                    responseDestination: deployerWalletContract.address,
-                    queryId: 0n,
-                    forwardTonAmount: 0n,
-                    forwardPayload: beginCell().storeUint(0, 1).asSlice(),
-                },
-                receiver: deployerWalletContract.address,
+            storeInviteInternal({
+                $$type: "InviteInternal",
+                amount: supply,
+                sender: deployerWalletContract.address,
+                invitor: deployerWalletContract.address,
+                forwardPayload: beginCell().endCell().asSlice(),
             }),
-        )
-        .endCell()
+        ).endCell()
 
     // send a message on new address contract to deploy it
     const seqno: number = await deployerWalletContract.getSeqno()

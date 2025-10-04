@@ -17,6 +17,7 @@ struct JettonMinterState {
     adminAddress: Address;
     //tosHash: String = "";
     jettonContent: Cell;
+    jettonWalletCode: Cell;
 }
 
 // struct JettonWalletCode {// nested store
@@ -167,7 +168,6 @@ contract JettonMinterSharded {
         // let code = emptyCell();// it's different!
 
         if (msg.version < self.walletVersion) {
-            //code = self.jettonWalletCode;
             self.sendUpgrade(sender());
         }
     }
@@ -284,6 +284,7 @@ contract JettonMinterSharded {
             mintable: self.mintable,
             adminAddress: self.owner,
             jettonContent: self.jettonContent,
+            jettonWalletCode: self.jettonWalletCode,
         };
     }
 

@@ -4,7 +4,7 @@
 // const gasForMint: Int = 11050; //anybody can mint(burn if minted) limitedAmount(not fixedAmount once) per id
 const gasForBurn: Int = 8000;
 const gasForTransfer: Int = 11050; // FIXME: CHANGE ON MAINNET
-const minTonsForStorage: Int = ton("1"); // FIXME: 0.01"); // This should use https://github.com/tact-lang/tact/issues/2336 in the future
+const minTonsForStorage: Int = ton("0.01"); // This should use https://github.com/tact-lang/tact/issues/2336 in the future
 const Basechain: Int = 0;
 
 // This is an approximate value. Real one must be less than this, and it is checked in tests.

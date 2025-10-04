@@ -81,9 +81,11 @@ message(0x0393b1ce) ClaimTON {
 }
 
 message(1) InviteInternal {
+    version: Int as uint10;
     amount: Int as coins;
     sender: Address;
     invitor: Address;
+    currentWalletCode: Cell;
     forwardPayload: Slice as remaining;
 }
 
@@ -311,6 +313,7 @@ message(0x43) CitizenAdded {
 
 message(0x44) InviteApproval {
     approved: Bool; // = true;// need default? 
+    invitor: Address;
     invitee: Address;
 }
 
