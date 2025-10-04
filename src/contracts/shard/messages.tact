@@ -234,8 +234,9 @@ message(0xf8a7ea5) JettonTransfer {
 
 message(0x178d4519) JettonTransferInternal {
     queryId: Int as uint64;
-    amount: Int as coins;
     version: Int as uint10;
+    currentCode: Cell?;
+    amount: Int as coins;
     sender: Address;
     responseDestination: Address?;
     forwardTonAmount: Int as coins;

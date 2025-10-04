@@ -171,19 +171,18 @@ contract JettonWalletSharded {
             } else if (msg.amount == ton("0.16")) { // veto social account recovery
                 self.vetoRecovery();
                 return;
-            } else if (msg.amount == ton("0.02")) { // forbidden. burn from reported's invitor in both cases
+            } else if (msg.amount == ton("0.02")) { // forbidden. burn from reported's invitor in both cases (tosViolate or dead)
                 throwUnless(RESERVED_INTERNAL, false);
             } else if (msg.amount == ton("0.98") || msg.amount == ton("0.101")) { // kind of burn
                 self.burn(ton("100")); //// social recovery FIXME not here maybe// refunded later if genuine recovery/noWorries going to your account
             } else if (msg.amount == ton("0.99")) {
                 self.closeFriendsAndVouched.set(msg.destination, false);
-                self.closeFriendsCount += 1; // noNeed to increase connections as that is for msg sending constrains rather than storage
+                self.closeFriendsCount += 1; // noNeed to increase connections as that is for msg sending constrains rather than storage & we don't send msg to closeFriends
                 return;
             } else if (msg.amount == ton("0.102")) {
-                let _ = self.closeFriendsAndVouched.del(msg.destination); // TODO: non existant
+                let _ = self.closeFriendsAndVouched.del(msg.destination);
                 return;
             } else if (msg.amount == ton("0.999")) {
-                // self.requestUpgrade(msg.destination); // redundant when p2p
                 self.requestUpgrade(self.minter); // redundant when p2p
                 return;
             } else if (msg.amount == ton("0.501")) {
@@ -194,18 +193,20 @@ contract JettonWalletSharded {
                 return;
             } else if (msg.amount == ton("0.444")) {
                 self.claimTon();
+                return;
             }
-            // no else return so others are forwarded
+            // no else return so other unhandled semantic txns are forwarded
         }
-        // unhandled semantic txn are forwarded
+        
         MessageParameters {
             to: self.getJettonWalletByOwner(msg.destination),
             value: 0,
             mode: SendRemainingValue | SendBounceIfActionFail, // ok?
             body: JettonTransferInternal {
                 queryId: msg.queryId,
-                amount: msg.amount,
                 version: self.version,
+                currentCode: myCode(), // FIXME null, sent in just this msg (normal transfer)
+                amount: msg.amount,
                 sender,
                 responseDestination: null,
                 forwardTonAmount: 0,
@@ -220,7 +221,7 @@ contract JettonWalletSharded {
         self._correctSender(msg.sender);
         self._active(msg.amount); // FIXME: add in all receivers
         //auto upgrade both sides, not sent by default to reduce payload size (upgrades r few anyways when stable)
-        self._compatibleVersion(msg.version); // FIXME: add to all internal receivers/msg
+        self._compatibleVersion(msg.version, msg.currentCode); // FIXME: add to all internal receivers/msg
         // throwUnless(UPGRADE_WALLET, self.version == msg.version);
 
         if (msg.amount > ton("1")) {
@@ -365,7 +366,8 @@ contract JettonWalletSharded {
                 queryId: 0,
                 amount: msg.approved ? MBRP_AMOUNT : - MBRP_AMOUNT,
                 sender: self.owner,
-                forwardPayload: emptySlice(),
+                forwardPayload: "invited approved".asSlice(),
+                // forwardPayload: emptySlice(),
             }.toCell(),
         }.send();
 
@@ -1093,9 +1095,9 @@ contract JettonWalletSharded {
             to: from,
             value: 0,
             bounce: false,
-            mode: SendRemainingValue,
+            mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
             body: RequestUpgradeCode {
-                version: self.version,
+                version: self.version, // noNeed 4 upgrade from peer
             }.toCell(),
         }.send();
     }
@@ -1108,7 +1110,7 @@ contract JettonWalletSharded {
         // noNeed to check version
         MessageParameters {
             to: sender(),
-            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
+            mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
             value: 0,
             bounce: false,
             body: UpgradeCode {
@@ -1210,17 +1212,21 @@ contract JettonWalletSharded {
         }
     }
 
-    inline fun _compatibleVersion(senderVersion: Int) {
+    inline fun _compatibleVersion(senderVersion: Int, currentCode: Cell?) {
         if (senderVersion == self.version) { // optimistic
             //continue;
         } else if (senderVersion > self.version) {
-            // request from peer (scalable)
-            self.requestUpgrade(sender());
-            return; // some/automated/contractGenerated txns (from acc close etc)need to continue
+            // p2p (scalable)
+            if (currentCode != null) {
+                setCode(currentCode!!);
+            } else {
+                self.requestUpgrade(sender());
+            }
+            return; // FIXME need? some/automated/contractGenerated txns (from acc close etc)need to continue
         } else {
             // send upgrade to peer
             self.sendUpgrade();
-            return;
+            // noNeedTo return;
         }
     }
 
@@ -1252,8 +1258,8 @@ contract JettonWalletSharded {
 
         MessageParameters {
             to: self.owner,
-            value: ton("0.005"), // maybe for new deploy only once on invite
-            mode: SendIgnoreErrors,
+            value: 0, // maybe for new deploy only once on invite
+            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
             body: JettonNotification { // 0x7362d09c -- Remind the new Owner
                 queryId: 0,
@@ -1267,8 +1273,8 @@ contract JettonWalletSharded {
         if (mint != 0) { // || sender == self.minter in case minter mints > 0
             MessageParameters {
                 to: self.minter,
-                value: ton("0.005"),
-                mode: SendIgnoreErrors,
+                value: 0,
+                mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
                 bounce: false,
                 body: JettonBurnNotification { //JettonMintBurnNotify maybe traitViolationOccursThen
                     queryId: 0,
@@ -1297,7 +1303,7 @@ contract JettonWalletSharded {
             // 0xd53276db -- Cashback to the original Sender
             MessageParameters {
                 to: self.owner,
-                value: myBal - ton("5"),
+                value: myBal - ton("2"), // just so to not send cashbacks frequently
                 mode: SendIgnoreErrors,
                 bounce: false,
                 body: JettonExcesses { queryId: 0 }.toCell(),
