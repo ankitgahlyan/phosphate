@@ -6,7 +6,7 @@ import {Address, TonClient, WalletContractV4, toNano, fromNano, Cell} from "@ton
 import {getHttpEndpoint} from "@orbs-network/ton-access"
 import {mnemonicToPrivateKey} from "@ton/crypto"
 // import {storeMint} from "../output/Jetton_JettonMinter"
-import {JettonMinterSharded, Upgrade} from "../output/Shard_JettonMinterSharded"
+import {JettonMinterSharded, Upgrade} from "../output/Root_JettonMinterSharded"
 
 import {printSeparator} from "../utils/print"
 import "dotenv/config"
@@ -15,7 +15,7 @@ import {buildJettonMinterFromEnv, buildJettonWalletFromEnv} from "../utils/jetto
 
 // import {createInterface} from "readline/promises"
 // import { client, deployerWalletContract, network, secretKey } from "./shard.deploy"
-import { SHARD_JETTON_MINTER_ADDRESS } from "./consts"
+import { ROOT_ADDRESS } from "./consts"
 // import chalk from "chalk"
 
 const main = async () => {
@@ -63,7 +63,7 @@ const main = async () => {
     //     }
     // }
 
-    const minterAddress = Address.parse(SHARD_JETTON_MINTER_ADDRESS)
+    const minterAddress = Address.parse(ROOT_ADDRESS)
     // const minterAddress = await readContractAddress()
     const jettonMinter = client.open(JettonMinterSharded.fromAddress(minterAddress))
     const jettonMinterNew = await buildJettonMinterFromEnv(deployerWalletContract.address)

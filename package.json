@@ -26,7 +26,7 @@
         "bench:ci": "yarn build && cross-env PRINT_TABLE=false ts-node ./src/benchmarks/benchmarks.ts",
         "bench:add": "yarn build && cross-env UPDATE=false ts-node ./src/benchmarks/update.build.ts",
         "bench:update": "yarn build && cross-env UPDATE=true ts-node ./src/benchmarks/update.build.ts",
-        "deduplicate": "yarn yarn-deduplicate --list --fail",
+        "deduplicate": "yarn-deduplicate --list --fail",
         "prepare": "husky"
     },
     "dependencies": {

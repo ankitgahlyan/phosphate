@@ -10,8 +10,8 @@ import chalk from "chalk"
 // import {JettonMinter} from "../output/Jetton_JettonMinter"
 // import {GovernanceJettonMinter} from "../output/Governance_GovernanceJettonMinter"
 // import {JettonMinterFeatureRich} from "../output/FeatureRich_JettonMinterFeatureRich"
-import { JettonMinterSharded } from "../output/Shard_JettonMinterSharded"
-import { JettonWalletSharded } from "../output/Shard_JettonWalletSharded"
+import { JettonMinterSharded } from "../output/Root_JettonMinterSharded"
+import { JettonWalletSharded } from "../output/Root_JettonWalletSharded"
 
 const ONCHAIN_CONTENT_PREFIX = 0x00
 const SNAKE_PREFIX = 0x00

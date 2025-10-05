@@ -8,7 +8,7 @@ import { createInterface } from "readline/promises"
 import { TonClient } from "@ton/ton"
 // import {JettonMinter} from "../output/Jetton_JettonMinter"//base
 // import {JettonMinterSharded} from "../output/Shard_JettonMinterSharded" // shard
-import { JettonWalletSharded } from "../output/Shard_JettonWalletSharded"
+import { JettonWalletSharded } from "../output/Root_JettonWalletSharded"
 // import chalk from "chalk"
 import { getNetworkFromEnv } from "../utils/utils"
 // import { displayContentCell } from "../utils/jetton-helpers"

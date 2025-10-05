@@ -562,4 +562,61 @@ unInvite for control, just freeze uninvited's invited not wholeChain cozOfBounce
 // NOTE: triggers = tick-tock functions
 - instead of bounced what if use regular fallback msg receiver TODO: 
 - text msg for semantic txns
+
+TESTS:
+deploy
+changeNominee
+invite unInvite changeInvitor
+approve disapprove
+fRequest unFriend
+confirmRequest
+clearRequests
+follow unfollow
+report
+dispute
+processReport
+
+addCloseFriend remove
+recover
+veto
+
+applyGrant
+voteProposal
+
+insurance changeAmount
+
+reqUpgrade
+claimTon
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 */

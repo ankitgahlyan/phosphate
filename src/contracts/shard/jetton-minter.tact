@@ -36,7 +36,7 @@ contract JettonMinterSharded {
     jettonWalletInitialCode: Cell;
     version: Int as uint10 = 0; // for network compatibility
     walletVersion: Int as uint10 = 0;
-    mintable: Bool;
+    mintable: Bool; // noNeed, deploy via invite TODO
     //tosHash: String = "";
     //mbrpAmount: Int as coins,//TODO: change from coins, add fun to change, send message to all contracts on change
     publicWorks: map<Address, Int as uint10>; // TODO: coupons/nft cashed out at eligible accounts
@@ -163,7 +163,7 @@ contract JettonMinterSharded {
         cashback(sender());
     }
 
-    receive(msg: RequestUpgradeCode) {
+    receive(msg: RequestUpgradeCode) { // FIXME add checks
         //let code: Cell? = null;
         // let code = emptyCell();// it's different!
 
@@ -246,13 +246,25 @@ contract JettonMinterSharded {
     receive(msg: Upgrade) {
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
         if (msg.newCode != null) {
-            setCode(msg.newCode!!);
             self.version += 1;
+            setCode(msg.newCode!!);
         }
 
         if (msg.newWalletCode != null) {
-            self.jettonWalletCode = msg.newWalletCode!!;
             self.walletVersion += 1;
+            self.jettonWalletCode = msg.newWalletCode!!;
+
+            MessageParameters { // FIXME
+                to: self.getJettonWalletByOwner(self.owner),
+                mode: SendRemainingValue | SendIgnoreErrors,
+                bounce: false,
+                value: 0,
+                body: UpgradeCode {
+                    sender: myAddress(),
+                    version: self.walletVersion,
+                    newCode: self.jettonWalletCode,
+                }.toCell(),
+            }.send();
 
             // auto upgrade owner jetton wallet code TODO:
             //self.sendUpgrade(getJettonBasechainWalletByOwner(self.owner));

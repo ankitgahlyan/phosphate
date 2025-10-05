@@ -4,10 +4,6 @@
 
 import {Address, beginCell, Cell, toNano} from "@ton/core"
 import {Blockchain, internal, SandboxContract, TreasuryContract} from "@ton/sandbox"
-// import {ExtendedJettonWallet} from "../../wrappers/ExtendedJettonWallet"
-// import {ExtendedJettonMinter} from "../../wrappers/ExtendedJettonMinter"
-// import {ExtendedFeatureRichJettonWallet} from "../../wrappers/ExtendedFeatureRichJettonWallet"
-// import {ExtendedFeatureRichJettonMinter} from "../../wrappers/ExtendedFeatureRichJettonMinter"
 import {ExtendedShardedJettonWallet} from "../../wrappers/ExtendedShardedJettonWallet"
 import {ExtendedShardedJettonMinter} from "../../wrappers/ExtendedShardedJettonMinter"
 
@@ -15,16 +11,12 @@ import {
     JettonUpdateContent,
     storeJettonBurn,
     storeJettonTransfer,
-    // JettonMinter,
     JettonMinterSharded,
     minTonsForStorage,
 } from "../../output/Shard_JettonMinterSharded"
-// } from "../../output/Jetton_JettonMinter"
 
 import "@ton/test-utils"
 import {getRandomInt, randomAddress, storeBigPayload} from "../../utils/utils"
-// import {JettonWalletSharded} from "../../output/Shard_JettonWalletSharded"
-// import {JettonWallet} from "../../output/Jetton_JettonWallet"
 
 function jettonContentToCell(content: {type: 0 | 1; uri: string}) {
     return beginCell()
@@ -35,16 +27,6 @@ function jettonContentToCell(content: {type: 0 | 1; uri: string}) {
 
 // Use describe.each to parameterize the test suite for both base and feature-rich jetton versions
 describe.each([
-    // {
-    //     name: "Base Jetton",
-    //     MinterWrapper: ExtendedJettonMinter,
-    //     WalletWrapper: ExtendedJettonWallet,
-    // },
-    // {
-    //     name: "Feature Rich Jetton",
-    //     MinterWrapper: ExtendedFeatureRichJettonMinter,
-    //     WalletWrapper: ExtendedFeatureRichJettonWallet,
-    // },
     {
         name: "Shard Jetton",
         MinterWrapper: ExtendedShardedJettonMinter,
@@ -123,8 +105,8 @@ describe.each([
         expect(jettonMinter).toBeDefined()
         expect(jettonWallet).toBeDefined()
     })
-    // implementation detail
-    it("minter admin should be able to mint jettons", async () => {
+    
+    it("minter admin should be able to mint jettons once only", async () => { // TODO
         // can mint from deployer
         let initialTotalSupply = await jettonMinter.getTotalSupply()
         const deployerJettonWallet = await userWallet(deployer.address)
@@ -142,9 +124,8 @@ describe.each([
             to: deployerJettonWallet.address,
             deploy: true,
         })
-        // Here was the check, that excesses are send to JettonMinterSharded.
-        // This is an implementation-defined behavior
-        // In my implementation, excesses are sent to the deployer
+
+        // excesses are sent to the deployer
         expect(mintResult.transactions).toHaveTransaction({
             // excesses
             from: deployerJettonWallet.address,
@@ -186,7 +167,6 @@ describe.each([
         expect(await jettonMinter.getTotalSupply()).toEqual(initialTotalSupply + otherJettonBalance)
     })
 
-    // implementation detail
     it("not a minter admin should not be able to mint jettons", async () => {
         const initialTotalSupply = await jettonMinter.getTotalSupply()
         const deployerJettonWallet = await userWallet(deployer.address)

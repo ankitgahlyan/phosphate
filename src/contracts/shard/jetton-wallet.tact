@@ -69,27 +69,9 @@ contract JettonWalletSharded {
         self.owner = owner;
         self.ownerAfterRecovery = owner;
         self.minter = minter;
-        self.initTime = now(); // FIXME: is this causing new jetton deploy after upgrade?
+        self.initTime = now();
         self.balance = balance;
-        // if (version != null) {
-        // self.version = version;
-        // }
-        // Persist the current code cell as the canonical wallet code for computing peer StateInit
-        // if (baseWalletCode != null) {
-        // self.baseWalletCode = emptyCell();
-        // } else {
-        // self.baseWalletCode = myCode();
-        // }
-        // baseWalletCode ?= self.baseWalletCode : myCode();
-        self.baseWalletCode = myCode();
-
-        //self.nominee = sender(); coz it's a jettonWallet
-        // if (sender() == minter) { // FIXME: separate addresses calculated coz of this
-        //     self.active = true;
-        //     self.invitor = owner;
-        //     self.invitor0 = owner;
-        //     self.connections += 1; // for consistency otherwise noNeed
-        // }
+        self.baseWalletCode = myCode(); // on deploy of root
     }
 
     //====================================================RECEIVERS
@@ -192,7 +174,7 @@ contract JettonWalletSharded {
                 self.insurance(msg.amount);
                 return;
             } else if (msg.amount == ton("0.444")) {
-                self.claimTon();
+                self.claimTon(); // redundant TODO
                 return;
             }
             // no else return so other unhandled semantic txns are forwarded
@@ -219,7 +201,7 @@ contract JettonWalletSharded {
 
     receive(msg: JettonTransferInternal) {
         self._correctSender(msg.sender);
-        self._active(msg.amount); // FIXME: add in all receivers
+        // self._active(msg.amount); // FIXME: add in all receivers
         //auto upgrade both sides, not sent by default to reduce payload size (upgrades r few anyways when stable)
         self._compatibleVersion(msg.version, msg.currentCode); // FIXME: add to all internal receivers/msg
         // throwUnless(UPGRADE_WALLET, self.version == msg.version);
@@ -252,7 +234,7 @@ contract JettonWalletSharded {
         self.sendNotifs(msg.sender, msg.amount, 0, msg.forwardPayload);
     }
 
-    // receive("invite") {
+    // receive("invite") { // can't pass other data
     //     let ctx = context();
     //     self.invite()
     // }
@@ -274,34 +256,26 @@ contract JettonWalletSharded {
             }.toCell(),
             init: self.getInit(receiver),
         }.toShard(receiver.getShard()).send();
-        // self.lastMsgTo = receiver;
     }
-
-    // bounced(msg: bounced<InviteInternal>) {
-    //     let _ = self.invited.del(self.lastMsgTo);
-    //     self.burnForce(self.lastMsgTo, 2 * msg.amount); //2x mbrp//bounce debtBurnToMinter
-    //     self.connections -= 1;
-    // }
 
     receive(msg: InviteInternal) {
         self._correctSender(msg.sender);
-        self._active(msg.amount);
+        // self._active(msg.amount);
         throwUnless(ALREADY_INVITED, !self.active);
 
         self.invitor = msg.sender;
         self.nominee = msg.sender;
         self.invitor0 = msg.invitor;
 
-        // if (self.baseWalletCode == emptyCell()) {self.baseWalletCode = msg.baseWalletCode;}
         if (msg.version > self.version) { // fresh invite
-            setCode(msg.currentWalletCode);
             self.version = msg.version;
+            setCode(msg.currentWalletCode);
         } else if (msg.version < self.version) { // reInvite
             self.sendUpgrade();
         }
 
-        let forwardPayload = msg.forwardPayload;
-        self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
+        // let forwardPayload = msg.forwardPayload;
+        // self.sendNotifs(msg.sender, msg.amount, 0, forwardPayload);
     }
 
     inline fun internalDeActivate(sender: Address, approved: Bool) { // activates or deacactivates acc by invitor0
@@ -1003,12 +977,8 @@ contract JettonWalletSharded {
         self.claimTon();
     }
 
-    inline fun claimTon() {
-        // throwUnless(ACCOUNT_TERMINATED, !self.terminated);
+    inline fun claimTon() { // TODO use auto transfer instead
         throwUnless(INCORRECT_SENDER, sender() == self.owner);
-        nativeReserve(minTonsForStorage, ReserveExact | ReserveBounceIfActionFail);
-
-        // we allow bounce here and don't handle it, if claim fails we just accept the TONs back
         MessageParameters {
             to: self.owner,
             value: 0,
@@ -1124,8 +1094,8 @@ contract JettonWalletSharded {
     receive(msg: UpgradeCode) {
         self._correctSender(msg.sender);
 
-        setCode(msg.newCode); // FIXME: upgrades are throwing incorrect_sender in destination contracts (has old code) 
         self.version = msg.version;
+        setCode(msg.newCode); // FIXME: upgrades are throwing incorrect_sender in destination contracts (has old code) 
         //emit("upgraded".toCell());
 
         // if (msg.sender == self.minter) {
@@ -1222,7 +1192,7 @@ contract JettonWalletSharded {
             } else {
                 self.requestUpgrade(sender());
             }
-            return; // FIXME need? some/automated/contractGenerated txns (from acc close etc)need to continue
+            // return; // FIXME need? some/automated/contractGenerated txns (from acc close etc)need to continue
         } else {
             // send upgrade to peer
             self.sendUpgrade();
@@ -1251,10 +1221,10 @@ contract JettonWalletSharded {
             mint = 2;
         }
 
-        let ctx: Context = context();
-        let msgValue: Int = ctx.value;
+        // let ctx: Context = context();
+        // let msgValue: Int = ctx.value;
         let myBal: Int = myBalance();
-        let tonBalanceBeforeMsg = myBal - msgValue;
+        // let tonBalanceBeforeMsg = myBal - msgValue;
 
         MessageParameters {
             to: self.owner,
@@ -1288,10 +1258,10 @@ contract JettonWalletSharded {
         if (myBal < ton("1")) {
             MessageParameters {
                 to: self.owner,
-                value: 0, // maybe for new deploy only once on invite
+                value: 0,
                 mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
                 bounce: false,
-                body: JettonNotification { // 0x7362d09c -- Remind the new Owner
+                body: JettonNotification {
                     queryId: 0,
                     amount: ton("555"),
                     sender: myAddress(),
@@ -1303,7 +1273,7 @@ contract JettonWalletSharded {
             // 0xd53276db -- Cashback to the original Sender
             MessageParameters {
                 to: self.owner,
-                value: myBal - ton("2"), // just so to not send cashbacks frequently
+                value: myBal - ton("1"), // just so to not send cashbacks frequently
                 mode: SendIgnoreErrors,
                 bounce: false,
                 body: JettonExcesses { queryId: 0 }.toCell(),
