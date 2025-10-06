@@ -19,32 +19,34 @@ import { ROOT_ADDRESS } from "./consts"
 // import chalk from "chalk"
 
 const main = async () => {
-    const mnemonics = process.env.MNEMONICS
-        if (mnemonics === undefined) {
-            console.error("Mnemonics is not provided, please add it to .env file")
-            throw new Error("Mnemonics is not provided")
-        }
-        if (mnemonics.split(" ").length !== 24) {
-            console.error("Invalid mnemonics, it should be 24 words")
-            throw new Error("Invalid mnemonics, it should be 24 words")
-        }
-    
-        const network = getNetworkFromEnv()
-    
-        const endpoint = await getHttpEndpoint({network})
-        const client = new TonClient({
-            endpoint: endpoint,
-        })
-        const keyPair = await mnemonicToPrivateKey(mnemonics.split(" "))
-        const secretKey = keyPair.secretKey
-        const workchain = 0 // we are working in basechain.
-        const deployerWallet = WalletContractV4.create({
-            workchain: workchain,
-            publicKey: keyPair.publicKey,
-        })
-    
-        const deployerWalletContract = client.open(deployerWallet)
-    
+    const mnemonicsRaw = process.env.MNEMONICS
+    if (!mnemonicsRaw) {
+        console.error("Mnemonics is not provided, please add it to .env file")
+        throw new Error("Mnemonics is not provided")
+    }
+    // robust split: trim and split on any whitespace
+    const mnemonics = mnemonicsRaw.trim().split(/\s+/)
+    if (mnemonics.length !== 24) {
+        console.error("Invalid mnemonics, it should be 24 words")
+        throw new Error("Invalid mnemonics, it should be 24 words")
+    }
+
+    const network = getNetworkFromEnv()
+
+    const endpoint = await getHttpEndpoint({network})
+    const client = new TonClient({
+        endpoint: endpoint,
+    })
+    const keyPair = await mnemonicToPrivateKey(mnemonics)
+    const secretKey = keyPair.secretKey
+    const workchain = 0 // we are working in basechain.
+    const deployerWallet = WalletContractV4.create({
+        workchain: workchain,
+        publicKey: keyPair.publicKey,
+    })
+
+    const deployerWalletContract = client.open(deployerWallet)
+
     // const readContractAddress = async () => {
     //     const readline = createInterface({
     //         input: process.stdin,
@@ -68,6 +70,7 @@ const main = async () => {
     const jettonMinter = client.open(JettonMinterSharded.fromAddress(minterAddress))
     const jettonMinterNew = await buildJettonMinterFromEnv(deployerWalletContract.address)
     const jettonWalletNew = await buildJettonWalletFromEnv(deployerWalletContract.address, minterAddress)
+
     // const wallet = client.open(JettonWalletSharded.fromAddress(walletAddress))
     const deployAmount = toNano("0.2")
 
@@ -90,6 +93,14 @@ const main = async () => {
     const walletCode: Cell | null = upgradeWallet ? jettonWalletNew!.init!.code : null
 
     console.log("Upgrade selection:", upgradeMinter ? "minter" : "", upgradeWallet ? "wallet" : "")
+    
+    // Validate built artifacts when selected for upgrade
+    if (upgradeMinter && (!jettonMinterNew || !jettonMinterNew.init)) {
+        throw new Error("Failed to build new minter artifact from env — cannot upgrade minter")
+    }
+    if (upgradeWallet && (!jettonWalletNew || !jettonWalletNew.init)) {
+        throw new Error("Failed to build new wallet artifact from env — cannot upgrade wallet")
+    }
     
     const msg: Upgrade = {
         $$type: "Upgrade",

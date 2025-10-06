@@ -994,8 +994,7 @@ contract JettonWalletSharded {
         throwUnless(INCORRECT_SENDER, sender() == self.owner);
         MessageParameters {
             to: self.owner,
-            value: myBalance() - ton("1"),
-            // TODO check if bal is lower than 1 ton
+            value: myBalance() - ton("1"), // TODO check if bal is lower than 1 ton
         }.send();
     }
 
@@ -1093,40 +1092,33 @@ contract JettonWalletSharded {
         // noNeed to check version
         MessageParameters {
             to,
-            mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
+            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             value: 0,
             bounce: false,
-            body: UpgradeCode {
+            body: Upgrade {
                 sender: self.owner,
-                version: self.version,
-                newCode: myCode(),
+                walletVersion: self.version,
+                newWalletCode: myCode(),
             }.toCell(),
         }.send();
     }
 
-    receive(msg: UpgradeCode) {
-        self._correctSender(msg.sender);
+    receive(msg: Upgrade) {
+        self._correctSender(msg.sender!!);
 
-        if (self.version < msg.version) { // ignore if manually upgraded
-            self.version = msg.version;
-            setCode(msg.newCode); // FIXME: upgrades are throwing incorrect_sender in destination contracts (has old code) 
+        if (self.version < msg.walletVersion!!) { // ignore if manually upgraded
+            self.version = msg.walletVersion!!;
+            setCode(msg.newWalletCode!!); // FIXME: upgrades are throwing incorrect_sender in destination contracts (has old code) 
         }
         emit("upgraded".asComment()); // FIXME
 
         // cascading auto upgrades
-        // if (msg.sender == self.invitor) { // if use self.owner in minter as sender
-        if (msg.sender == self.invitor || msg.sender == self.minter) { // send upgrades but check version to foreach (addr, _ in self.invited)
+        if (msg.sender == self.invitor) { // self.owner in minter as sender
+            // if (msg.sender == self.invitor || sender() == self.minter) { // send upgrades but check version to foreach (addr, _ in self.invited)
             foreach (invited, _ in self.invited) {
                 self.sendUpgrade(self.getJettonWalletByOwner(invited));
             }
         }
-        // MessageParameters { // FIXME: invitor gets excess
-        //     to: self.owner,
-        //     value: 0,
-        //     mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
-        //     bounce: false,
-        //     body: JettonExcesses { queryId: 0 }.toCell(),
-        // }.send();
     }
 
     inline fun voteProposal(proposer: Address) {

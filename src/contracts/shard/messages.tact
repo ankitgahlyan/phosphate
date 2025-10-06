@@ -5,6 +5,14 @@ struct Insurance {
     emi: Int as coins;
     startStop: Int as uint42; // FIXME: enough for time
 }
+
+// -----------------------------------------------------------------------------
+// Notifications / Standard Jetton messages
+// These messages are used for notifications, burns, transfers and standard
+// Jetton flow. Opcodes are kept explicit for interop with TEPs and reference
+// implementations.
+// -----------------------------------------------------------------------------
+
 // Optimized action messages with op codes
 message(0x7362d09c) JettonNotification {
     queryId: Int as uint64;
@@ -27,9 +35,10 @@ message(0x7bdd97de) JettonBurnNotification {
     responseDestination: Address?;
 }
 
-message(0xd53276db) JettonExcesses {
-    queryId: Int as uint64;
-}
+// -----------------------------------------------------------------------------
+// Wallet discovery / balance related messages
+// ProvideWalletAddress / ProvideWalletBalance / TakeWalletBalance etc.
+// -----------------------------------------------------------------------------
 
 message(0x2c76b973) ProvideWalletAddress {
     queryId: Int as uint64;
@@ -40,23 +49,9 @@ message(0x2c76b973) ProvideWalletAddress {
 message(0xd1735400) TakeWalletAddress {
     queryId: Int as uint64;
     walletAddress: Address;
-    ownerAddress: Cell?; //It is Maybe ^Address, just encoded it like this
+    ownerAddress: Cell?; //It is Maybe ^Address, encoded as Cell for simplicity
 }
 
-message(0x642b7d07) Mint {
-    queryId: Int as uint64;
-    receiver: Address;
-    mintMessage: JettonTransferInternal;
-}
-
-message(22) CloseMinting {}
-
-message(3) ChangeOwner {
-    queryId: Int as uint64;
-    newOwner: Address;
-}
-
-// provide_wallet_balance#7ac8d559 receiver:MsgAddress include_verify_info:Bool = InternalMsgBody
 message(0x7ac8d559) ProvideWalletBalance {
     receiver: Address;
     includeVerifyInfo: Bool;
@@ -75,9 +70,76 @@ message(0xca77fdc2) TakeWalletBalance {
     verifyInfo: VerifyInfo?;
 }
 
+// -----------------------------------------------------------------------------
+// Minting / Transfer messages
+// Clarified that mint performs an atomic next-step forward (master_msg), see spec.
+// -----------------------------------------------------------------------------
+
+message(0x642b7d07) Mint {
+    queryId: Int as uint64;
+    receiver: Address;
+    mintMessage: JettonTransferInternal;
+}
+
+message(0xf8a7ea5) JettonTransfer {
+    queryId: Int as uint64;
+    amount: Int as coins;
+    destination: Address;
+    responseDestination: Address?;
+    customPayload: Cell?;
+    forwardTonAmount: Int as coins;
+    forwardPayload: Slice as remaining;
+}
+
+message(0x178d4519) JettonTransferInternal {
+    queryId: Int as uint64;
+    version: Int as uint10;
+    currentCode: Cell?;
+    amount: Int as coins;
+    sender: Address;
+    responseDestination: Address?;
+    forwardTonAmount: Int as coins;
+    forwardPayload: Slice as remaining;
+}
+
+message(0xd53276db) JettonExcesses {
+    queryId: Int as uint64;
+}
+
 // claim_ton#0393b1ce receiver:MsgAddress = InternalMsgBody
 message(0x0393b1ce) ClaimTON {
     receiver: Address;
+}
+
+// -----------------------------------------------------------------------------
+// Upgrade lifecycle messages
+// Keep upgrade-related messages grouped; Upgrade message includes optional
+// new code/data for root and wallet. Delayed upgrade flows should be handled by
+// traits (see docs).
+// -----------------------------------------------------------------------------
+
+message(0x38) RequestUpgradeCode {
+    version: Int as uint10;
+}
+
+message(0x2508d66a) Upgrade {
+    rootVersion: Int? as uint10 = null;
+    walletVersion: Int? as uint10 = null;
+    sender: Address? = null;
+    newRootData: Cell? = null;
+    newRootCode: Cell? = null;
+    newWalletCode: Cell? = null;
+}
+
+// -----------------------------------------------------------------------------
+// Internal actions / system messages
+// These messages are used for internal contract actions, system-level messages,
+// and administrative tasks.
+// -----------------------------------------------------------------------------
+
+message(3) ChangeOwner {
+    queryId: Int as uint64;
+    newOwner: Address;
 }
 
 message(1) InviteInternal {
@@ -192,12 +254,9 @@ struct OtherStateConsts {
 
 struct InvitorNominee {
     invitor: Address;
-    nominee: Address;
-
-    //minterOwner: Address;
+    nominee: Address;   
 }
 
-//minterOwner: Address;
 struct JettonData {
     totalSupply: Int as coins;
     mintable: Bool;
@@ -221,28 +280,6 @@ message(4) JettonUpdateContent {
     queryId: Int as uint64;
     content: Cell;
 }
-
-message(0xf8a7ea5) JettonTransfer {
-    queryId: Int as uint64;
-    amount: Int as coins;
-    destination: Address;
-    responseDestination: Address?;
-    customPayload: Cell?;
-    forwardTonAmount: Int as coins;
-    forwardPayload: Slice as remaining;
-}
-
-message(0x178d4519) JettonTransferInternal {
-    queryId: Int as uint64;
-    version: Int as uint10;
-    currentCode: Cell?;
-    amount: Int as coins;
-    sender: Address;
-    responseDestination: Address?;
-    forwardTonAmount: Int as coins;
-    forwardPayload: Slice as remaining;
-}
-// TODO: sent but received : maybe sent to app and not contract
 
 message(0x25) Mintable {
     mintable: Bool;
@@ -283,16 +320,6 @@ message(0x37) TakeInvitor {
     invitor: Address;
 }
 
-message(0x38) RequestUpgradeCode {
-    version: Int as uint10;
-}
-
-message(0x39) UpgradeCode {
-    sender: Address;
-    version: Int as uint10;
-    newCode: Cell;
-}
-
 message(0x40) AccountGenerated {
     deployer: Address;
     newAccount: Address;
@@ -321,11 +348,4 @@ message(0x44) InviteApproval {
 message(0xcb862902) ChangeMetadataUri {
     queryId: Int as uint64;
     metadata: Slice as remaining;
-}
-
-message(0x2508d66a) Upgrade {
-    queryId: Int as uint64;
-    newData: Cell? = null;
-    newCode: Cell? = null;
-    newWalletCode: Cell? = null;
 }

@@ -178,10 +178,10 @@ contract JettonMinterSharded {
             mode: SendRemainingValue | SendIgnoreErrors,
             bounce: false,
             value: 0,
-            body: UpgradeCode {
-                sender: myAddress(),
-                version: self.walletVersion,
-                newCode: self.jettonWalletCode,
+            body: Upgrade {
+                sender: self.owner,
+                walletVersion: self.walletVersion,
+                newWalletCode: self.jettonWalletCode,
             }.toCell(),
         }.send();
     }
@@ -201,24 +201,8 @@ contract JettonMinterSharded {
     receive(msg: AccountGenerated) {
         // FIXME: checks
         self.totalAccounts += 1;
-        // we allow bounce here and don't handle it, if claim fails we just accept the TONs back
-        // FIXME: emit event or tell connections in wallet's init
         cashback(msg.deployer); // empty receiver significance?
         // TODO: external out msg containing location and invitor0 of msg.newAccount
-
-        // let msgValue: Int = context().value;
-        // let tonBalanceBeforeMsg = myBalance() - msgValue;
-        // nativeReserve(max(tonBalanceBeforeMsg, minTonsForStorage), ReserveAtMost);
-        // // 0xd53276db -- Cashback to the original Sender
-        // if (msgValue > 0) {
-        //     MessageParameters {
-        //         to: msg.deployer,
-        //         value: msgValue, // NOTE: VALUE + remaining BALANCE?
-        //         mode: SendRemainingBalance | SendIgnoreErrors,
-        //         bounce: false,
-        //         body: JettonExcesses { queryId: 0 }.toCell(),
-        //     }.send();
-        // }
     }
 
     // topUp
@@ -245,9 +229,9 @@ contract JettonMinterSharded {
 
     receive(msg: Upgrade) {
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
-        if (msg.newCode != null) {
+        if (msg.newRootCode != null) {
             self.version += 1;
-            setCode(msg.newCode!!);
+            setCode(msg.newRootCode!!);
         }
 
         if (msg.newWalletCode != null) {
@@ -258,16 +242,14 @@ contract JettonMinterSharded {
             self.sendUpgrade(self.getJettonWalletByOwner(self.owner)); // or msg.newWalletCode cheaper?
         }
 
-        if (msg.newData != null) {
-            setData(msg.newData!!);
+        if (msg.newRootData != null) {
+            setData(msg.newRootData!!);
             // By the end of every transaction,
             // the Tact compiler automatically adds a call to setData() for your convenience.
             // However, we have already set the data ourselves,
             // so let us stop the execution now to prevent a secondary call to setData().
             throw(0);
         }
-
-        // cashback(sender());
     }
 
     bounced(msg: bounced<JettonTransferInternal>) {

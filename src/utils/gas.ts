@@ -28,10 +28,9 @@ export function getUsedGasInternal(
                 : consumptionType.chainLength + 1
             : 2
 
-    return sendResult.transactions
-        .slice(1, lastTxInChainNumber)
-        .map(t => getComputeGasForTx(t))
-        .reduceRight((prev, cur) => prev + cur)
+    // slice(1, ...) may produce an empty array — sum safely with initial 0
+    const txs = sendResult.transactions.slice(1, lastTxInChainNumber)
+    return txs.reduce((sum, tx) => sum + getComputeGasForTx(tx), 0)
 }
 
 export function getComputeGasForTx(tx: BlockchainTransaction) {
@@ -144,21 +143,29 @@ export function getSizeOfState(arg: {code: Cell; data: Cell}) {
     }
 }
 
-function calculateChange(prev: number, curr: number): string {
-    const change = (((curr - prev) / prev) * 100).toFixed(2)
-    const number = parseFloat(change)
-    if (number === 0) {
-        return chalk.gray(`same`)
+function calculateChange(prev: number | undefined, curr: number | undefined): string {
+    // new metric
+    if (typeof prev === "undefined" && typeof curr !== "undefined") {
+        return chalk.greenBright(`(new)`)
     }
-
-    if (Number.isNaN(number)) {
-        if (typeof prev === "undefined" && typeof curr !== "undefined") {
-            return chalk.greenBright(`(new)`)
-        }
+    // missing current or both undefined => nothing to show
+    if (typeof curr === "undefined" || typeof prev === "undefined") {
         return ""
     }
 
-    return number >= 0 ? chalk.redBright(`(+${change}%)`) : chalk.green(`(${change}%)`)
+    if (prev === curr) {
+        return chalk.gray(`same`)
+    }
+
+    // avoid division by zero
+    if (prev === 0) {
+        // prev 0 -> infinite relative increase (present something noticeable)
+        return curr === 0 ? chalk.gray(`same`) : chalk.redBright(`(+∞%)`)
+    }
+
+    const change = ((curr - prev) / prev) * 100
+    const changeStr = change.toFixed(2)
+    return change >= 0 ? chalk.redBright(`(+${changeStr}%)`) : chalk.green(`(${changeStr}%)`)
 }
 
 function calculateChanges<
