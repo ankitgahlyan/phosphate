@@ -33,7 +33,7 @@ contract JettonWalletSharded {
     friends: map<Address, Int as coins>;
     closeFriendsAndVouched: map<Address, Bool>; // for social recovery TODO: don't go beyond 16
     closeFriendsCount: Int as uint4 = 0; // 16
-    recoveryValidatorsCount: Int as uint4 = 0;
+    recoveryVouchersCount: Int as uint4 = 0;
     pendingRequests: map<Address, Int as coins>;
     followers: map<Address, Int as coins>;
     followings: map<Address, Int as coins>;
@@ -80,7 +80,7 @@ contract JettonWalletSharded {
         let sender = sender(); //TODO: Check whole callChain if var is used? thrice?
 
         throwUnless(INCORRECT_SENDER, sender == self.owner);
-        throwUnless(ACCOUNT_TERMINATED, !self.terminated); // TODO: use inactive, need for bounced from debts
+        // throwUnless(ACCOUNT_TERMINATED, !self.terminated); // TODO: use inactive, need for bounced from debts
         throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount == ton("0.101")); // for social recovery by new/inactive/uninvited self account
         forceBasechain(msg.destination);
 
@@ -99,7 +99,7 @@ contract JettonWalletSharded {
         //     (2 * getComputeFee(gasForTransfer, false) + minTonsForStorage),
         // );
 
-        if (msg.amount > ton("1")) {
+        if (msg.amount >= ton("1")) {
             self.lastTxnTime = now(); // need in all receivers
             if (msg.destination != self.minter) { // normal txn
                 self.burn(msg.amount);
@@ -205,7 +205,7 @@ contract JettonWalletSharded {
         // throwUnless(UPGRADE_WALLET, self.version == msg.version);
 
         let mint = 0;
-        if (msg.amount > ton("1")) {
+        if (msg.amount >= ton("1")) {
             self.mintInternal(msg.amount);
         } else {
             if (msg.amount == ton("0.02")) { // reportInternal burn, yours invited is reported
@@ -227,12 +227,10 @@ contract JettonWalletSharded {
                     approved = false;
                 }
                 self.internalDeActivate(msg.sender, approved); // redundant? use reports instead
-                // return;
-                msg.amount = 3 * MBRP_AMOUNT; // OWNER notify Allowed?
-                mint = 1; // FIXME minter notify
+                return;
             }
         }
-        self.notifyOwner(msg.sender, msg.amount, mint, msg.forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount, msg.forwardPayload);
     }
 
     // receive("invite") { // can't pass other data
@@ -287,7 +285,7 @@ contract JettonWalletSharded {
             self.mintInternal(MBRP_AMOUNT);
             self.connections += 1;
         } else {
-            self.burnForce(sender, MBRP_AMOUNT);
+            self.burnForce(self.invitor, MBRP_AMOUNT);
             self.connections -= 1;
         }
         self.lastMsgTo = self.invitor;
@@ -297,8 +295,8 @@ contract JettonWalletSharded {
             to: self.getJettonWalletByOwner(self.invitor),
             body: InviteApproval {
                 approved,
-                invitor: sender, // FIXME: or invotor0
-                invitee: self.owner,
+                sender: self.owner,
+                approver: sender, // need?
             }.toCell(),
         }.send();
     }
@@ -315,26 +313,21 @@ contract JettonWalletSharded {
     }
 
     receive(msg: InviteApproval) {
-        self._correctSender(msg.invitee);
-        // let amount = msg.approved ? 2 * MBRP_AMOUNT : 0;
+        self._correctSender(msg.sender); // msg.approver == self.invitor
         let amount = 2 * MBRP_AMOUNT;
         if (msg.approved) {
-            self.invited.set(msg.invitee, amount);
+            self.invited.set(msg.sender, amount);
             self.mintInternal(amount); // 2x
             self.connections += 1;
         } else {
-            let _ = self.invited.del(msg.invitee);
-            self.burnForce(msg.invitee, amount);
+            let _ = self.invited.del(msg.sender);
+            self.burnForce(msg.sender, amount);
             self.connections -= 1;
         }
-        // notifs
-        let ctx: Context = context();
-        let msgValue: Int = ctx.value;
-        let myBal: Int = myBalance();
-        let tonBalanceBeforeMsg = myBal - msgValue;
-
+        self.notifyOwner(msg.sender, amount, null);
+        self.notifyRoot(msg.approver, msg.approved, 3 * MBRP_AMOUNT);
         MessageParameters { // FIXME these also not working JUST SEND TO INVITOR OTHERS R HANDLED
-            to: msg.invitee,
+            to: msg.sender,
             value: 0,
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
@@ -342,26 +335,7 @@ contract JettonWalletSharded {
                 queryId: 0,
                 amount: msg.approved ? MBRP_AMOUNT : - MBRP_AMOUNT,
                 sender: self.owner,
-                // forwardPayload: "invited approved".asSlice(),
                 forwardPayload: "invited approved".asComment().asSlice(),
-                // forwardPayload: emptySlice(),
-            }.toCell(),
-        }.send();
-
-        // TODO notify invitor also
-
-        // reusing burnNotify for minting
-        MessageParameters {
-            // forwardPayload: emptySlice(),
-            to: self.minter,
-            value: 0,
-            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
-            bounce: false,
-            body: JettonBurnNotification { //JettonMintBurnNotify maybe traitViolationOccursThen
-                queryId: 0,
-                amount: 3 * MBRP_AMOUNT,
-                sender: self.owner, // mint to or burn from FIXME: 724 , 9
-                responseDestination: msg.approved ? self.owner : null,
             }.toCell(),
         }.send();
     }
@@ -401,7 +375,7 @@ contract JettonWalletSharded {
         self._correctSender(msg.sender);
         throwUnless(NOT_INVITOR, self.invitor == msg.sender); //redundant bothSide check for unBounced s
 
-        self.notifyOwner(msg.sender, msg.amount, 2, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount,  forwardPayload);
 
         self.active = false;
         //maybe no burns if coz someone will reinvite eventually, don't mint THEN
@@ -432,7 +406,7 @@ contract JettonWalletSharded {
         let forwardPayload = msg.forwardPayload;
         self._correctSender(msg.sender);
 
-        self.notifyOwner(msg.sender, msg.amount, 0, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount,  forwardPayload);
 
         self.pendingRequests.set(msg.sender, msg.amount);
     }
@@ -476,7 +450,7 @@ contract JettonWalletSharded {
         let forwardPayload = msg.forwardPayload;
         self._correctSender(msg.sender);
 
-        self.notifyOwner(msg.sender, msg.amount, 1, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount, forwardPayload);
 
         self.mintInternal(msg.amount);
         self.friends.set(msg.sender, msg.amount);
@@ -517,7 +491,7 @@ contract JettonWalletSharded {
         let forwardPayload = msg.forwardPayload;
         self._correctSender(msg.sender);
 
-        self.notifyOwner(msg.sender, msg.amount, 2, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount,  forwardPayload);
 
         let _ = self.friends.del(msg.sender);
         self.burnForce(msg.sender, msg.amount);
@@ -562,7 +536,7 @@ contract JettonWalletSharded {
         let forwardPayload = msg.forwardPayload;
         self._correctSender(msg.sender);
 
-        self.notifyOwner(msg.sender, msg.amount, 1, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount,  forwardPayload);
 
         self.balance += MBRP_AMOUNT;
 
@@ -602,7 +576,7 @@ contract JettonWalletSharded {
         let forwardPayload = msg.forwardPayload;
         self._correctSender(msg.sender);
 
-        self.notifyOwner(msg.sender, msg.amount, 2, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount,  forwardPayload);
 
         self.unfollowInternal(msg.sender, msg.amount);
     }
@@ -675,7 +649,7 @@ contract JettonWalletSharded {
             }.send();
         }
 
-        self.notifyOwner(msg.sender, msg.amount, 0, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount, forwardPayload);
     }
 
     inline fun dispute(sender: Address, amount: Int, receiver: Address, msg: JettonTransfer) {
@@ -703,7 +677,7 @@ contract JettonWalletSharded {
         self._correctSender(msg.sender);
 
         self.disputeInternal(msg.sender);
-        self.notifyOwner(msg.sender, msg.amount, 0, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount, forwardPayload);
     }
 
     inline fun disputeInternal(sender: Address) {
@@ -734,7 +708,7 @@ contract JettonWalletSharded {
         self._correctSender(msg.sender);
 
         self.reportResolutionInternal(msg);
-        self.notifyOwner(msg.sender, msg.amount, 0, forwardPayload);
+        self.notifyOwner(msg.sender, msg.amount, forwardPayload);
     }
 
     inline fun reportResolutionInternal(msg: ResolutionInternal) {
@@ -1057,9 +1031,9 @@ contract JettonWalletSharded {
     inline fun validateRecovery(sender: Address) {
         throwUnless(NOT_CLOSE_FRIEND, self.closeFriendsAndVouched.exists(sender));
         throwUnless(ALREADY_VOUCHED, !self.closeFriendsAndVouched.get(sender)!!); // FIXME: misti error redundant compare with bool literal
-        if (self.recoveryValidatorsCount >= divc(self.closeFriendsCount, 2) && (now() - self.lastTxnTime) > CLOSURE_WAIT) { // FIXME: state may stuck
+        if (self.recoveryVouchersCount >= divc(self.closeFriendsCount, 2) && (now() - self.lastTxnTime) > CLOSURE_WAIT) { // FIXME: state may stuck
             self.owner = self.ownerAfterRecovery;
-            self.recoveryValidatorsCount = 0;
+            self.recoveryVouchersCount = 0;
             // reimburse vouchers and reset vouch state
             foreach (friend, vouched in self.closeFriendsAndVouched) {
                 if (vouched) {
@@ -1068,7 +1042,7 @@ contract JettonWalletSharded {
             }
         } else {
             self.closeFriendsAndVouched.set(sender, true);
-            self.recoveryValidatorsCount += 1;
+            self.recoveryVouchersCount += 1;
         }
     }
 
@@ -1217,24 +1191,14 @@ contract JettonWalletSharded {
         //ACCOUNT EXISTS
     }
 
-    fun notifyOwner(sender: Address, amount: Int, mint: Int, forwardPayload: Slice?) {
+    fun notifyOwner(sender: Address, amount: Int, forwardPayload: Slice?) {
         // let masterMsgSlice = msg.masterMsg.beginParse();
         // let op = masterMsgSlice.preloadUint(32);
 
         // if (op == JettonTransfer.opcode()) {
         //     let msgToSend = JettonTransfer.fromSlice(masterMsgSlice);// It also validates the message, throws 9
 
-        if (amount == ton("0.23")) {
-            mint = 1;
-        } else if (amount == ton("0.24")) {
-            mint = 2;
-        }
-
-        // let ctx: Context = context();
-        // let msgValue: Int = ctx.value;
         let myBal: Int = myBalance();
-        // let tonBalanceBeforeMsg = myBal - msgValue;
-
         MessageParameters {
             to: self.owner,
             value: myBal > ton("5") ? myBal - ton("1") : 0,
@@ -1242,27 +1206,29 @@ contract JettonWalletSharded {
             bounce: false,
             body: JettonNotification { // 0x7362d09c -- Remind the new Owner
                 queryId: 0,
-                amount: mint != 0 ? MBRP_AMOUNT : amount,
+                amount,
                 sender,
                 forwardPayload: forwardPayload!!, // FIXME
             }.toCell(),
         }.send();
+    }
 
+    inline fun notifyRoot(approver: Address, mint: Bool, amount: Int) {
         // reusing burnNotify for minting
-        if (mint != 0) { // || sender == self.minter in case minter mints > 0
+         // || sender == self.minter in case minter mints > 0
             MessageParameters {
                 to: self.minter,
                 value: 0,
                 mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
                 bounce: false,
                 body: JettonBurnNotification { //JettonMintBurnNotify maybe traitViolationOccursThen
-                    queryId: 0,
-                    amount: 3 * MBRP_AMOUNT,
+                    queryId: 0, // FIXME used to notify users & show correctly in explorers
+                    amount,
                     sender: self.owner, // mint to or burn from FIXME: 724 , 9
-                    responseDestination: mint == 2 ? sender : null,
+                    responseDestination: mint ? approver : null,
                 }.toCell(),
             }.send();
-        }
+        
     }
 
     fun _deductDebt(amount: Int): Int {

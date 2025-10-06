@@ -128,6 +128,7 @@ message(0x2508d66a) Upgrade {
     sender: Address? = null;
     newRootData: Cell? = null;
     newRootCode: Cell? = null;
+    newWalletData: Cell? = null;
     newWalletCode: Cell? = null;
 }
 
@@ -254,7 +255,7 @@ struct OtherStateConsts {
 
 struct InvitorNominee {
     invitor: Address;
-    nominee: Address;   
+    nominee: Address;
 }
 
 struct JettonData {
@@ -341,8 +342,8 @@ message(0x43) CitizenAdded {
 
 message(0x44) InviteApproval {
     approved: Bool; // = true;// need default? 
-    invitor: Address;
-    invitee: Address;
+    sender: Address;
+    approver: Address;
 }
 
 message(0xcb862902) ChangeMetadataUri {

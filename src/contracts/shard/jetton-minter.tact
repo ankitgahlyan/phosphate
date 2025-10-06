@@ -28,26 +28,24 @@ struct JettonMinterState {
 contract JettonMinterSharded {
     totalSupply: Int as coins;
     totalAccounts: Int as uint32 = 0;
-    // treasurySurplus: Int as coins = 0;
-    // treasuryDeficits: Int as coins = 0;
+    treasurySurplus: Int as coins = 0;
+    treasuryDeficits: Int as coins = 0;
     owner: Address;
     jettonContent: Cell;
     jettonWalletCode: Cell;
     jettonWalletInitialCode: Cell;
     version: Int as uint10 = 0; // for network compatibility
     walletVersion: Int as uint10 = 0;
-    mintable: Bool; // noNeed, deploy via invite TODO
-    //tosHash: String = "";
-    //mbrpAmount: Int as coins,//TODO: change from coins, add fun to change, send message to all contracts on change
+    tosHash: String = "";
+    mbrpAmount: Int as coins = MBRP_AMOUNT;//TODO: change from coins, add fun to change, send message to all contracts on change
     publicWorks: map<Address, Int as uint10>; // TODO: coupons/nft cashed out at eligible accounts
     votes: map<Address, Int as uint20>;
-    //crowdFund: map<Int as uint10, Int as uint10>;
+    crowdFund: map<Int as uint10, Int as uint10>;
 
-    init(totalSupply: Int as coins, owner: Address, jettonContent: Cell, mintable: Bool) {
+    init(totalSupply: Int as coins, owner: Address, jettonContent: Cell) {
         self.totalSupply = totalSupply;
         self.owner = owner;
         self.jettonContent = jettonContent;
-        self.mintable = true; // even if someone accidently  pass false
         self.jettonWalletCode = codeOf JettonWalletSharded;
         self.jettonWalletInitialCode = codeOf JettonWalletSharded;
     }
@@ -91,7 +89,7 @@ contract JettonMinterSharded {
         throwUnless(UNAUTHORIZED_BURN, sender.workchain == Basechain && sender.address == wallet.hash!!); // unauthorized burn/sender
 
         if (msg.responseDestination != null) { // custom use for mint notify
-            self.totalSupply -= msg.amount;
+            self.totalSupply += msg.amount;
             MessageParameters {
                 to: msg.responseDestination!!, // maybe change msg signature from null if does not interfere with spec, explorers
                 body: JettonExcesses { queryId: msg.queryId }.toCell(),
@@ -100,7 +98,7 @@ contract JettonMinterSharded {
                 mode: SendRemainingValue | SendIgnoreErrors, // ignore errors, because supply has already been updated
             }.send();
         } else {
-            self.totalSupply += msg.amount;
+            self.totalSupply -= msg.amount;
         }
     }
 
@@ -109,7 +107,6 @@ contract JettonMinterSharded {
     // it is asserted inside the deploy function
     receive(msg: Mint) {
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
-        throwUnless(MINT_CLOSED, self.mintable); // mint is closed
         throwUnless(WRONG_WORKCHAIN, parseStdAddress(msg.receiver.asSlice()).workchain == 0); // Wrong workchain
 
         // No need to check the opcode here, as Tact will check it automatically
@@ -132,7 +129,6 @@ contract JettonMinterSharded {
 
         self.totalSupply += msg.mintMessage.amount; // + ton("1000"); // invitation by minter
         self.totalAccounts += 1; // only mints to owner just once
-        self.mintable = false;
 
         // basechain destination is calculated inside deploy function
         DeployParameters {
@@ -189,12 +185,6 @@ contract JettonMinterSharded {
     receive(msg: ChangeOwner) {
         throwUnless(INCORRECT_SENDER, sender() == self.owner);
         self.owner = msg.newOwner;
-        cashback(sender());
-    }
-
-    receive(msg: CloseMinting) {
-        throwUnless(INCORRECT_SENDER, sender() == self.owner);
-        self.mintable = false;
         cashback(sender());
     }
 
@@ -263,7 +253,7 @@ contract JettonMinterSharded {
     get fun get_jetton_data(): JettonMinterState { // don't touch it or explorers won't recognise as minter
         return JettonMinterState {
             totalSupply: self.totalSupply,
-            mintable: self.mintable,
+            mintable: true, // for explorers
             adminAddress: self.owner,
             jettonContent: self.jettonContent,
             jettonWalletCode: self.jettonWalletCode,

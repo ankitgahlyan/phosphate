@@ -2,16 +2,16 @@
 //  Copyright © 2025 TON Studio
 
 // import { Address, toNano, fromNano } from "@ton/core"
-import {Address, TonClient, WalletContractV4, toNano, fromNano, Cell} from "@ton/ton"
-import {getHttpEndpoint} from "@orbs-network/ton-access"
-import {mnemonicToPrivateKey} from "@ton/crypto"
+import { Address, TonClient, WalletContractV4, toNano, fromNano, Cell } from "@ton/ton"
+import { getHttpEndpoint } from "@orbs-network/ton-access"
+import { mnemonicToPrivateKey } from "@ton/crypto"
 // import {storeMint} from "../output/Jetton_JettonMinter"
-import {JettonMinterSharded, Upgrade} from "../output/Root_JettonMinterSharded"
+import { JettonMinterSharded, Upgrade } from "../output/Root_JettonMinterSharded"
 
-import {printSeparator} from "../utils/print"
+import { printSeparator } from "../utils/print"
 import "dotenv/config"
-import {getJettonHttpLink, getNetworkFromEnv} from "../utils/utils"
-import {buildJettonMinterFromEnv, buildJettonWalletFromEnv} from "../utils/jetton-helpers"
+import { getJettonHttpLink, getNetworkFromEnv } from "../utils/utils"
+import { buildJettonMinterFromEnv, buildJettonWalletFromEnv } from "../utils/jetton-helpers"
 
 // import {createInterface} from "readline/promises"
 // import { client, deployerWalletContract, network, secretKey } from "./shard.deploy"
@@ -33,7 +33,7 @@ const main = async () => {
 
     const network = getNetworkFromEnv()
 
-    const endpoint = await getHttpEndpoint({network})
+    const endpoint = await getHttpEndpoint({ network })
     const client = new TonClient({
         endpoint: endpoint,
     })
@@ -93,7 +93,7 @@ const main = async () => {
     const walletCode: Cell | null = upgradeWallet ? jettonWalletNew!.init!.code : null
 
     console.log("Upgrade selection:", upgradeMinter ? "minter" : "", upgradeWallet ? "wallet" : "")
-    
+
     // Validate built artifacts when selected for upgrade
     if (upgradeMinter && (!jettonMinterNew || !jettonMinterNew.init)) {
         throw new Error("Failed to build new minter artifact from env — cannot upgrade minter")
@@ -101,12 +101,15 @@ const main = async () => {
     if (upgradeWallet && (!jettonWalletNew || !jettonWalletNew.init)) {
         throw new Error("Failed to build new wallet artifact from env — cannot upgrade wallet")
     }
-    
+
     const msg: Upgrade = {
         $$type: "Upgrade",
-        queryId: 0n,
-        newData: null,
-        newCode: minterCode,
+        rootVersion: null,
+        walletVersion: null,
+        sender: null,
+        newRootData: null,
+        newRootCode: minterCode,
+        newWalletData: null,
         newWalletCode: walletCode,
     }
 
@@ -114,7 +117,7 @@ const main = async () => {
     console.log(`Running UPGRADE script for ${network} network and for Minter`)
     console.log(
         "🛠️Preparing new outgoing massage from deployment wallet. \n" +
-            deployerWalletContract.address,
+        deployerWalletContract.address,
     )
     console.log("Seqno: ", seqno + "\n")
     printSeparator()
@@ -132,7 +135,7 @@ const main = async () => {
     // ============================
     await jettonMinter.send(
         deployerWalletContract.sender(secretKey),
-        {value: deployAmount, bounce: true},
+        { value: deployAmount, bounce: true },
         msg,
     )
     // await deployerWalletContract.sendTransfer({

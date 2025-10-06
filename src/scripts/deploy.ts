@@ -71,17 +71,6 @@ const main = async () => {
         )
         .endCell()
 
-    // const packed_msg = beginCell()
-    //     .store(
-    //         storeInviteInternal({
-    //             $$type: "InviteInternal",
-    //             amount: supply,
-    //             sender: deployerWalletContract.address,
-    //             invitor: deployerWalletContract.address,
-    //             forwardPayload: beginCell().endCell().asSlice(),
-    //         }),
-    //     ).endCell()
-
     // send a message on new address contract to deploy it
     const seqno: number = await deployerWalletContract.getSeqno()
     console.log(`Running deploy script for ${network} network and for Shard Jetton Minter`)
