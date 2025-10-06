@@ -93,8 +93,7 @@ message(0xf8a7ea5) JettonTransfer {
 
 message(0x178d4519) JettonTransferInternal {
     queryId: Int as uint64;
-    version: Int as uint10;
-    currentCode: Cell?;
+    walletVersion: Int as uint10;
     amount: Int as coins;
     sender: Address;
     responseDestination: Address?;

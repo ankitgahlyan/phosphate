@@ -37,7 +37,7 @@ contract JettonMinterSharded {
     version: Int as uint10 = 0; // for network compatibility
     walletVersion: Int as uint10 = 0;
     tosHash: String = "";
-    mbrpAmount: Int as coins = MBRP_AMOUNT;//TODO: change from coins, add fun to change, send message to all contracts on change
+    mbrpAmount: Int as coins = MBRP_AMOUNT; //TODO: change from coins, add fun to change, send message to all contracts on change
     publicWorks: map<Address, Int as uint10>; // TODO: coupons/nft cashed out at eligible accounts
     votes: map<Address, Int as uint20>;
     crowdFund: map<Int as uint10, Int as uint10>;

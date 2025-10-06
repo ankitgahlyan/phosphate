@@ -32,9 +32,8 @@ export class ExtendedShardedJettonMinter extends JettonMinterSharded {
         totalSupply: bigint,
         owner: Address,
         jettonContent: Cell,
-        mintable: boolean,
     ) {
-        const base = await JettonMinterSharded.fromInit(totalSupply, owner, jettonContent, mintable)
+        const base = await JettonMinterSharded.fromInit(totalSupply, owner, jettonContent)
         if (base.init === undefined) {
             throw new Error("JettonMinterSharded init is not defined")
         }

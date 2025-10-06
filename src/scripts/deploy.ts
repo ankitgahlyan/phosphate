@@ -58,8 +58,7 @@ const main = async () => {
                 mintMessage: {
                     $$type: "JettonTransferInternal",
                     amount: supply,
-                    version: 0n,
-                    currentCode: null,
+                    walletVersion: 0n,
                     sender: deployerWalletContract.address,
                     responseDestination: deployerWalletContract.address,
                     queryId: 0n,
