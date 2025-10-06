@@ -589,7 +589,8 @@ reqUpgrade
 claimTon
 
 
-
+VARIABLES:
+txn fees, MBRP_AMOUNT, WAIT_CLOSURE, insurance payout, stake for applyGrant
 
 
 

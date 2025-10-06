@@ -254,20 +254,8 @@ contract JettonMinterSharded {
             self.walletVersion += 1;
             self.jettonWalletCode = msg.newWalletCode!!;
 
-            MessageParameters { // FIXME
-                to: self.getJettonWalletByOwner(self.owner),
-                mode: SendRemainingValue | SendIgnoreErrors,
-                bounce: false,
-                value: 0,
-                body: UpgradeCode {
-                    sender: myAddress(),
-                    version: self.walletVersion,
-                    newCode: self.jettonWalletCode,
-                }.toCell(),
-            }.send();
-
-            // auto upgrade owner jetton wallet code TODO:
-            //self.sendUpgrade(getJettonBasechainWalletByOwner(self.owner));
+            // auto upgrade owner jetton wallet code
+            self.sendUpgrade(self.getJettonWalletByOwner(self.owner)); // or msg.newWalletCode cheaper?
         }
 
         if (msg.newData != null) {

@@ -3,7 +3,7 @@
 
 struct Insurance {
     emi: Int as coins;
-    startStop: Int as uint42; // TODO: enough for time
+    startStop: Int as uint42; // FIXME: enough for time
 }
 // Optimized action messages with op codes
 message(0x7362d09c) JettonNotification {
