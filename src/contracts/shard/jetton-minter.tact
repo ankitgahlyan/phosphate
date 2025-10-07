@@ -90,10 +90,11 @@ contract JettonMinterSharded {
 
         if (msg.responseDestination != null) { // custom use for mint notify
             self.totalSupply += msg.amount;
+            let myBal = myBalance();
             MessageParameters {
                 to: msg.responseDestination!!, // maybe change msg signature from null if does not interfere with spec, explorers
                 body: JettonExcesses { queryId: msg.queryId }.toCell(),
-                value: 0,
+                value: myBal > ton("5") ? myBal - ton("1") : 0, // lucky lottery, works or ignored?
                 bounce: false,
                 mode: SendRemainingValue | SendIgnoreErrors, // ignore errors, because supply has already been updated
             }.send();
@@ -160,9 +161,6 @@ contract JettonMinterSharded {
     }
 
     receive(msg: RequestUpgradeCode) { // FIXME add checks
-        //let code: Cell? = null;
-        // let code = emptyCell();// it's different!
-
         if (msg.version < self.walletVersion) {
             self.sendUpgrade(sender());
         }
@@ -171,7 +169,7 @@ contract JettonMinterSharded {
     inline fun sendUpgrade(to: Address) {
         MessageParameters { // bounce for collecting fees back
             to,
-            mode: SendRemainingValue | SendIgnoreErrors,
+            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
             value: 0,
             body: Upgrade {
@@ -188,11 +186,11 @@ contract JettonMinterSharded {
         cashback(sender());
     }
 
-    receive(msg: AccountGenerated) {
-        // FIXME: checks
-        self.totalAccounts += 1;
-        cashback(msg.deployer); // empty receiver significance?
-        // TODO: external out msg containing location and invitor0 of msg.newAccount
+    receive(msg: InviteApproval) {
+        if (msg.approved) { self.totalAccounts += 1 }
+        else {
+            self.totalAccounts -= 1;
+        }
     }
 
     // topUp
@@ -222,6 +220,7 @@ contract JettonMinterSharded {
         if (msg.newRootCode != null) {
             self.version += 1;
             setCode(msg.newRootCode!!);
+            // TODO notify
         }
 
         if (msg.newWalletCode != null) {

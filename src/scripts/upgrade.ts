@@ -72,7 +72,7 @@ const main = async () => {
     const jettonWalletNew = await buildJettonWalletFromEnv(deployerWalletContract.address, minterAddress)
 
     // const wallet = client.open(JettonWalletSharded.fromAddress(walletAddress))
-    const deployAmount = toNano("0.2")
+    const deployAmount = toNano("2")
 
     // Ask user which contract(s) to upgrade
     const { createInterface } = await import("readline/promises")

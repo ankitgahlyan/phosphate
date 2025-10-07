@@ -341,7 +341,8 @@ message(0x43) CitizenAdded {
 
 message(0x44) InviteApproval {
     approved: Bool; // = true;// need default? 
-    sender: Address;
+    invitor: Address;
+    invitee: Address;
     approver: Address;
 }
 
