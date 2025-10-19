@@ -1,17 +1,10 @@
-//  SPDX-License-Identifier: MIT
-//  Copyright © 2023 @howardpen9 @0kenx
-//  Based on https://github.com/howardpen9/jetton-implementation-in-tact/blob/d996d51c59e672aa9eabb028869e0e4d6135a8cb/sources/utils/jetton-helpers.ts
-//  Modified by TON Studio
-
 import { Sha256 } from "@aws-crypto/sha256-js"
 import { Dictionary, beginCell, Cell, Address } from "@ton/core"
 import { TonClient } from "@ton/ton"
 import chalk from "chalk"
-// import {JettonMinter} from "../output/Jetton_JettonMinter"
-// import {GovernanceJettonMinter} from "../output/Governance_GovernanceJettonMinter"
-// import {JettonMinterFeatureRich} from "../output/FeatureRich_JettonMinterFeatureRich"
-import { JettonMinterSharded } from "../output/Root_JettonMinterSharded"
-import { JettonWalletSharded } from "../output/Root_JettonWalletSharded"
+import { JettonMinterSharded } from '../../build/root/Root_JettonMinterSharded';
+import { JettonWalletSharded as JettonWalletOnly} from "../../build/wallet/Wallet_JettonWalletSharded"
+import { JettonWalletSharded } from "../../build/root/Root_JettonWalletSharded";
 
 const ONCHAIN_CONTENT_PREFIX = 0x00
 const SNAKE_PREFIX = 0x00
@@ -163,4 +156,7 @@ export async function buildJettonWalletFromAddress(deployerAddress: Address) {
 
 export async function buildJettonWalletFromEnv(deployerAddress: Address, minterAddress: Address) {// FIXME: for upgrades only
     return await JettonWalletSharded.fromInit(deployerAddress, minterAddress, 0n)
+}
+export async function buildJettonWalletOnlyFromEnv(deployerAddress: Address, minterAddress: Address) {// FIXME: for upgrades only
+    return await JettonWalletOnly.fromInit(deployerAddress, minterAddress, 0n)
 }

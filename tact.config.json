@@ -4,7 +4,7 @@
         {
             "name": "Root",
             "path": "./src/contracts/shard/jetton-minter.tact",
-            "output": "./src/output",
+            "output": "./build/root",
             "mode": "full",
             "options": {
                 "external": false,
@@ -26,7 +26,7 @@
         {
             "name": "Wallet",
             "path": "./src/contracts/shard/jetton-wallet.tact",
-            "output": "./src/output",
+            "output": "./build/wallet",
             "mode": "full",
             "options": {
                 "external": false,

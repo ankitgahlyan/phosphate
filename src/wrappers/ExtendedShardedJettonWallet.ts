@@ -7,10 +7,10 @@ import {
     JettonWalletSharded,
     walletStateInitBits,
     walletStateInitCells,
-} from "../output/Root_JettonWalletSharded"
+} from "../../build/root/Root_JettonWalletSharded"
 
 import {Address, Builder, Cell, ContractProvider, Sender, toNano} from "@ton/core"
-import {JettonBurn, ProvideWalletBalance} from "../output/Root_JettonMinterSharded"
+import {JettonBurn, ProvideWalletBalance} from "../../build/root/Root_JettonMinterSharded"
 
 export class ExtendedShardedJettonWallet extends JettonWalletSharded {
     constructor(address: Address, init?: {code: Cell; data: Cell}) {

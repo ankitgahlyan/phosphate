@@ -34,6 +34,7 @@ contract JettonMinterSharded {
     jettonContent: Cell;
     jettonWalletCode: Cell;
     jettonWalletInitialCode: Cell;
+    mintable: Bool = true;
     version: Int as uint10 = 0; // for network compatibility
     walletVersion: Int as uint10 = 0;
     tosHash: String = "";
@@ -107,7 +108,8 @@ contract JettonMinterSharded {
     // however minting is possible only to basechain addresses
     // it is asserted inside the deploy function
     receive(msg: Mint) {
-        throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
+        throwUnless(INCORRECT_SENDER, sender() == self.owner || self.mintable); // FIXME v5 testnet workaround
+        throwUnless(MINT_CLOSED, self.mintable);
         throwUnless(WRONG_WORKCHAIN, parseStdAddress(msg.receiver.asSlice()).workchain == 0); // Wrong workchain
 
         // No need to check the opcode here, as Tact will check it automatically
@@ -130,7 +132,7 @@ contract JettonMinterSharded {
 
         self.totalSupply += msg.mintMessage.amount; // + ton("1000"); // invitation by minter
         self.totalAccounts += 1; // only mints to owner just once
-
+        self.mintable = false;
         // basechain destination is calculated inside deploy function
         DeployParameters {
             value: 0, // ignore msg.tonAmount and use SendMode 64 instead
@@ -155,7 +157,7 @@ contract JettonMinterSharded {
     receive(msg: JettonUpdateContent) { // metadata update and wallet code upgrade
         throwUnless(INCORRECT_SENDER, sender() == self.owner); // incorrect sender
         self.jettonContent = msg.content;
-        // self.version = + 1;// noNeed 2 change version
+        self.version = + 1;
 
         cashback(sender());
     }
@@ -169,7 +171,7 @@ contract JettonMinterSharded {
     inline fun sendUpgrade(to: Address) {
         MessageParameters { // bounce for collecting fees back
             to,
-            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
+            mode: SendRemainingValue | SendIgnoreErrors,
             bounce: false,
             value: 0,
             body: Upgrade {
@@ -187,10 +189,24 @@ contract JettonMinterSharded {
     }
 
     receive(msg: InviteApproval) {
-        if (msg.approved) { self.totalAccounts += 1 }
-        else {
+        if (msg.approved) {
+            // if ( self.mintable && self.totalAccounts > ton("1")) {
+            //     self.mintable = false;
+            //     MessageParameters {
+            //         to: self.owner,
+            //         value: 0,
+            //         mode: SendPayFwdFeesSeparately,
+            //         body: StopEngageMint {sender: self.owner}.toCell(),
+            //     }
+            // }
+            self.totalAccounts += 1;
+        } else {
             self.totalAccounts -= 1;
         }
+    }
+
+    receive(msg: MintNotify) {
+        self.totalSupply += msg.amount; // FIXME: checks
     }
 
     // topUp
@@ -252,7 +268,7 @@ contract JettonMinterSharded {
     get fun get_jetton_data(): JettonMinterState { // don't touch it or explorers won't recognise as minter
         return JettonMinterState {
             totalSupply: self.totalSupply,
-            mintable: true, // for explorers
+            mintable: self.mintable, // for explorers
             adminAddress: self.owner,
             jettonContent: self.jettonContent,
             jettonWalletCode: self.jettonWalletCode,

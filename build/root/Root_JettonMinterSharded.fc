@@ -1,0 +1,1087 @@
+#pragma version =0.4.6;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+;; Root_JettonMinterSharded.headers.fc
+;;
+;; Header files for JettonMinterSharded
+;; NOTE: declarations are sorted for optimal order
+;;
+
+;; __tact_store_address_opt
+builder __tact_store_address_opt(builder b, slice address) inline;
+
+;; __tact_not_null
+forall X -> X __tact_not_null(X x) impure inline;
+
+;; __tact_context_get
+(int, slice, int, slice) __tact_context_get() inline;
+
+;; __tact_context_get_sender
+slice __tact_context_get_sender() inline;
+
+;; __tact_dict_set_slice_uint
+(cell, ()) __tact_dict_set_slice_uint(cell d, int kl, slice k, int v, int vl) inline;
+
+;; $JettonTransferInternal$_store
+builder $JettonTransferInternal$_store(builder build_0, (int, int, int, slice, slice, int, slice) v) inline;
+
+;; $JettonTransferInternal$_store_cell
+cell $JettonTransferInternal$_store_cell((int, int, int, slice, slice, int, slice) v, builder b) inline;
+
+;; $JettonTransferInternal$_load
+(slice, ((int, int, int, slice, slice, int, slice))) $JettonTransferInternal$_load(slice sc_0) impure inline;
+
+;; $JettonTransferInternal$_load_bounced
+(slice, ((int, int, int))) $JettonTransferInternal$_load_bounced(slice sc_0) inline;
+
+;; $JettonExcesses$_store
+builder $JettonExcesses$_store(builder build_0, (int) v) inline;
+
+;; $JettonExcesses$_store_cell
+cell $JettonExcesses$_store_cell((int) v, builder b) inline;
+
+;; $Upgrade$_store
+builder $Upgrade$_store(builder build_0, (int, int, slice, cell, cell, cell, cell) v) inline;
+
+;; $Upgrade$_store_cell
+cell $Upgrade$_store_cell((int, int, slice, cell, cell, cell, cell) v, builder b) inline;
+
+;; $JettonMinterSharded$_store
+builder $JettonMinterSharded$_store(builder build_0, (int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) v) inline;
+
+;; $JettonMinterSharded$_load
+(slice, ((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell))) $JettonMinterSharded$_load(slice sc_0) inline;
+
+;; $StdAddress$_get_workchain
+_ $StdAddress$_get_workchain((int, int) v) inline;
+
+;; $JettonMinterState$_to_external
+(int, int, slice, cell, cell) $JettonMinterState$_to_external(((int, int, slice, cell, cell)) v) inline;
+
+;; $JettonMinterSharded$_to_external
+(int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $JettonMinterSharded$_to_external(((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell)) v) inline;
+
+;; $JettonWalletSharded$init$_store
+builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v) inline;
+
+;; $JettonMinterSharded$init$_load
+(slice, ((int, slice, cell))) $JettonMinterSharded$init$_load(slice sc_0) inline;
+
+;; $JettonWalletSharded$_code_child
+cell $JettonWalletSharded$_code_child() inline;
+
+;; $JettonMinterSharded$_contract_init
+(int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $JettonMinterSharded$_contract_init(int $totalSupply, slice $owner, cell $jettonContent) impure inline;
+
+;; $JettonMinterSharded$_contract_load
+(int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $JettonMinterSharded$_contract_load() impure inline;
+
+;; $JettonMinterSharded$_contract_store
+() $JettonMinterSharded$_contract_store((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) v) impure inline;
+
+;; $BasechainAddress$_constructor_hash
+((int)) $BasechainAddress$_constructor_hash(int $hash) inline;
+
+;; $global_emptyBasechainAddress
+(int) $global_emptyBasechainAddress() impure inline;
+
+;; $Builder$_fun_storeBasechainAddress
+builder $Builder$_fun_storeBasechainAddress(builder $self, (int) $address) impure inline;
+
+;; $global_makeTakeWalletAddressMsg
+cell $global_makeTakeWalletAddressMsg((int) $targetJettonWallet, (int, slice, int) $msg) impure inline;
+
+;; $global_changeShard
+int $global_changeShard(int $hash, int $shard) impure inline;
+
+;; $Builder$_fun_asSlice
+slice $Builder$_fun_asSlice(builder $self) impure inline;
+
+;; $Builder$_fun_storeShardedStateInit
+builder $Builder$_fun_storeShardedStateInit(builder $self, (cell, cell) $init) impure inline;
+
+;; $Slice$_fun_asCell
+cell $Slice$_fun_asCell(slice $self) impure inline;
+
+;; $Address$_fun_getShard
+int $Address$_fun_getShard(slice $self) impure inline;
+
+;; $MessageParameters$_fun_send
+() $MessageParameters$_fun_send((int, cell, int, slice, int) $self) impure inline;
+
+;; $ShardDeployParameters$_constructor_shard_deployParameters
+(((int, cell, int, int, (cell, cell)), int)) $ShardDeployParameters$_constructor_shard_deployParameters(int $shard, (int, cell, int, int, (cell, cell)) $deployParameters) inline;
+
+;; $DeployParameters$_fun_toShard
+((int, cell, int, int, (cell, cell)), int) $DeployParameters$_fun_toShard((int, cell, int, int, (cell, cell)) $self, int $shard) impure inline;
+
+;; $ShardDeployParameters$_fun_send
+() $ShardDeployParameters$_fun_send(((int, cell, int, int, (cell, cell)), int) $self) impure inline;
+
+;; $JettonWalletSharded$_init_child
+(cell, cell) $JettonWalletSharded$_init_child(slice $owner, slice $minter, int $balance) inline;
+
+;; $DeployParameters$_constructor_value_mode_body_init
+((int, cell, int, int, (cell, cell))) $DeployParameters$_constructor_value_mode_body_init(int $value, int $mode, cell $body, (cell, cell) $init) inline;
+
+;; $Upgrade$_constructor_sender_walletVersion_newWalletCode
+((int, int, slice, cell, cell, cell, cell)) $Upgrade$_constructor_sender_walletVersion_newWalletCode(slice $sender, int $walletVersion, cell $newWalletCode) inline;
+
+;; $StateInit$_constructor_code_data
+((cell, cell)) $StateInit$_constructor_code_data(cell $code, cell $data) inline;
+
+;; $MessageParameters$_constructor_to_mode_bounce_value_body
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_mode_bounce_value_body(slice $to, int $mode, int $bounce, int $value, cell $body) inline;
+
+;; $JettonMinterSharded$_fun_sendUpgrade
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), ()) $JettonMinterSharded$_fun_sendUpgrade((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $to) impure inline;
+
+;; $JettonMinterSharded$_fun_state
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell)) $JettonMinterSharded$_fun_state((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self) impure inline;
+
+;; $JettonMinterState$_constructor_totalSupply_mintable_adminAddress_jettonContent_jettonWalletCode
+((int, int, slice, cell, cell)) $JettonMinterState$_constructor_totalSupply_mintable_adminAddress_jettonContent_jettonWalletCode(int $totalSupply, int $mintable, slice $adminAddress, cell $jettonContent, cell $jettonWalletCode) inline;
+
+;; $JettonMinterSharded$_fun_get_jetton_data
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (int, int, slice, cell, cell)) $JettonMinterSharded$_fun_get_jetton_data((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self) impure inline;
+
+;; $JettonMinterSharded$_fun_getInit
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (cell, cell)) $JettonMinterSharded$_fun_getInit((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $address) impure inline;
+
+;; $JettonMinterSharded$_fun_getJettonWalletInit
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), cell) $JettonMinterSharded$_fun_getJettonWalletInit((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $address) impure inline;
+
+;; $JettonMinterSharded$_fun_getJettonWalletByOwner
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), slice) $JettonMinterSharded$_fun_getJettonWalletByOwner((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $jettonWalletOwner) impure inline;
+
+;; $JettonMinterSharded$_fun_get_wallet_address
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), slice) $JettonMinterSharded$_fun_get_wallet_address((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $ownerAddress) impure inline;
+
+;; $JettonMinterSharded$_fun_getJettonBasechainWalletByOwner
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (int)) $JettonMinterSharded$_fun_getJettonBasechainWalletByOwner((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $jettonWalletOwner) impure inline;
+
+;; $MessageParameters$_constructor_body_to_value_mode
+((int, cell, int, slice, int)) $MessageParameters$_constructor_body_to_value_mode(cell $body, slice $to, int $value, int $mode) inline;
+
+;; $MessageParameters$_constructor_to_body_value_bounce_mode
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_body_value_bounce_mode(slice $to, cell $body, int $value, int $bounce, int $mode) inline;
+
+;; $JettonExcesses$_constructor_queryId
+((int)) $JettonExcesses$_constructor_queryId(int $queryId) inline;
+
+;; $MessageParameters$_constructor_to_value_mode
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
+
+
+;; Root_JettonMinterSharded.stdlib.fc
+global (int, slice, int, slice) __tact_context;
+global slice __tact_context_sender;
+global cell __tact_child_contract_codes;
+global int __tact_randomized;
+
+(slice, slice) __tact_load_address_opt(slice cs) asm """
+
+            b{00} SDBEGINSQ
+            IF:<{
+              PUSHNULL
+            }>ELSE<{
+              LDMSGADDR
+              SWAP
+            }>
+
+""";
+
+builder __tact_store_addr_none(builder b) asm "b{00} STSLICECONST";
+
+builder __tact_store_address_opt(builder b, slice address) inline {
+    if (null?(address)) {
+        return __tact_store_addr_none(b);
+    } else {
+        return b.store_slice(address);
+    }
+}
+
+forall X -> X __tact_not_null(X x) impure inline {
+    throw_if(128, null?(x)); return x;
+}
+
+(cell, int) __tact_dict_delete(cell dict, int key_len, slice index) asm(index dict key_len) """
+    DICTDEL
+""";
+
+(int, slice, int, slice) __tact_context_get() inline {
+    return __tact_context;
+}
+
+slice __tact_context_get_sender() inline {
+    return __tact_context_sender;
+}
+
+(cell, ()) __tact_dict_set_slice_uint(cell d, int kl, slice k, int v, int vl) inline {
+    if (null?(v)) {
+        var (r, ok) = __tact_dict_delete(d, kl, k);
+        return (r, ());
+    } else {
+        return (dict_set_builder(d, kl, k, begin_cell().store_uint(v, vl)), ());
+    }
+}
+
+builder $global_beginCell() impure asm """
+    NEWC
+""";
+
+slice $global_myAddress() impure asm """
+    MYADDR
+""";
+
+int $global_myBalance() impure asm """
+    BALANCE FIRST
+""";
+
+int $global_getComputeFee(int $gasUsed, int $isMasterchain) impure asm """
+    GETGASFEE
+""";
+
+int $global_getForwardFee(int $cells, int $bits, int $isMasterchain) impure asm """
+    GETFORWARDFEE
+""";
+
+() $global_nativeReserve(int $amount, int $mode) impure asm """
+    RAWRESERVE
+""";
+
+() $global_message((int, cell, int, slice, int) $params) impure asm """
+    NEWC
+    b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+    1 STI               // store `bounce`
+    b{000} STSLICECONST // store bounced = false and src = addr_none
+    STSLICE             // store `to`
+    SWAP
+    STGRAMS             // store `value`
+    106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+    STZEROES
+    // → Stack state
+    // s0: Builder
+    // s1: `body`
+    // s2: `mode`
+    STDICT
+    ENDC
+    SWAP
+    SENDRAWMSG
+""";
+
+() $global_cashback(slice $to) impure asm """
+    NEWC
+    x{42_} STSLICECONST // .storeUint(0x10, 6)
+    STSLICE          // .storeAddress(to)
+    0 PUSHINT        // 0
+    111 STUR         // .storeUint(0, 111)
+                     // 4 zeros for coins and 107 zeros for lt, fees, etc.
+    ENDC
+    66 PUSHINT       // SendRemainingValue | SendIgnoreErrors
+    SENDRAWMSG
+""";
+
+() $global_sendRawMessage(cell $msg, int $mode) impure asm """
+    SENDRAWMSG
+""";
+
+(int, int) $global_parseStdAddress(slice $slice) impure asm """
+    REWRITESTDADDR
+""";
+
+(int) $global_emptyBasechainAddress() impure inline {
+    return $BasechainAddress$_constructor_hash(null());
+}
+
+cell $Builder$_fun_endCell(builder $self) impure asm """
+    ENDC
+""";
+
+builder $Builder$_fun_storeMaybeRef(cell $cell, builder $self) impure asm """
+    STOPTREF
+""";
+
+builder $Builder$_fun_storeAddress(builder $self, slice $address) impure asm """
+    STSLICER
+""";
+
+builder $Builder$_fun_storeBasechainAddress(builder $self, (int) $address) impure inline {
+    var ($self) = $self;
+    var (($address'hash)) = $address;
+    if (null?($address'hash)) {
+        return store_uint($self, 0, 2);
+    }
+    return store_uint(store_uint($self, 1024, 11), __tact_not_null($address'hash), 256);
+}
+
+builder $Builder$_fun_storeBool(int $value, builder $self) impure asm """
+    1 STI
+""";
+
+builder $Builder$_fun_storeCoins(builder $self, int $value) impure asm """
+    STVARUINT16
+""";
+
+builder $Builder$_fun_storeRef(cell $cell, builder $self) impure asm """
+    STREF
+""";
+
+builder $Builder$_fun_storeSlice(builder $self, slice $slice) impure asm """
+    STSLICER
+""";
+
+slice $Cell$_fun_beginParse(cell $self) impure asm """
+    CTOS
+""";
+
+slice $Builder$_fun_asSlice(builder $self) impure inline {
+    var ($self) = $self;
+    return $Cell$_fun_beginParse($Builder$_fun_endCell($self));
+}
+
+(slice, ()) $Slice$_fun_skipBits(slice $self, int $l) impure asm """
+    SDSKIPFIRST
+""";
+
+cell $Slice$_fun_asCell(slice $self) impure inline {
+    var ($self) = $self;
+    return $Builder$_fun_endCell($Builder$_fun_storeSlice($global_beginCell(), $self));
+}
+
+(slice, slice) $Slice$_fun_loadAddress(slice $self) impure asm( -> 1 0) """
+    LDMSGADDR
+""";
+
+int $Cell$_fun_hash(cell $self) impure asm """
+    HASHCU
+""";
+
+slice $Address$_fun_asSlice(slice $self) impure asm "NOP";
+
+int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure asm """
+    LDMSGADDR   // load dest:MsgAddressInt
+    LDGRAMS     // load value:CurrencyCollection
+    ONE
+    SDSKIPFIRST // skip extra currency collection
+    LDGRAMS     // load ihr_fee
+    LDGRAMS     // load fwd_fee, we'll be using this!
+    DROP        // drop remaining Slice (with created_lt and created_at)
+
+    // There are 7 entries on the stack — first 3 fields of Context plus 4 loaded ones.
+    // The topmost is fwd_fee, which is the only one we're after, so let's drop 6 entries below:
+    6 1 BLKDROP2 // drop the loaded values as well as the first 3 fields of Context
+
+    ZERO              // not masterchain
+    GETORIGINALFWDFEE // floor(fwd_fee * 2^16 / (2^16 - first_frac)), where
+                      // first_frac is a value listed in config param 25
+                      // of the blockchain: https://tonviewer.com/config#25
+                      // this instruction effectively multiplies the fwd_fee by 1.5,
+                      // at least for the current value of first_frac, which is 21845
+""";
+
+;; Root_JettonMinterSharded.constants.fc
+;; String ""
+slice __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7() asm """
+    B{b5ee9c724101010100020000004cacb9cd} B>boc <s PUSHSLICE
+""";
+
+;; Root_JettonMinterSharded.storage.fc
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_constructor_code_data(cell $code, cell $data) inline {
+    return ($code, $data);
+}
+
+;;
+;; Type: MessageParameters
+;; TLB: _ mode:int257 body:Maybe ^cell value:int257 to:address bounce:bool = MessageParameters
+;;
+
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_mode_bounce_value_body(slice $to, int $mode, int $bounce, int $value, cell $body) inline {
+    return ($mode, $body, $value, $to, $bounce);
+}
+
+((int, cell, int, slice, int)) $MessageParameters$_constructor_body_to_value_mode(cell $body, slice $to, int $value, int $mode) inline {
+    return ($mode, $body, $value, $to, true);
+}
+
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_body_value_bounce_mode(slice $to, cell $body, int $value, int $bounce, int $mode) inline {
+    return ($mode, $body, $value, $to, $bounce);
+}
+
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline {
+    return ($mode, null(), $value, $to, true);
+}
+
+;;
+;; Type: DeployParameters
+;; TLB: _ mode:int257 body:Maybe ^cell value:int257 bounce:bool init:StateInit{code:^cell,data:^cell} = DeployParameters
+;;
+
+((int, cell, int, int, (cell, cell))) $DeployParameters$_constructor_value_mode_body_init(int $value, int $mode, cell $body, (cell, cell) $init) inline {
+    return ($mode, $body, $value, true, $init);
+}
+
+;;
+;; Type: StdAddress
+;; TLB: _ workchain:int8 address:uint256 = StdAddress
+;;
+
+_ $StdAddress$_get_workchain((int, int) v) inline {
+    var (v'workchain, v'address) = v;
+    return v'workchain;
+}
+
+;;
+;; Type: BasechainAddress
+;; TLB: _ hash:Maybe int257 = BasechainAddress
+;;
+
+((int)) $BasechainAddress$_constructor_hash(int $hash) inline {
+    return ($hash);
+}
+
+;;
+;; Type: JettonTransferInternal
+;; Header: 0x178d4519
+;; TLB: jetton_transfer_internal#178d4519 queryId:uint64 walletVersion:uint10 amount:coins sender:address responseDestination:address forwardTonAmount:coins forwardPayload:remainder<slice> = JettonTransferInternal
+;;
+
+builder $JettonTransferInternal$_store(builder build_0, (int, int, int, slice, slice, int, slice) v) inline {
+    var (v'queryId, v'walletVersion, v'amount, v'sender, v'responseDestination, v'forwardTonAmount, v'forwardPayload) = v;
+    build_0 = store_uint(build_0, 395134233, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    build_0 = build_0.store_uint(v'walletVersion, 10);
+    build_0 = build_0.store_varuint16(v'amount);
+    build_0 = build_0.store_slice(v'sender);
+    build_0 = __tact_store_address_opt(build_0, v'responseDestination);
+    build_0 = build_0.store_varuint16(v'forwardTonAmount);
+    build_0 = build_0.store_slice(v'forwardPayload);
+    return build_0;
+}
+
+cell $JettonTransferInternal$_store_cell((int, int, int, slice, slice, int, slice) v, builder b) inline {
+    return $JettonTransferInternal$_store(b, v).end_cell();
+}
+
+(slice, ((int, int, int, slice, slice, int, slice))) $JettonTransferInternal$_load(slice sc_0) impure inline {
+    throw_unless(129, sc_0~load_uint(32) == 395134233);
+    var v'queryId = sc_0~load_uint(64);
+    var v'walletVersion = sc_0~load_uint(10);
+    var v'amount = sc_0~load_varuint16();
+    var v'sender = sc_0~load_msg_addr();
+    var v'responseDestination = sc_0~__tact_load_address_opt();
+    var v'forwardTonAmount = sc_0~load_varuint16();
+    var v'forwardPayload = sc_0;
+    return (sc_0, (v'queryId, v'walletVersion, v'amount, v'sender, v'responseDestination, v'forwardTonAmount, v'forwardPayload));
+}
+
+(slice, ((int, int, int))) $JettonTransferInternal$_load_bounced(slice sc_0) inline {
+    var v'queryId = sc_0~load_uint(64);
+    var v'walletVersion = sc_0~load_uint(10);
+    var v'amount = sc_0~load_varuint16();
+    return (sc_0, (v'queryId, v'walletVersion, v'amount));
+}
+
+;;
+;; Type: JettonExcesses
+;; Header: 0xd53276db
+;; TLB: jetton_excesses#d53276db queryId:uint64 = JettonExcesses
+;;
+
+builder $JettonExcesses$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 3576854235, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $JettonExcesses$_store_cell((int) v, builder b) inline {
+    return $JettonExcesses$_store(b, v).end_cell();
+}
+
+((int)) $JettonExcesses$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: Upgrade
+;; Header: 0x2508d66a
+;; TLB: upgrade#2508d66a rootVersion:Maybe uint10 walletVersion:Maybe uint10 sender:address newRootData:Maybe ^cell newRootCode:Maybe ^cell newWalletData:Maybe ^cell newWalletCode:Maybe ^cell = Upgrade
+;;
+
+builder $Upgrade$_store(builder build_0, (int, int, slice, cell, cell, cell, cell) v) inline {
+    var (v'rootVersion, v'walletVersion, v'sender, v'newRootData, v'newRootCode, v'newWalletData, v'newWalletCode) = v;
+    build_0 = store_uint(build_0, 621336170, 32);
+    build_0 = ~ null?(v'rootVersion) ? build_0.store_int(true, 1).store_uint(v'rootVersion, 10) : build_0.store_int(false, 1);
+    build_0 = ~ null?(v'walletVersion) ? build_0.store_int(true, 1).store_uint(v'walletVersion, 10) : build_0.store_int(false, 1);
+    build_0 = __tact_store_address_opt(build_0, v'sender);
+    build_0 = build_0.store_maybe_ref(v'newRootData);
+    build_0 = build_0.store_maybe_ref(v'newRootCode);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_maybe_ref(v'newWalletData);
+    build_1 = build_1.store_maybe_ref(v'newWalletCode);
+    build_0 = store_builder_ref(build_0, build_1);
+    return build_0;
+}
+
+cell $Upgrade$_store_cell((int, int, slice, cell, cell, cell, cell) v, builder b) inline {
+    return $Upgrade$_store(b, v).end_cell();
+}
+
+((int, int, slice, cell, cell, cell, cell)) $Upgrade$_constructor_sender_walletVersion_newWalletCode(slice $sender, int $walletVersion, cell $newWalletCode) inline {
+    return (null(), $walletVersion, $sender, null(), null(), null(), $newWalletCode);
+}
+
+;;
+;; Type: ShardDeployParameters
+;; TLB: _ deployParameters:DeployParameters{mode:int257,body:Maybe ^cell,value:int257,bounce:bool,init:StateInit{code:^cell,data:^cell}} shard:uint8 = ShardDeployParameters
+;;
+
+(((int, cell, int, int, (cell, cell)), int)) $ShardDeployParameters$_constructor_shard_deployParameters(int $shard, (int, cell, int, int, (cell, cell)) $deployParameters) inline {
+    return ($deployParameters, $shard);
+}
+
+;;
+;; Type: JettonMinterState
+;; TLB: _ totalSupply:coins mintable:bool adminAddress:address jettonContent:^cell jettonWalletCode:^cell = JettonMinterState
+;;
+
+(int, int, slice, cell, cell) $JettonMinterState$_to_external(((int, int, slice, cell, cell)) v) inline {
+    var (v'totalSupply, v'mintable, v'adminAddress, v'jettonContent, v'jettonWalletCode) = v; 
+    return (v'totalSupply, v'mintable, v'adminAddress, v'jettonContent, v'jettonWalletCode);
+}
+
+((int, int, slice, cell, cell)) $JettonMinterState$_constructor_totalSupply_mintable_adminAddress_jettonContent_jettonWalletCode(int $totalSupply, int $mintable, slice $adminAddress, cell $jettonContent, cell $jettonWalletCode) inline {
+    return ($totalSupply, $mintable, $adminAddress, $jettonContent, $jettonWalletCode);
+}
+
+;;
+;; Type: JettonWalletSharded
+;; TLB: _ owner:address ownerAfterRecovery:address minter:address nominee:address invitor:address invitor0:address balance:coins turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded
+;;
+
+builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v) inline {
+    var (v'owner, v'minter, v'balance) = v;
+    build_0 = build_0.store_slice(v'owner);
+    build_0 = build_0.store_slice(v'minter);
+    build_0 = build_0.store_varuint16(v'balance);
+    return build_0;
+}
+
+cell $JettonWalletSharded$_child_get_code() impure asm """
+    B{b5ee9c720202014500010000838300000114ff00f4a413f4bcf2c80b000102016200020003047ed0eda2edfb01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e8dfa40fa40fa00552003d158db3ce30d1124e302705623d74920c21f01400141000400050201200135013604b811228020d7217021d749c21f9430d31f01de20c0448fc1303605d200013120b301e30f09c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54e020c034000600070133000803fee30021c00001c121b08ef3305722112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551de0001e001f002001fc112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a10791068000901fe112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a1079106807000a02fe8efc30fa000131aa00111581010b245617206e953059f4593098c801fa024133f441e201111b011115a007a4112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b07111c071119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113e00012000b0122517210571046415504038218e8d4a5100000b901ae104610354403028218e8d4a510008ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c09a400d1045c20c0078e9b30fa0001315333111681010bf45930111501112301112456245624e020c031e30220c017e30220c005000c000d000e000f01fc20c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be20211110281010b0201112501001001fa30fa000131230111150181010b015616206e953059f4593098c801fa024133f441e201111b011114a007a4112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b07111c071119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113001201fe5b522e81010bf4593007a5112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e107f10ce10bd0013041ee30220c008e30220c009e30220c035001400150016001701f81124206e953059f4593098c801fa024133f441e207a5112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100011019a071111070e11100e10df10ce10bd10ac109b108a0910685515c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54013301ca1112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a0910681057104610354403c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed540133017e10ac109b108a0910685515c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54013301fe30fa0001311e81010b5242206e953059f4593098c801fa024133f441e207a4112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113111211141112111111131111001801fe30fa00d20059303101111b01a0112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111c1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac001d01fc30fa00013101111b01a0112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111c1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b001903fc8ef15b112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551de0208210178d4519bae302001f001a001b01a61110111211100f11110f0e11100e107f10ce10bd10ac109b108a0910685515c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed5401330184108a107910681057104610354430c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54013301f830d33fd309fa0055206c312082103b9aca00be9701111b01a0111a9130e25620c8cf8508ce70cf0b6ec98042fb00112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611140038011e82107bdd97debae3025f0f5f0f5f06001c01fcd33ffa00596c2101111b01a0112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111c1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac001d0188109b108a107910681057104610354430c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54013304fe315623d70b1f2082100f8a7ea5ba8fe75b11228020d721d33ffa00fa40d72c01916d93fa4001e201f404fa00f842205629c705f2e2bc2d917f982682103b9aca00b9e2f2e2be25fa4430f2d08a21f404016e913091d1e22682103b9aca00bee30f7080506d220511290527050411290403112b031128c8e0208210178d451900210022002300240168c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54013302fec0008ea91122f90182f0535d44514554aee036c09a39063fe878ca30a50cb9b5f8f6f1ec24f13e3169e9bae302925722e2112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611140037003802fe343a5bf823225624c705b3e303112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a11191125111911181124111811171123111711161125111611151124111511141123111411131125111311121124111211111123111111101125111000250026044c26821005f5e100bae3022682100bebc200bae30226821011e1a300bae30226821017d78400ba0039003a003b003c01f655608210178d45195008cb1f16cb3f14cb0958fa02ce01206e9430cf84809201cee201fa02cec9112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a1119111811191118111711181117111611171116111511161115111411151114002c0420bae30220c001e30220c044e30220c034002f00300031003201fe323336112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df002700e40f11240f0e11230e0d11250d0c11240c0b11230b0a11250a09112409081123080711250706112406050411250403112403020111260111275624f82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b029c10ce10bd10ac109b108a107910681057104610351024db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310028013301f020718064a986112311251123112211241122112111251121112011241120111f1125111f111e1124111e111d1125111d111c1124111c111b1125111b111a1124111a111911251119111811241118111711251117111611241116111511251115111411241114111311251113111211241112111111251111002901fe1110112411100f11250f0e11240e0d11250d0c11240c0b11250b0a11240a091125090811240807112507061124060511250504112404031125030211240201112501f82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b7011248040002a01f81126c85980415003cb1fce01fa02c9021124020111250156210140337fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115002b00501114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d01f81113111411131112111311121111111211111110111111100f11100f10ef10de10cd10bc10ab109a108910781067105610451034112455025626562170f82ac87001ca0055215023cece01fa02c9315210041125040311270302112602103410237f591129800bd721d3073010561045103441300111290155505505002d01fac85a80285003cb057601cb03ccccc9c87101cb0113ca00830901cb0d22f90058018100f8a92801aaf7b101cbff58fa027301cb6accf400c901fb00111e1122111e111d1121111d111c1120111c111b111f111b111a111e111a1119111d11191118111c11181117111b11171116111a1116111511191115111411181114002e01c41113111711131112111611121111111511111110111411100f11130f0e11120e0d11110d0c11100c553b1023c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301fc5b11228020d721d33f31d309fa00fa40d72c01916d93fa4001e230fa0031112211241122112111231121112011241120111f1123111f111e1124111e111d1123111d111c1124111c111b1123111b111a1124111a11191123111911181124111811171123111711161124111611151123111511141124111411131123111300a101fc5b11228020d721d309fa0031fa40fa40d430112211241122112111231121112011241120111f1123111f111e1124111e111d1123111d111c1124111c111b1123111b111a1124111a111911231119111811241118111711231117111611241116111511231115111411241114111311231113111211241112111111231111003301fa5b11228020d721d200fa4031fa40fa4030112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111100b402fe8efd5b11228020d721fa00fa40112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111111101123111000c000c103fa1110112411100f11230f0e11240e0d11230d0c11240c0b11230b0a11240a09112309081124080711230706112406051123050411240403112303021124020111250111265624db3c571d571d571d24b3f2e2d35621562122bc95311123fb048e89572411205620b9e300e2111e1122111e111d1121111d111c1120111c01210034003502fef842111f1123111f111e1122111e111d1121111d111d1120111d1119111d11191118111c11181117111b11171116111a11161115111911151114111811141113111711131112111611121111111511111110111411100f11130f0e11120e0d11110d0c11100c10bf10ae109d108c107b106a1059104810374650144330db3c012f003601a8111c111f111c1118111c11181117111b11171116111a11161115111911151114111811141113111711131112111611121111111511111110111411100f11130f0e11120e0d11110d0c11100c10bf10ae109d553801320090111e1122111e111d1121111d111f1120111f03111f0303111c0302111b0201111a01111903111803021117020111160111150311140302111302011112011111031110034fed558301e0112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d011901ac1113111511131112111411121111111311111110111211100f11110f0e11100e551dc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54013301fe145f046c22112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e003d01fe145f046c22112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e004501fe30112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113004c043ce3022682101dcd6500bae30226821023c34600bae30226821029b92700ba005200530054005502a010df10ce10bd10ac109b108a107910681057104610351024db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31003e013301f42b8100fab9f2e0fa112211241122112111231121112011241120111f1123111f111e1124111e111d1123111d111c1124111c111b1123111b111a1124111a111911231119111811241118111711231117111611241116111511231115111411241114111311231113111211241112111111231111111011241110003f01800f11230f0e11240e0d11230d0c11240c0b11230b0a11240a09112309081124080711230706112406051123050411240403112303021124020111230111245623004001fc561f21c705917f9c561681010b2259f40a6fa131e2917f9c561081010b2259f40a6fa131e2917f9c561781010b2259f40a6fa131e292307f9c81010b56120259f40a6fa131e2917f9170e2b3f2e2cf708050821005f5e100f82a2703562702562402112bc85550715007cb1f15cb095003fa02cececccec9112211241122004101f8112111231121112011241120111f1123111f111e1124111e111d1123111d111c1124111c111b1123111b111a1124111a1119112311191118112411181117112311171116112411161115112311151114112411141113112311131112112411121111112311111110112411100f11230f0e11240e0d11230d0c11240c004201e40b11230b0a11240a09112309081124080711230706112406051123050411240403112303021124020111230111245625562170f82ac87001ca0055215023cece01fa02c9315210041125040311280302112602103410237f591128800bd721d3073010561045103441300111280155505505004301fac85a80285003cb057601cb03ccccc9c87101cb0113ca00830901cb0d22f90058018100f8a92801aaf7b101cbff58fa027301cb6accf400c901fb00111e1122111e111d1121111d111c1120111c111b111f111b111a111e111a1119111d11191118111c11181117111b11171116111a1116111511191115111411181114004400581113111711131112111611121111111511111110111411100f11130f0e11120e0d11110d0c11100c553b433002b010df10ce10bd10ac109b108a1079106810571046103510248219d1a94a200001db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310046013301f42c8100fab9f2e0fa112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a111911251119111811241118111711231117111611251116111511241115111411231114111311251113111211241112111111231111111011251110004701800f11240f0e11230e0d11250d0c11240c0b11230b0a11250a09112409081123080711250706112406051123050411250403112403021123020111250111245623004801fe561f21c705917f9c561681010b2259f40a6fa131e2917f9c561081010b2259f40a6fa131e2917f9c561781010b2259f40a6fa131e292307f9c81010b56120259f40a6fa131e2917f9170e2b3f2e2cf112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b004902da111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550edb3c701126562480501127c85520765004cb1f58fa02cecec913021126020111250140037f0129004a01fac8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113111211141112111111131111111011121110004b00140f11110f0e11100e551d02c61112111411121111111311111110111211100f11110f0e11100e10df10ce10bd2410bd10ac109b108a5560db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31004d013301ee6c61561381010b2359f40a6fa131f2e2c2561381010b2359f40a6fa193fa003092306de2206ef2d080112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a111911251119111811241118111711231117111611251116004e01c81115112411151114112311141113112511131112112411121111112311111110112511100f11240f0e11230e0d11250d0c11240c0b11230b0a11250a09112409081123080711250706112406051123050411250403112403021123020111250111245624004f03e68ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c111581010b56245626206e953059f4593098c801fa024133f441e211155623db3c35701125562380501128c800d10129005001f85520775004cb1f58fa02cecec91035021125020111260140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb005620011121010f81010bf4593006a4111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a11171116111911160051008c1115111811151114111711141113111611131112111511121111111411111110111311100f11120f061111060d11100d10cf10be10ad109c108b107a0910581047103641050401fc10575f07112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd005601fe30112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113005701fc1128112a1128112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114005d043ce3022682102faf0800bae30226821035a4e900bae302268210068e7780ba005e005f00600061019410ac109b108a1079106810571046103544305720c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013302dc1112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a10798218e8d4a5100025106844741513db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310058013301ec6c612c8100fab9f2e0fa112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a1119112511191118112411181117112311171116112511161115112411151114112311141113112511131112112411121111112311110059018c1110112511100f11240f0e11230e0d11250d0c11240c0b11230b0a11250a09112409081123080711250706112406051123050411250403112403021123020111250111245623005a02f2561f21c705917f9c561681010b2259f40a6fa131e2917f9c561081010b2259f40a6fa131e2917f9c561781010b2259f40a6fa131e292307f9c81010b56120259f40a6fa131e2917f9170e2b3f2e2cf0f81010b56245627206e953059f4593098c801fa024133f441e20f5623db3c35701126562380501127c80129005b01f8552080175004cb1f58fa02cecec91035021126020111250140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0006a4111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a1117111611191116111511181115111411171114005c00741113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a0910581047103641501402ec1113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a078218e8d4a510007f274879103644554313db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310063013301fc1128112a1128112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114006201fc1128112a1128112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114006801fe30112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113006e03fe8ef25f08112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551de026821007270e00bae30200720073007402ec1113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a078218e8d4a5100070274879103644554313db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310063013301f06c61112211271122112111261121112011251120111f1124111f111e1123111e111d1127111d111c1126111c111b1125111b111a1124111a1119112311191118112711181117112611171116112511161115112411151114112311141113112711131112112611121111112511111110112411100f11230f006401f40e11270e0d11260d0c11250c0b11240b0a11230a09112709081126080711250706112406051123050411270403112603021125020111240111235625f82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b112211231122006502fe112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e1126db3c0111250111247011280129006601fa80501128c85530785005cb1f5003fa02ca00cecec903112303021126020111250140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00111e1122111e111d1121111d111c1120111c111b111f111b111a111e111a1119111d11191118111c11181117111b11171116111a1116111511191115111411181114006700541113111711131112111611121111111511111110111411100f11130f0e11120e0d11110d0c11100c553b02e81113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a078218e8d4a510005415765044451503db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310069013301f06c61112211261122112111251121112011241120111f1123111f111e1126111e111d1125111d111c1124111c111b1123111b111a1126111a1119112511191118112411181117112311171116112611161115112511151114112411141113112311131112112611121111112511111110112411100f11230f006a01f40e11260e0d11250d0c11240c0b11230b0a11260a09112509081124080711230706112606051125050411240403112303021126020111250111245626f82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b112211231122006b02fe112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e1125db3c1126701126805011260129006c01f8c85520795004cb1f58fa02cecec903112603021125020111240140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a1117111611191116111511181115111411171114006d00541113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be552a02c61112111411121111111311111110111211100f11110f0e11100e10df10ce10bd2410bd10ac109b108a5560db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31006f013301f6365f04112311251123112211241122112111251121112011241120111f1125111f111e1124111e111d1125111d111c1124111c111b1125111b111a1124111a111911251119111811241118111711251117111611241116111511251115111411241114111311251113111211241112111111251111111011241110007002f60f11250f0e11240e0d11250d0c11240c0b11250b0a11240a0911250908112408071125070611240605112505041124040311250302112402011125011124db3c70701126562580501129c855207a5004cb1f58fa02cecec9443002112602011127014343c8cf8580ca00cf8440ce01fa02806acf40f400c901fb000129007100e0112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d02ae56116e936d5712df88c88258c000000000000000000000000101cb67ccc970fb00c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310075013301fe30112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511130076045226821007bfa480bae30226821008583b00bae3026c223223821008f0d180bae30223821009896800ba007a007b007c007d003400000000636c656172656450656e64696e67526571756573747302dc1112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a10798218e8d4a5100025106844741513db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310077013301f46c615220111381010bf459f2e2cd112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a111911251119111811241118111711231117111611251116111511241115111411231114111311251113111211241112111111231111007802f61110112511100f0e11230e0d11250d0c0b11230b0a11250a0908112308071125070605112305041125040302112302011125015623db3c35701126562380501127c85520755004cb1f58fa02cecec91035021126020111250140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0006a5111f1122111f0129007900f8111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a0910581047103641501401fe30112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113007e01fe30112711291127112611281126112511271125112411261124112311251123112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113008401fc10245f04112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd008a02f88ef85f05112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d572156211121e0230132008b02c61112111411121111111311111110111211100f11110f0e11100e10df10ce10bd2410bd10ac109b108a5560db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31007f013301ee6c615210111981010bf459f2e2d12081010b2359f40a6fa193fa003092306de2206ef2d080112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a111911251119111811241118111711231117011116011115112411150080019411141123111401111301111211241112111111231111011110010f11240f0e11230e1d0c11240c0b11230b1a091124090811230817061124060511230514031124030211230211245624008102fef82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b5623db3c357080501126ab00015624011128c8552080345004cb1f58fa02cecec91035021126020111250140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0006a50129008201fe111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a091058104710360083000641501402c61112111411121111111311111110111211100f11110f0e11100e10df10ce10bd2410bd10ac109b108a5560db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310085013301f66c61561781010b2359f40a6fa131f2e2d0561781010b2359f40a6fa193fa003092306de2206ef2d0805220111981010bf45930112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a111911251119111811241118111711231117008601a6111611251116111511141123111411131125111311121111112311111110112511100f0e11230e0d11250d0c0b11230b0a11250a09081123080711250706051123050411250403021123020111250156235625008702fc20c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be25623db3c35701125562380500129008801fe1128c8552080315004cb1f58fa02cecec91035021125020111260140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0006a5111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a1117111611191116111511181115111411171114008900741113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a0910581047103641050401ec10ac109b108a1079106810571046103544308d0860000000000000000000000000000000000000000000000000000000000000000004c705b3f2e2bc27f2e2bec87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301e28209312d00ba93f2c2c0e30e0211270201112601041125040311240311230411220403112103112004111f0403111e03111d04111c0403111b03111a04111904031118031117041116040311150311140411130403111203111104111004103f0e104d103c0b104a103908104710364515008c03f82382103a699d00ba917f9823821006052340bae2e30f112701112601112211251122112111241121112011231120111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a1117111611191116111511181115111411171114111311161113008d008e008f01fc112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a1119112511191118112411181117112311171116112511161115112411151114112311141113112511131112112411121111112311111110112511100f11240f0e11230e0d11250d0090044c2382103b023380bae30223821006146580bae3022382103b8b87c0bae3022382101ddca740ba009100920093009400681112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a1069105810471036102500e20c11240c0b11230b0a11250a09112409081123080711250706112406051123050411250403112403021123020111260111278218174876e800f82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b01fe10245f040111130181010b017071216e955b59f4593098c801cf004133f441e21111a4112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131111111411111113009501fe10245f0401111381010bf45930112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a111811171119111711161118111611151117111511141116111411131115111311141111111311111110111211100f11110f0e11100e10df10ce10bd10ac009601fc5f05112011221120111f1121111f561e1121111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b0097046ce30223821017e6c640ba917f9823821017f60880bae2917f9823821018148d00bae2e3022382101a76e700bae302238210069db9c0ba00980099009a009b01b81110111211100f11110f0e11100e10df10ce10bd10ac109b108a107910681057104610354403c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310133018c109b108a107910681057104610354430c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301e2108a10791068105710461035440382100bebc20070801127c801803858cb1fcb09c94343c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301fc10245f04112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd009c01fc10345f04112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd009d01e45f05112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d011903fa8f745f05112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551ddb3ce0112701112601009e0132009f01fc10ac109b108a107910681057104610354430804056247003561fc8552080425004cb1f12cece01fa02c95623503340137fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301d810ac109b108a1079106810571046103544308e57eda2edfb56197022821017e6c640ba9c303157198218174876e800208e2b22821017f60880ba9c303157198218746a528800208e1302821018148d00ba965b705719db31e0111a01e2e201111a01bc965717f8231117ded8013202f6f823f8232382015180a0bc9827a18209e13380b9923070e2f2e2df8212540be4008ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c31f823820898968073708212540be4005626c800d100a000dc04112504031124030211230204112204031121030211200204111f0403111e0302111d0204111c0403111b0302111a0204111904031118030211170204111604031115030211140204111304031112030211110204111004103f102e104d103c102b104a1039102810471036102500565980465003cb1f01fa02cec956245530441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb000102fc1112112411121111112311111110112411100f11230f0e11240e0d11230d0c11240c0b11230b0a11240a09112309081124080711230706112406051123050411240403112303021124020111250111265625db3c112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c012100a2019c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e00a304fa5304ba91308eba24bc8e2ff84282100bebc20070801127c801803858cb1fcb09c94343c8cf8580ca00cf8440ce01fa02806acf40f400c901fb008e84f842db3ce2e2562382103b9aca00bee30f112211251122112111241121112011231120111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b012f00a400a500a6019256238ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c00d1024856238209312d00ba8e98562382103a699d00ba9a111c8218174876e800a0e30e111ce30d00a700a801a0111a111d111a1119111c11191118111b11181117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d552c00f003fa5623821006052340ba8ed2562457228218174876e8008ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c8f1b562382100623a7c0ba8e8e561d206ef2d080562501c705e302e30de2111c00d100a900aa00f656248218e8d4a5100020c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be201fa57257f112382100e4e1c00ba93705723de112111241121112011231120111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a111711161119111611151118111511141117111411131116111311121115111211111114111111101113111000ab01f25624561581010b2259f40a6fa131f2e2e0561581010b22714133f40a6fa19401d70030925b6de2206ef2d080b3f2e2e1561472a906561401be99f82327a182015180bc9170e28e290111150181010b017f71216e955b59f4593098c801cf004133f441e21112a401112201111211141112e30d01112201111200b3028c0f11120f0e11110e0d11100d552cdb3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db3100ac013303f2395388e30f561d112011221120111f1121111f111e1122111e111d1121111d7080505624111f111e1124111e111d111c1124111c111b111a1124111a111911181124111811171116112411161115111411241114111311121124111211111110112411100f0e11240e0d0c11240c0b104a091048071046103500ad00ae00af01fc112211241122112111231121112011241120111f1123111f111e1124111e111d1123111d111c1124111c111b1123111b111a1124111a1119112311191118112411181117112311171116112411161115112311151114112411141113112311131112112411121111112311111110112411100f11230f0e11240e0d11230d00b001fa112211241122112111231121112011241120111f1123111f8218e8d4a5100056251120111f1125111f111e111d1125111d111c111b1125111b111a111911251119111811171125111711161115112511151114111311251113111211111125111111100f11250f0e0d11250d0c0b11250b491a4718451644140311260100b102f602112402011125db3c01112601561f015624011129c8553080445005cb1f13ca00cececec903112303021124020111260140337fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00111e1122111e111d1121111d111c1120111c111b111f111b111a111e111a1119111d11191118111c11181117111b1117012900b201ee0c11240c0b11230b0a11240a09112309081124080706112406050411240403021124020111248218e8d4a510008ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c3408a400d100ea20c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be23408a500a01116111a11161115111911151114111811141113111711131112111611121111111511111110111411100f11130f0e11120e0d11110d0c11100c10bf10ae109d108c107b106a1059104810374614400500ca3057125721561f70561481010b7159f4826fa520965023d7003058966c216d326d01e2908e3d8e1d111581010b56167071216e955b59f4593098c801cf004133f441e21115de81010b561602714133f4746fa520965023d7003058966c216d326d01e2e85b04a61110112311100f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c8219d1a94a20005624e30f012100b500b600b701ea111781010b56265619206e953059f4593098c801fa024133f441e2112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a111911231119111811231118111711231117111611151114111311121111111055e0562300b801ce562501111881010bf45930112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a111911231119111811231118111711231117111611151114111311121111111055e05625562400b902fc88d0112311241123112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f00ba00bb01928ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c09a400d100e820c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be209a5002400000000696e76697465207375636365737301fa10ef10de10cd1b1c109a1089107810671056104510341023562659f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb0056255624821aba7def300000bc02fe821005f5e10073707005926d36df443056285006c8553082107bdd97de5005cb1f13cb3f01fa02ce01206e9430cf84809201cee2c956245044441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb0082089896807370708218e8d4a5100088d0562801c8553082107362d09c5005cb1f13cb3f01fa02cecec9562800bd00be002800000000696e766974656420617070726f76656401fc5530441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00820898968011247370562502011128011129c8553080445005cb1f13ca00cececec95621040311250302112702112601441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00111f1122111f111e1121111e111d1120111d111c111f111c00bf01ac111b111e111b111a111d111a1119111c11191118111b11181117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d552c013202f60f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c561e5625c705f2e2d1112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b012100c20426e020c006e30220c007e30220c031e30220c01700c500c600c700c8019c111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e56245110112700c301f8f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb0037112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c00c401d6111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a10797009106810571046103544030200d701fe5b11228020d721fa00fa402a8100fab9f2e0fa112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111100c901fa5b11228020d721fa00fa40112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111111101123111000cd01fa5b11228020d721fa00fa40112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111111101123111000d3041ee30220c005e30220c008e30220c00900d800d900da00db02fc1110112311100f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a012100ca01901119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e56245110112700cb01faf8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb000211110281010b02011124011125206e953059f4593098c801fa024133f441e211201122112000cc01fe111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a111811171119111711161118111611151117111511141116111411131115111311121114111211111113111111101112111011110e11100e10df10ce10bd10ac109b108a10791068105710461035443012013202fc0f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a1119012100ce01841118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e56245110112700cf01b2f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00562400d002f68ebdeda2edfb561a561c6e22c101917f9821c00091209170e2e2915b8ea021c2008e16571c5cbe9c571b01111a01a1111970db31e1a170111b9131e2e301e2d801111d01a0111c0211150281010b02011124011125206e953059f4593098c801fa024133f441e207a4112011221120111f1121111f111e1120111e00d100d200ee561b81010bf4826fa5209502fa00305895316d326d01e2908e5b22c101935bdb31e05320be91209122e266a15033a1228e1e01111d0181010b01561e5004206e953059f4593098c801fa024133f441e29a3220111d81010bf45930e281010b21111e59f4746fa5209502fa00305895316d326d01e2e85b01d2111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114071115071112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a095516013202fc0f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a1119012100d401841118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e56245110112700d501f4f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00562301111681010bf45930112211241122112111231121112011221120111f1121111f00d601ee111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a111811171119111711161118111611171114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a1079106810571046103544030200d701e420c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be2013201fe5b11228020d721fa00fa402a8100fab9f2e0fa112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111100dc01fa5b11228020d721fa00fa40112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111111101123111000e101f45b11228020d721fa00d200fa4020112211251122112111241121112011231120111f1125111f111e1124111e111d1123111d111c1125111c111b1124111b111a1123111a11191125111911181124111811171123111711161125111611151124111511141123111411131125111311121124111211111123111100e702fe8efd5b11228020d721fa00fa40112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a11191123111911181123111811171123111711161123111611151123111511141123111411131123111311121123111211111123111111101123111000ed00ee02fc1110112311100f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a012100dd01921119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d66112600de01e4f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00111c8218e8d4a51000a00111100181010b0111248218e8d4a5100000df01fc206e953059f4593098c801fa024133f441e208a4112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100811100800e0018810ef10de10cd10bc10ab090a5507c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013302fc0f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a1119012100e201841118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e56245110112700e301f6f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112211241122112111231121112011221120111f1121111f111e1120111e111d111f111d00e402b4111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551ddb3c00e5013201342ec000f2e2c35210111381010bf459302bc200930ba50bde111200e600e420c101915b8e6a561e21be983101111d01a1111ce020111fa17020561e81010b2559f40a6fa1318e1930561d81010b2459f40a6fa193fa003092306de2206ef2d080de81010b03a003111e0301111e01206e953059f4593098c801fa024133f441e201111c01111da0111a111c111a111be202e21110112511100f11240f0e11230e0d11250d0c11240c0b11230b0a11250a09112409081123080711250706112406051123050411250403112403021123020111260111275623db3c3a5623953c0b11220b925723e225f2e2be2c81010b562359f40a6fa131b3f2e2c60c81010b56227f71012100e802f6216e955b59f4593098c801cf004133f441e20aa4f82382015180a021925725e30e112011251120111f1124111f111e1123111e111d1122111d111c1121111c111b1120111b111a111f111a1119111e11191118111d11181117111c11171116111b11161115111a111511141119111411131118111311121117111200e900ea01fe37112011211120111f1120111f111e111f111e111d111e111d7f561d111f111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f5e2c102d10bc108b1900eb01661111111611111110111511100f11140f0e11130e0d11120d0a11110a0b11100b0f109e10bd107c106b105a104910384706401500f002fc1a107810671056104510341023112402db3c82083d0900708209312d005410222802562802562a02112d1045c855608210178d45195008cb1f16cb3f14cb0958fa02ce01206e9430cf84809201cee201fa02cec912011127017050237fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0009112409112211211120012900ec004e111f111e111d111c111b111a11191118111711161115111411131112111111100f0e0d55900c0b02fa0f11230f0e11230e0d11230d0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111240111255624db3c56243b2cc200f2e2c71e81010b500b7071216e955b59f4593098c801cf004133f441e20aa4f82382015180a050ba1e112211251122112111241121012100ef043ae020c00ae30220c035e3022082107ac8d559bae302208210595f07bcba00f100f200f300f401e8112011231120111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d552c00f001aef8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00013201fc5b11228020d721fa00fa4020112211241122112111231121112011241120111f1123111f111e1124111e111d1123111d111c1124111c111b1123111b111a1124111a11191123111911181124111811171123111711161124111611151123111511141124111411131123111311121124111211111123111111101124111000f502f85b11228020d721fa0030562156215621562156215621562156215621562156215621562156215621562156215621562156215621562156215621562156215621562156215621562156215621564356455623ed41ed43ed44ed45ed47965b01111a01a0ed67ed65ed64ed63ed6180247fed118aed41edf101f2ff11190101013201f45b11228020d721fa40d2003028b3f2e2bd6d019c30f82a562001562301126f03de561c01c8598210ca77fdc25003cb1f01fa02216eb38e117f01ca0001206ef2d0806f235023cececc947032ca00e2c90170804043137fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112011221120111f1121111f010303fee30220820b93b1ceba8ef35b5722112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551de001180119011a02f40f11230f0e11240e0d11230d0c11240c0b11230b0a11240a09112309081124080711230706112406051123050411240403112303021124020111250111265624db3c5623015625011127112411251124112311241123112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d012100f602f8111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f10ef10de10cd10bc10ab109a10891078106710561045103403112703db3c11221125112211211124112100f700f804f6322cc200f2e2c2f8232dbef2e2df547ede21bc209132923101e270561381010b7159f4826fa520965023d7003058966c216d326d01e2908eb12091249170e292307f97b39223b39170e2e2e30081010b561502714133f4746fa520965023d7003058966c216d326d01e2e85f04e30f112011221120111f1121111f00f900fa00fb00fc01fc112011231120111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11181117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a010001fa5312b9998219d1a94a200002a4988218e8d4a5100002e2112211291122112111281121112011271120111f1126111f111e1125111e111d1124111d111c1123111c111b1129111b111a1128111a11191127111911181126111811171125111711161124111611151123111511141129111411131128111311121127111200fd04d2561181010bf4826fa5209502fa00305895316d326d01e2908ae85b561281010bf4826fa5209502fa00305895316d326d01e2908ae85b561781010bf4826fa5209502fa00305895316d326d01e2908ae85b561881010bf4826fa5209502fa00305895316d326d01e290010401050106010700ce5b3a3a3a3a3a6d705300091121090b11200b09111f090b111e0b09111d090b111c0b09111b090b111a0b091119090b11180b091117090b11160b091115090b11140b091113090b11120b091111090b11100b109f10be109d10bc103b704a9b103806504407050300f4111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b108a10790810571046103544301202c81111112611111110112511100f11240f0e11230e0d11290d0c11280c0b11270b0a11260a09112509081124080711230706112906051128050411270403112603021125020111240111235624db3c707154510101112a01528056280156290156311045c8012900fe01fa55608210178d45195008cb1f16cb3f14cb0958fa02ce01206e9430cf84809201cee201fa02cec941300111280140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112111281121112011271120111f1126111f111e1125111e111d1124111d111c1123111c111b1122111b111a1121111a11191120111900ff00b21118111f11181117111e11171116111d11161115111c11151114111b11141113111a11131112111911121111111811111110111711100f11160f0e11150e0d11140d0c11130c0b11120b0a11110a09111009108f107e55661601c41069105810471036453304f8276f102082112a05f200bc9782103b9aca00a196308208989680e273707045135064c8553082107362d09c5005cb1f13cb3f01fa02cecec956264344441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00013201fc112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd10ac109b01020090108a107910681057104610354430f82327a1218218e8d4a51000a90612a0561ac2009c561a5882109ca41900a986a09131e2111d561da120c2fff2e2c501111c01111da0111b111901c8111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e551d013201fc112211261122112111251121112011241120111f1123111f111e1126111e111d1125111d111c1124111c111b1123111b111a1126111a1119112511191118112411181117112311171116112611161115112511151114112411141113112311131112112611121111112511111110112411100f11230f0e11260e0d11250d010801fc112211261122112111251121112011241120111f1123111f111e1126111e111d1125111d111c1124111c111b1123111b111a1126111a1119112511191118112411181117112311171116112611161115112511151114112411141113112311131112112611121111112511111110112411100f11230f0e11260e0d11250d010901fc112211261122112111251121112011241120111f1123111f111e1126111e111d1125111d111c1124111c111b1123111b111a1126111a1119112511191118112411181117112311171116112611161115112511151114112411141113112311131112112611121111112511111110112411100f11230f0e11260e0d11250d010a02f88ae85b112211241122112111231121112011241120111f1123111f5624111f111e1124111e111d111c1124111c111b111a1124111a111911181124111811171116112411161115111411241114111311121124111211111110112411100f0e11240e0d0c11240c0b0a11240a09081124080706112406050411240403010b010c02e80c11240c0b11230b0a11260a09112509081124080711230706112606051125050411240403112303021126020111250111245625db3c7071112756255627c8552080355004cb1f58fa02cecec941300111270140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0081010b2f0211260129010e02ea0c11240c0b11230b0a11260a09112509081124080711230706112606051125050411240403112303021126020111250111245625db3c7071112756255627c8552080355004cb1f58fa02cecec941300111270140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0081010b56100211260129010e02ee0c11240c0b11230b0a11260a09112509081124080711230706112606051125050411240403112303021126020111250111245625db3c70711127aa0056255627c8552080355004cb1f58fa02cecec941300111270140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0081010b56150211260129010e01fc112211261122112111251121112011241120111f1123111f111e1126111e111d1125111d111c1124111c111b1123111b111a1126111a1119112511191118112411181117112311171116112611161115112511151114112411141113112311131112112611121111112511111110112411100f11230f0e11260e0d11250d010d03c802112402011125db3c7071821aba7def300056265628c8552080355004cb1f58fa02cecec940037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb002d925724e30e561981010bf4826fa5209502fa00305895316d326d01e2908ae85b3757217f01290110011102ee0c11240c0b11230b0a11260a09112509081124080711230706112606051125050411240403112303021126020111250111245625db3c70711127a70356255627c8552080355004cb1f58fa02cecec941300111270140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0081010b56160211260129010e01fe59f4746fa5209502fa00305895316d326d01e2112311271123112211261122112111251121112011241120111f1123111f111e1122111e111d1121111d111c1120111c111b111f111b111a111e111a1119111d11191118111c11181117111b11171116111a1116111511191115111411181114111311171113111211161112010f005c1111111511111110111411100f11130f0e11120e0d11110d0c11100c10bf10ae109d108c107b106a10591048103702ea705619c2009cf82328a1821925b3aee000b99170e29d3056187828561aa07aa98601a8de11221123112211211123112111201123112056231120111f111e111d111c111b111a111911181117111611151114111311121111111055e01124db3c70712156205628a05381562901562d01562d1045c80129011201fc112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a1119112311191118112311181117112311171116112311161115112311151114112311141113112311131112112311121111112311111110112311100f11230f0e11230e0d11230d011501fc55608210178d45195008cb1f16cb3f14cb0958fa02ce01206e9430cf84809201cee201fa02cec940037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00707370228b02130211280201112ac8553082107bdd97de5005cb1f13cb3f01fa02ce01206e9430cf84809201cee2c95622431402112802112601441359011301fac8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100114000c0f11100f550e02ea0c11230c0b11230b0a11230a09112309081123080711230706112306051123050411230403112303021123020111230111255623db3c7071112856255628c8552080355004cb1f58fa02cecec941300111280140037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb0081010b561a0211240129011601fe59f4746fa5209502fa00305895316d326d01e2112311241123112211231122112111221121112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a1119111811191118111711181117111611171116111511161115111411151114111311141113111211131112011700501111111211111110111111100f11100f10ef10de10cd10bc10ab109a10891078106710561045103401fe5b11228020d721d33ffa00d72c01916d93fa4001e23129b3f2e2bdf8425624c705f2e2bc111d21a120c2fff2e2c5f8416f2443305230fa40fa0071d721fa00fa00306c6170f83a811f4070f836aa00a0bcf2e2bf708040504356257f1121c8553082107bdd97de5005cb1f13cb3f01fa02ce01206e9430cf84809201cee2c9011b01d2f8425623c705f2e2bcf8276f1082103b9aca00a1562301706d40037fc8cf8580ca00cf8440ce01fa02806acf40f400c901fb00c87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db310133022020c038e3022082102508d66abae30201011d011e01f85622044313111f01441359c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a1118111711191117111611181116111511171115111411161114111311151113111211141112011c01981111111311111110111211100f11110f0e11100e551dc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301fe5b5722f842112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e10df10ce10bd011f01f65b11228020d721d2000193d30931ded2000192d309926d01e2d72c01916d93fa4001e201f40431f40431d430d0f40431f4043021206ef2d080112311241123112211241122112111241121112011241120111f1124111f111e1124111e111d1124111d111c1124111c111b1124111b111a1124111a1119112411190120029410ac109b108a107910681057104610354430db3cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31012f013302fc1118112411181117112411171116112411161115112411151114112411141113112411131112112411121111112411111110112411100f11240f0e11240e0d11240d0c11240c0b11240b0a11240a091124090811240807112407061124060511240504112404031124030211250201112601db3c5623206ef2d0805240b90121012201f4112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a1119112311191118112311181117112311171116112311161115112311151114112311141113112311131112112311121111112311111110112311100f11230f0e11230e012302fe8e1b331122206ef2d0801124206ef2d080fb04112111231121011121019457235724e21122561c216e925b7092c705e28e9c561381010bf4826fa5209502fa00305895316d326d01e231908ae830de111f1122111f111e1121111e111d1120111d111c111f111c111b111e111b111a111d111a1119111c11191118111b11180126012702fe0d11230d0c11230c0b11230b0a11230a09112309112308070655405623562170f82ac87001ca0055215023cece01fa02c9315210f842fa443159c85980285003cb057601cb03ccccc9f900206ef2d0808100f8a928018100f8a928ba925723e30e112111221121112011211120111f1120111f111e111f111e111d111e111d012401250054f842562101c705f2e2bc279257238e1937571c571c7f562108a40611220608111d0806111c06508806e200a8111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e01f856205620562056205620562056205620562056205620562056205620562056205620562056205620562056205620562056205620562056205620562056205620564256445643112211431122112111421121112011411120111f1140111f111e113f111e111d113e111d111c113d111c111b113c111b111a113b111a012801a81117111a11171116111911161115111811151114111711141113111611131112111511121111111411111110111311100f11120f0e11110e0d11100d10cf10be10ad109c108b107a106910581047103645135042013202fc1119113a11191118113911181117113811171116113711161115113611151114113511141113113411131112113311121111113211111110113111100f11300f0e112f0e0d112e0d0c112d0c0b112c0b0a112b0a09112a09081129080711280706112706051126050411250403112403021145020111460111445623db3c0129012a01f4112211231122112111231121112011231120111f1123111f111e1123111e111d1123111d111c1123111c111b1123111b111a1123111a1119112311191118112311181117112311171116112311161115112311151114112311141113112311131112112311121111112311111110112311100f11230f0e11230e012b01fc57105f0f57105f0f6c31112111231121112011221120111f1121111f111e1120111e111d111f111d111c111e111c111b111d111b111a111c111a1119111b11191118111a11181117111911171116111811161115111711151114111611141113111511131112111411121111111311111110111211100f11110f0e11100e012e01f40d11230d0c11230c0b11230b0a11230a09112309112308070655405623562170f82ac87001ca0055215023cece01fa02c9315210c85980285003cb057601cb03ccccc91124800bd721d30730c87401cb027001cb071125f90001018100f8a92801aaf7b1011124cbffc9d0fa4030112211231122112111221121012c01fc112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f10ef10de10cd10bc10ab109a1089107810671056012d000c10451034413002fc10df10ce10bd10ac109b108a1079106810571046103510240211240201112401db3c81010b561702112559f4746fa5209502fa00305895316d326d01e231021124020311230302112202031121030211200203111f0302111e0203111d0302111c0203111b0302111a020311190302111802031117030211160203111503012f013001cc7382100bebc20070f82a562752926d6d50046d50036d01c8556082102508d66a5008cb1f266eb3977f01ca0016cb099636705006ca00e2246eb3977f01ca0014cb099634705004ca00e258206e9430cf84809201cee2f400f40001c8f40012f400cdc9035044013100540211140203111303021112020311110302111002103f102e103d102c103b102a1039102810375e321024002ec8cf8580ca00cf8440ce01fa02806acf40f400c901fb00016cc87f01ca001123112211211120111f111e111d111c111b111a111911181117111611151114111311121111111055e0db3cc9ed54db31013301f6011122011123ce01112001ce01111e01ce111cc8ce01111b01ce011119206e9430cf84809201cee2011117fa02c8011116fa0201111401f400011112fa0202011110010f59fa02cb291cf4001af40008c8f40017cb0315cb0313f400f40001c8f40012f40012ca0013cb0913cb0913cb1f13cb0713ca0013ca00140134002ccb1f14cb1f14ce15cb0915ca0015cb1f15cccdcdcdcd0201200137013802039c34013e013f0201580139013a0255bbb02ed44d0d200018e8dfa40fa40fa00552003d158db3ce30df82a561d015624015623016cc46cc46cb480140014103fbb3c57b513434800063a37e903e903e80154800f45636cf38c35588958895889588958895889588958895889588958895889588958895889588958895889588958895889588958895889588958895889588958895889588958895889588958895c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8d5c8e001400141013b02016e013c013d0050572357235723572357235723572357235723572357235723572357235723572357235723572357230263a783da89a1a400031d1bf481f481f400aa4007a2b1b679c61a5167e5c57aac2aac20ac24ac32ac2aac3eac28d9ced9ced8ef014001410253a4cfda89a1a400031d1bf481f481f400aa4007a2b1b679c61aac3cac40ae24ae20be1eae26ae20be1e63014001410247bf7ed44d0d200018e8dfa40fa40fa00552003d158db3ce30d2a57105f0f57105f0f6c31801400141029bbd3ed44d0d200018e8dfa40fa40fa00552003d158db3ce30d8218e8d4a5100082015180561a561ac85959fa02cb29c9561003561003561003561003561003561003561052e26cbb6cbb6cbb6c2b80140014102f4308d08600000000000000000000000000000000000000000000000000000000000000000048d08600000000000000000000000000000000000000000000000000000000000000000046d706d5471116d6d6d53556d6d6d6d705475552070702289217f21561e561ef82382103b9aca00f82af84201112301c7050142014301fafa40fa40fa40d401d0fa40fa40d72c01916d93fa4001e201fa00d430d0fa00f404fa00fa00d3295902f404f404d430d0f404d303d303f404f404d430d0f404f404d200d309d309d31fd307d200d200d31fd31ffa40d309d200d31fd430112011231120112011221120112011211120111711181117572311211122112101440043800000000000000000000000000000000000000000000000000000000000000000100098923070de03112203031121030211200202111f0202111e0202111d02111c02111b02111a0211190211180211170211160211150211140211130211120211110211104f1e4d1c4b1a4918554200d8112011211120111f1120111f111e111f111e111d111e111d111c111d111c111b111c111b111a111b111a1119111a11191118111911181117111811171116111711161115111611151114111511141113111411131112111311121111111211111110111111100f11100f550e} B>boc PUSHREF
+""";
+
+cell $JettonWalletSharded$_code_child() inline {
+    return $JettonWalletSharded$_child_get_code();
+}
+
+(cell, cell) $JettonWalletSharded$_init_child(slice $owner, slice $minter, int $balance) inline {
+    ;; Build init code cell
+
+    ;; Contract Code: JettonWalletSharded
+    cell init_code = $JettonWalletSharded$_child_get_code();
+
+
+    builder b = begin_cell();
+    b = b.store_int(false, 1);
+    b = $JettonWalletSharded$init$_store(b, ($owner, $minter, $balance));
+    return (init_code, b.end_cell());
+}
+
+;;
+;; Type: JettonMinterSharded
+;; TLB: _ totalSupply:coins totalAccounts:uint32 treasurySurplus:coins treasuryDeficits:coins owner:address jettonContent:^cell jettonWalletCode:^cell jettonWalletInitialCode:^cell mintable:bool version:uint10 walletVersion:uint10 tosHash:^string mbrpAmount:coins publicWorks:dict<address, uint10> votes:dict<address, uint20> crowdFund:dict<uint10, uint10> = JettonMinterSharded
+;;
+
+builder $JettonMinterSharded$_store(builder build_0, (int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) v) inline {
+    var (v'totalSupply, v'totalAccounts, v'treasurySurplus, v'treasuryDeficits, v'owner, v'jettonContent, v'jettonWalletCode, v'jettonWalletInitialCode, v'mintable, v'version, v'walletVersion, v'tosHash, v'mbrpAmount, v'publicWorks, v'votes, v'crowdFund) = v;
+    build_0 = build_0.store_varuint16(v'totalSupply);
+    build_0 = build_0.store_uint(v'totalAccounts, 32);
+    build_0 = build_0.store_varuint16(v'treasurySurplus);
+    build_0 = build_0.store_varuint16(v'treasuryDeficits);
+    build_0 = build_0.store_slice(v'owner);
+    build_0 = build_0.store_ref(v'jettonContent);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_ref(v'jettonWalletCode);
+    build_1 = build_1.store_ref(v'jettonWalletInitialCode);
+    build_1 = build_1.store_int(v'mintable, 1);
+    build_1 = build_1.store_uint(v'version, 10);
+    build_1 = build_1.store_uint(v'walletVersion, 10);
+    build_1 = build_1.store_builder_ref(begin_cell().store_slice(v'tosHash));
+    build_1 = build_1.store_varuint16(v'mbrpAmount);
+    var build_2 = begin_cell();
+    build_2 = build_2.store_dict(v'publicWorks);
+    build_2 = build_2.store_dict(v'votes);
+    build_2 = build_2.store_dict(v'crowdFund);
+    build_1 = store_builder_ref(build_1, build_2);
+    build_0 = store_builder_ref(build_0, build_1);
+    return build_0;
+}
+
+(slice, ((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell))) $JettonMinterSharded$_load(slice sc_0) inline {
+    var v'totalSupply = sc_0~load_varuint16();
+    var v'totalAccounts = sc_0~load_uint(32);
+    var v'treasurySurplus = sc_0~load_varuint16();
+    var v'treasuryDeficits = sc_0~load_varuint16();
+    var v'owner = sc_0~load_msg_addr();
+    var v'jettonContent = sc_0~load_ref();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'jettonWalletCode = sc_1~load_ref();
+    var v'jettonWalletInitialCode = sc_1~load_ref();
+    var v'mintable = sc_1~load_int(1);
+    var v'version = sc_1~load_uint(10);
+    var v'walletVersion = sc_1~load_uint(10);
+    var v'tosHash = sc_1~load_ref().begin_parse();
+    var v'mbrpAmount = sc_1~load_varuint16();
+    slice sc_2 = sc_1~load_ref().begin_parse();
+    var v'publicWorks = sc_2~load_dict();
+    var v'votes = sc_2~load_dict();
+    var v'crowdFund = sc_2~load_dict();
+    return (sc_0, (v'totalSupply, v'totalAccounts, v'treasurySurplus, v'treasuryDeficits, v'owner, v'jettonContent, v'jettonWalletCode, v'jettonWalletInitialCode, v'mintable, v'version, v'walletVersion, v'tosHash, v'mbrpAmount, v'publicWorks, v'votes, v'crowdFund));
+}
+
+(int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $JettonMinterSharded$_to_external(((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell)) v) inline {
+    var (v'totalSupply, v'totalAccounts, v'treasurySurplus, v'treasuryDeficits, v'owner, v'jettonContent, v'jettonWalletCode, v'jettonWalletInitialCode, v'mintable, v'version, v'walletVersion, v'tosHash, v'mbrpAmount, v'publicWorks, v'votes, v'crowdFund) = v; 
+    return (v'totalSupply, v'totalAccounts, v'treasurySurplus, v'treasuryDeficits, v'owner, v'jettonContent, v'jettonWalletCode, v'jettonWalletInitialCode, v'mintable, v'version, v'walletVersion, v'tosHash, v'mbrpAmount, v'publicWorks, v'votes, v'crowdFund);
+}
+
+(slice, ((int, slice, cell))) $JettonMinterSharded$init$_load(slice sc_0) inline {
+    var v'totalSupply = sc_0~load_varuint16();
+    var v'owner = sc_0~load_msg_addr();
+    var v'jettonContent = sc_0~load_ref();
+    return (sc_0, (v'totalSupply, v'owner, v'jettonContent));
+}
+
+(int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $JettonMinterSharded$_contract_load() impure inline {
+    slice $sc = get_data().begin_parse();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$JettonMinterSharded$_load();
+    }
+    else {
+        (int $totalSupply, slice $owner, cell $jettonContent) = $sc~$JettonMinterSharded$init$_load();
+        $sc.end_parse();
+        return $JettonMinterSharded$_contract_init($totalSupply, $owner, $jettonContent);
+    }
+}
+
+() $JettonMinterSharded$_contract_store((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_int(true, 1);
+    b = $JettonMinterSharded$_store(b, v);
+    set_data(b.end_cell());
+}
+
+;;
+;; Contract JettonMinterSharded functions
+;;
+
+(int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $JettonMinterSharded$_contract_init(int $totalSupply, slice $owner, cell $jettonContent) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = (null(), 0, 0, 0, null(), null(), null(), null(), true, 0, 0, __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7(), 1000000000000, null(), null(), null());
+    $self'totalSupply = $totalSupply;
+    $self'owner = $owner;
+    $self'jettonContent = $jettonContent;
+    $self'jettonWalletCode = $JettonWalletSharded$_code_child();
+    $self'jettonWalletInitialCode = $JettonWalletSharded$_code_child();
+    return ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund);
+}
+
+() $global_setCode(cell $newCode) impure asm """
+    SETCODE
+""";
+
+() $global_setData(cell $newData) impure asm """
+    c4 POP
+""";
+
+() $global_checkEitherForwardPayload(slice $forwardPayload) impure asm """
+    LDDICT // Throws 9 if Either bit = 1 and ref is not present
+    SWAP
+    ISNULL
+    <{
+        DROP
+    }> PUSHCONT
+    <{
+        ENDS // Also throws 9 if slice is not empty
+    }> PUSHCONT
+    IFELSE
+""";
+
+cell $global_makeTakeWalletAddressMsg((int) $targetJettonWallet, (int, slice, int) $msg) impure inline {
+    var (($targetJettonWallet'hash)) = $targetJettonWallet;
+    var (($msg'queryId, $msg'ownerAddress, $msg'includeAddress)) = $msg;
+    return $Builder$_fun_endCell($Builder$_fun_storeMaybeRef(($msg'includeAddress ? $Builder$_fun_endCell($Builder$_fun_storeAddress($global_beginCell(), $msg'ownerAddress)) : null()), $Builder$_fun_storeBasechainAddress(store_uint(store_uint($global_beginCell(), 0xd1735400, 32), $msg'queryId, 64), ($targetJettonWallet'hash))));
+}
+
+int $global_extractLowBits(int $value, int $count) impure asm """
+    MODPOW2
+""";
+
+int $global_changeShard(int $hash, int $shard) impure inline {
+    return ($global_extractLowBits($hash, 248) | ($shard << 248));
+}
+
+builder $Builder$_fun_storeShardedStateInit(builder $self, (cell, cell) $init) impure inline {
+    var ($self) = $self;
+    var (($init'code, $init'data)) = $init;
+    return $Builder$_fun_storeRef($init'data, $Builder$_fun_storeRef($init'code, store_uint(store_uint($self, 40, 6), 6, 4)));
+}
+
+int $Address$_fun_getShard(slice $self) impure inline {
+    var ($self) = $self;
+    slice $sl = $Address$_fun_asSlice($self);
+    $sl~$Slice$_fun_skipBits(11);
+    return $sl~load_uint(8);
+}
+
+() $MessageParameters$_fun_send((int, cell, int, slice, int) $self) impure inline {
+    var (($self'mode, $self'body, $self'value, $self'to, $self'bounce)) = $self;
+    var (($self'mode, $self'body, $self'value, $self'to, $self'bounce)) = $self;
+    $global_message(($self'mode, $self'body, $self'value, $self'to, $self'bounce));
+}
+
+((int, cell, int, int, (cell, cell)), int) $DeployParameters$_fun_toShard((int, cell, int, int, (cell, cell)) $self, int $shard) impure inline {
+    var (($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data))) = $self;
+    var (($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data))) = $self;
+    return $ShardDeployParameters$_constructor_shard_deployParameters($shard, ($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data)));
+}
+
+() $ShardDeployParameters$_fun_send(((int, cell, int, int, (cell, cell)), int) $self) impure inline {
+    var ((($self'deployParameters'mode, $self'deployParameters'body, $self'deployParameters'value, $self'deployParameters'bounce, ($self'deployParameters'init'code, $self'deployParameters'init'data)), $self'shard)) = $self;
+    var ((($self'deployParameters'mode, $self'deployParameters'body, $self'deployParameters'value, $self'deployParameters'bounce, ($self'deployParameters'init'code, $self'deployParameters'init'data)), $self'shard)) = $self;
+    cell $newStateInit = $Builder$_fun_endCell($Builder$_fun_storeShardedStateInit($global_beginCell(), ($self'deployParameters'init'code, $self'deployParameters'init'data)));
+    cell $msg = $Builder$_fun_endCell($Builder$_fun_storeMaybeRef($self'deployParameters'body, $Builder$_fun_storeRef($newStateInit, store_uint($Builder$_fun_storeCoins(store_uint(store_uint($Builder$_fun_storeBool($self'deployParameters'bounce, store_uint($global_beginCell(), 1, 2)), 1024, 14), $global_changeShard($Cell$_fun_hash($newStateInit), $self'shard), 256), $self'deployParameters'value), 3, 107))));
+    $global_sendRawMessage($msg, $self'deployParameters'mode);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), ()) $JettonMinterSharded$_fun_sendUpgrade((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $to) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    $MessageParameters$_fun_send($MessageParameters$_constructor_to_mode_bounce_value_body($to, 66, false, 0, $Upgrade$_store_cell($Upgrade$_constructor_sender_walletVersion_newWalletCode($self'owner, $self'walletVersion, $self'jettonWalletCode), begin_cell())));
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), ());
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell)) $JettonMinterSharded$_fun_state((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    var $fresh$ret_53 = ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund);
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_53);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (int, int, slice, cell, cell)) $JettonMinterSharded$_fun_get_jetton_data((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    var $fresh$ret_54 = $JettonMinterState$_constructor_totalSupply_mintable_adminAddress_jettonContent_jettonWalletCode($self'totalSupply, $self'mintable, $self'owner, $self'jettonContent, $self'jettonWalletCode);
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_54);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (cell, cell)) $JettonMinterSharded$_fun_getInit((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $address) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    var ($walletInit'code, $walletInit'data) = $JettonWalletSharded$_init_child($address, $global_myAddress(), 0);
+    var $fresh$ret_56 = $StateInit$_constructor_code_data($self'jettonWalletInitialCode, $walletInit'data);
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_56);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), cell) $JettonMinterSharded$_fun_getJettonWalletInit((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $address) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    var ($init'code, $init'data) = ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getInit($address);
+    var $fresh$ret_57 = $Builder$_fun_endCell($Builder$_fun_storeShardedStateInit($global_beginCell(), ($init'code, $init'data)));
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_57);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), slice) $JettonMinterSharded$_fun_getJettonWalletByOwner((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $jettonWalletOwner) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    cell $init = ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getJettonWalletInit($jettonWalletOwner);
+    int $ownerShard = $Address$_fun_getShard($jettonWalletOwner);
+    slice $expectedAddr = $Builder$_fun_asSlice(store_uint(store_uint(store_uint($global_beginCell(), 4, 3), 0, 8), $global_changeShard($Cell$_fun_hash($init), $ownerShard), 256));
+    var $fresh$ret_58 = $expectedAddr~$Slice$_fun_loadAddress();
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_58);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), slice) $JettonMinterSharded$_fun_get_wallet_address((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $ownerAddress) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    var $fresh$ret_55 = ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getJettonWalletByOwner($ownerAddress);
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_55);
+}
+
+((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell), (int)) $JettonMinterSharded$_fun_getJettonBasechainWalletByOwner((int, int, int, int, slice, cell, cell, cell, int, int, int, slice, int, cell, cell, cell) $self, slice $jettonWalletOwner) impure inline {
+    var (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)) = $self;
+    cell $init = ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getJettonWalletInit($jettonWalletOwner);
+    int $ownerShard = $Address$_fun_getShard($jettonWalletOwner);
+    var $fresh$ret_59 = $BasechainAddress$_constructor_hash($global_changeShard($Cell$_fun_hash($init), $ownerShard));
+    return (($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund), $fresh$ret_59);
+}
+
+;;
+;; Get methods of a Contract JettonMinterSharded
+;;
+
+_ %state() method_id(77589) {
+    var self = $JettonMinterSharded$_contract_load();
+    var res = self~$JettonMinterSharded$_fun_state();
+    return $JettonMinterSharded$_to_external(res);
+}
+
+_ %get_jetton_data() method_id(106029) {
+    var self = $JettonMinterSharded$_contract_load();
+    var res = self~$JettonMinterSharded$_fun_get_jetton_data();
+    return $JettonMinterState$_to_external(res);
+}
+
+_ %get_wallet_address(slice $ownerAddress) method_id(103289) {
+    slice $ownerAddress = $ownerAddress;
+    var self = $JettonMinterSharded$_contract_load();
+    var res = self~$JettonMinterSharded$_fun_get_wallet_address($ownerAddress);
+    return res;
+}
+
+;;
+;; Routing of a Contract JettonMinterSharded
+;;
+
+;; message opcode reader utility: binary receivers and empty fallback receiver
+;; Returns 32 bit message opcode, or returns immediately if the message is shorter than 32 bits
+(slice, int) ~load_opcode_internal(slice s) asm( -> 1 0) "32 LDUQ IFNOTRET";
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    cs~skip_bits(2);
+    var msg_bounceable = cs~load_int(1);
+    var msg_bounced = cs~load_int(1);
+    slice msg_sender_addr = cs~load_msg_addr();
+    __tact_context = (msg_bounceable, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund) = $JettonMinterSharded$_contract_load();
+    
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        ;; Skip 0xFFFFFFFF prefix of a bounced message
+        in_msg~skip_bits(32);
+        int op = 0;
+        if (slice_bits(in_msg) >= 32) {
+            op = in_msg~load_uint(32);
+        }
+        ;; Bounced handler for JettonTransferInternal message
+        if (op == 0x178d4519) {
+            var ($msg'queryId, $msg'walletVersion, $msg'amount) = in_msg~$JettonTransferInternal$_load_bounced();
+            $self'totalSupply = $self'totalSupply - $msg'amount;
+            $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+            return ();
+        }
+        
+        return ();
+    }
+    int op = 0;
+    int in_msg_length = slice_bits(in_msg);
+    if (in_msg_length >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    ;; Receive ProvideWalletAddress message
+    if (op == 0x2c76b973) {
+        in_msg~skip_bits(32);
+        var $msg'queryId = in_msg~load_uint(64);
+        var $msg'ownerAddress = in_msg~load_msg_addr();
+        var $msg'includeAddress = in_msg~load_int(1);
+        int $ownerWorkchain = $StdAddress$_get_workchain($global_parseStdAddress($Address$_fun_asSlice($msg'ownerAddress)));
+        int $ownerShard = $Address$_fun_getShard($msg'ownerAddress);
+        int $hash = $Cell$_fun_hash(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getJettonWalletInit($msg'ownerAddress));
+        var ($targetJettonWallet'hash) = (($ownerWorkchain == 0) ? $BasechainAddress$_constructor_hash($global_changeShard($hash, $ownerShard)) : $global_emptyBasechainAddress());
+        $MessageParameters$_fun_send($MessageParameters$_constructor_body_to_value_mode($global_makeTakeWalletAddressMsg(($targetJettonWallet'hash), ($msg'queryId, $msg'ownerAddress, $msg'includeAddress)), __tact_context_get_sender(), 0, 64));
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive JettonBurnNotification message
+    if (op == 0x7bdd97de) {
+        in_msg~skip_bits(32);
+        var $msg'queryId = in_msg~load_uint(64);
+        var $msg'amount = in_msg~load_varuint16();
+        var $msg'sender = in_msg~load_msg_addr();
+        var $msg'responseDestination = in_msg~__tact_load_address_opt();
+        var ($sender'workchain, $sender'address) = $global_parseStdAddress($Address$_fun_asSlice(__tact_context_get_sender()));
+        var ($wallet'hash) = ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getJettonBasechainWalletByOwner($msg'sender);
+        throw_unless(724, ( (($sender'workchain == 0)) ? (($sender'address == __tact_not_null($wallet'hash))) : (false) ));
+        if ((~ null?($msg'responseDestination))) {
+            $self'totalSupply = $self'totalSupply + $msg'amount;
+            int $myBal = $global_myBalance();
+            $MessageParameters$_fun_send($MessageParameters$_constructor_to_body_value_bounce_mode(__tact_not_null($msg'responseDestination), $JettonExcesses$_store_cell($JettonExcesses$_constructor_queryId($msg'queryId), begin_cell()), (($myBal > 5000000000) ? ($myBal - 1000000000) : 0), false, 66));
+        } else {
+            $self'totalSupply = $self'totalSupply - $msg'amount;
+        }
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive Mint message
+    if (op == 0x642b7d07) {
+        in_msg~skip_bits(32);
+        var $msg'queryId = in_msg~load_uint(64);
+        var $msg'receiver = in_msg~load_msg_addr();
+        slice sc_1 = in_msg~load_ref().begin_parse();
+        var ($msg'mintMessage'queryId, $msg'mintMessage'walletVersion, $msg'mintMessage'amount, $msg'mintMessage'sender, $msg'mintMessage'responseDestination, $msg'mintMessage'forwardTonAmount, $msg'mintMessage'forwardPayload) = sc_1~$JettonTransferInternal$_load();
+        throw_unless(700, ( (( equal_slices_bits(__tact_context_get_sender(), $self'owner) )) ? (true) : ($self'mintable) ));
+        throw_unless(730, $self'mintable);
+        throw_unless(734, ($StdAddress$_get_workchain($global_parseStdAddress($Address$_fun_asSlice($msg'receiver))) == 0));
+        $global_checkEitherForwardPayload($msg'mintMessage'forwardPayload);
+        var ($ctx'bounceable, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+        throw_unless(703, ($ctx'value > ((((10000000 + $msg'mintMessage'forwardTonAmount) + $Context$_fun_readForwardFee(($ctx'bounceable, $ctx'sender, $ctx'value, $ctx'raw))) + $global_getForwardFee(300, 250000, false)) + (2 * $global_getComputeFee(11050, false)))));
+        $self'totalSupply = $self'totalSupply + $msg'mintMessage'amount;
+        $self'totalAccounts = $self'totalAccounts + 1;
+        $self'mintable = false;
+        $ShardDeployParameters$_fun_send($DeployParameters$_fun_toShard($DeployParameters$_constructor_value_mode_body_init(0, 80, $JettonTransferInternal$_store_cell(($msg'mintMessage'queryId, $msg'mintMessage'walletVersion, $msg'mintMessage'amount, $msg'mintMessage'sender, $msg'mintMessage'responseDestination, $msg'mintMessage'forwardTonAmount, $msg'mintMessage'forwardPayload), begin_cell()), ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getInit($msg'receiver)), $Address$_fun_getShard($msg'receiver)));
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive ClaimTON message
+    if (op == 0x393b1ce) {
+        in_msg~skip_bits(32);
+        var $msg'receiver = in_msg~load_msg_addr();
+        throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
+        $global_nativeReserve(10000000, 16);
+        $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode($msg'receiver, 0, 128));
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive JettonUpdateContent message
+    if (op == 4) {
+        in_msg~skip_bits(32);
+        var $msg'queryId = in_msg~load_uint(64);
+        var $msg'content = in_msg~load_ref();
+        throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
+        $self'jettonContent = $msg'content;
+        $self'version = 1;
+        $global_cashback(__tact_context_get_sender());
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive RequestUpgradeCode message
+    if (op == 0x38) {
+        in_msg~skip_bits(32);
+        var $msg'version = in_msg~load_uint(10);
+        if (($msg'version < $self'walletVersion)) {
+            ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_sendUpgrade(__tact_context_get_sender());
+        }
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive ChangeOwner message
+    if (op == 3) {
+        in_msg~skip_bits(32);
+        var $msg'queryId = in_msg~load_uint(64);
+        var $msg'newOwner = in_msg~load_msg_addr();
+        throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
+        $self'owner = $msg'newOwner;
+        $global_cashback(__tact_context_get_sender());
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive InviteApproval message
+    if (op == 0x44) {
+        in_msg~skip_bits(32);
+        var $msg'approved = in_msg~load_int(1);
+        var $msg'invitor = in_msg~load_msg_addr();
+        var $msg'invitee = in_msg~load_msg_addr();
+        var $msg'approver = in_msg~load_msg_addr();
+        if ($msg'approved) {
+            $self'totalAccounts = $self'totalAccounts + 1;
+        } else {
+            $self'totalAccounts = $self'totalAccounts - 1;
+        }
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive MintNotify message
+    if (op == 0x46) {
+        in_msg~skip_bits(32);
+        var $msg'amount = in_msg~load_varuint16();
+        var $msg'sender = in_msg~load_msg_addr();
+        $self'totalSupply = $self'totalSupply + $msg'amount;
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive ApplyGrant message
+    if (op == 0x41) {
+        in_msg~skip_bits(32);
+        var $msg'sender = in_msg~load_msg_addr();
+        var $msg'amount = in_msg~load_varuint16();
+        $self'publicWorks~__tact_dict_set_slice_uint(267, $msg'sender, $msg'amount, 10);
+        $global_cashback($msg'sender);
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive VoteProposal message
+    if (op == 0x42) {
+        in_msg~skip_bits(32);
+        var $msg'sender = in_msg~load_msg_addr();
+        var $msg'proposer = in_msg~load_msg_addr();
+        var $msg'turnover = in_msg~load_varuint16();
+        $self'votes~__tact_dict_set_slice_uint(267, $msg'proposer, $msg'turnover, 20);
+        $global_cashback($msg'sender);
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive ChangeMetadataUri message
+    if (op == 0xcb862902) {
+        in_msg~skip_bits(32);
+        var $msg'queryId = in_msg~load_uint(64);
+        var $msg'metadata = in_msg;
+        throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
+        $self'jettonContent = $Slice$_fun_asCell($msg'metadata);
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive Upgrade message
+    if (op == 0x2508d66a) {
+        in_msg~skip_bits(32);
+        var $msg'rootVersion = in_msg~load_int(1) ? in_msg~load_uint(10) : null();
+        var $msg'walletVersion = in_msg~load_int(1) ? in_msg~load_uint(10) : null();
+        var $msg'sender = in_msg~__tact_load_address_opt();
+        var $msg'newRootData = in_msg~load_maybe_ref();
+        var $msg'newRootCode = in_msg~load_maybe_ref();
+        slice sc_1 = in_msg~load_ref().begin_parse();
+        var $msg'newWalletData = sc_1~load_maybe_ref();
+        var $msg'newWalletCode = sc_1~load_maybe_ref();
+        throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
+        if ((~ null?($msg'newRootCode))) {
+            $self'version = $self'version + 1;
+            $global_setCode(__tact_not_null($msg'newRootCode));
+        }
+        if ((~ null?($msg'newWalletCode))) {
+            $self'walletVersion = $self'walletVersion + 1;
+            $self'jettonWalletCode = __tact_not_null($msg'newWalletCode);
+            ($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_sendUpgrade(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund)~$JettonMinterSharded$_fun_getJettonWalletByOwner($self'owner));
+        }
+        if ((~ null?($msg'newRootData))) {
+            $global_setData(__tact_not_null($msg'newRootData));
+            throw(0);
+        }
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    
+    ;; Receive empty message
+    if ((op == 0) & (in_msg_length <= 32)) {
+        $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+        return ();
+    }
+    ;; Receiver fallback
+    $JettonMinterSharded$_contract_store(($self'totalSupply, $self'totalAccounts, $self'treasurySurplus, $self'treasuryDeficits, $self'owner, $self'jettonContent, $self'jettonWalletCode, $self'jettonWalletInitialCode, $self'mintable, $self'version, $self'walletVersion, $self'tosHash, $self'mbrpAmount, $self'publicWorks, $self'votes, $self'crowdFund));
+}

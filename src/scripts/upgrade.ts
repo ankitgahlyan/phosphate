@@ -6,7 +6,7 @@ import { Address, TonClient, WalletContractV4, toNano, fromNano, Cell } from "@t
 import { getHttpEndpoint } from "@orbs-network/ton-access"
 import { mnemonicToPrivateKey } from "@ton/crypto"
 // import {storeMint} from "../output/Jetton_JettonMinter"
-import { JettonMinterSharded, Upgrade } from "../output/Root_JettonMinterSharded"
+import { JettonMinterSharded, Upgrade } from "../../build/root/Root_JettonMinterSharded"
 
 import { printSeparator } from "../utils/print"
 import "dotenv/config"
@@ -78,9 +78,10 @@ const main = async () => {
     const { createInterface } = await import("readline/promises")
     const rl = createInterface({ input: process.stdin, output: process.stdout })
 
-    let choice: string
+    // FIXME for now upgrade both as wallet init is coming from Root config builds or import from Wallet config build
+    const choice: string = 'b';
     while (true) {
-        choice = (await rl.question("Which contract to upgrade? (minter / wallet / both / m / w / b): ")).trim().toLowerCase()
+        // choice = (await rl.question("Which contract to upgrade? (minter / wallet / both / m / w / b): ")).trim().toLowerCase()
         if (["minter", "wallet", "both", "m", "w", "b"].includes(choice)) break
         console.log("Invalid choice. Please type 'm', 'w', 'b', 'minter', 'wallet' or 'both'.")
     }
@@ -95,12 +96,12 @@ const main = async () => {
     console.log("Upgrade selection:", upgradeMinter ? "minter" : "", upgradeWallet ? "wallet" : "")
 
     // Validate built artifacts when selected for upgrade
-    if (upgradeMinter && (!jettonMinterNew || !jettonMinterNew.init)) {
-        throw new Error("Failed to build new minter artifact from env — cannot upgrade minter")
-    }
-    if (upgradeWallet && (!jettonWalletNew || !jettonWalletNew.init)) {
-        throw new Error("Failed to build new wallet artifact from env — cannot upgrade wallet")
-    }
+    // if (upgradeMinter && (!jettonMinterNew || !jettonMinterNew.init)) {
+    //     throw new Error("Failed to build new minter artifact from env — cannot upgrade minter")
+    // }
+    // if (upgradeWallet && (!jettonWalletNew || !jettonWalletNew.init)) {
+    //     throw new Error("Failed to build new wallet artifact from env — cannot upgrade wallet")
+    // }
 
     const msg: Upgrade = {
         $$type: "Upgrade",

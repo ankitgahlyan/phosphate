@@ -61,6 +61,8 @@ contract JettonWalletSharded {
     // profession: Int as uint10 = 0; // not applicable
 
     version: Int as uint10 = 0;
+    mintable: Bool = true; // false after 1 billion ids/accounts, use case: marketing, engagement rewards
+    lastRewardClaimTime: Int as uint32 = 0;
 
     // Persist original wallet code so getInit can produce stable peer addresses across upgrades
     baseWalletCode: Cell; // store the original wallet code cell at deployment
@@ -179,6 +181,9 @@ contract JettonWalletSharded {
                 return;
             } else if (msg.amount == ton("0.444")) {
                 self.claimTon(); // redundant TODO
+                return;
+            } else if (msg.amount == ton("0.111")) { // engagement reward like pi network
+                self.engagementReward();
                 return;
             }
             // no else return so other unhandled semantic txns are forwarded
@@ -319,12 +324,12 @@ contract JettonWalletSharded {
             self.invited.set(msg.invitee, amount);
             self.mintInternal(amount); // 2x
             self.connections += 1;
-        } else { // FIXME get amount from store when reversing connection
+        } else { // FIXME: get amount from store when reversing connection
             let _ = self.invited.del(msg.invitee);
             self.burnForce(msg.invitee, amount);
             self.connections -= 1;
         }
-        self.notifyOwner(msg.invitee, amount, "invite success".asComment().asSlice());
+        self.notifyOwner(msg.invitee, amount, "invite success".asComment().asSlice()); // FIXME: onUnInvite
         self.notifyRoot(msg.approver, msg.approved, 3 * MBRP_AMOUNT);
         MessageParameters { // FIXME maybe notifs need to come from owners only
             to: msg.invitee,
@@ -333,7 +338,7 @@ contract JettonWalletSharded {
             bounce: false,
             body: JettonNotification { // 0x7362d09c -- Remind the invitee
                 queryId: 0,
-                amount: msg.approved ? MBRP_AMOUNT : - MBRP_AMOUNT,
+                amount: MBRP_AMOUNT, // msg.approved ? MBRP_AMOUNT : - MBRP_AMOUNT,
                 sender: self.owner,
                 forwardPayload: "invited approved".asComment().asSlice(),
             }.toCell(),
@@ -725,7 +730,7 @@ contract JettonWalletSharded {
 
     inline fun reportResolutionInternal(msg: ResolutionInternal) {
         throwUnless(NO_PENDING_REQUEST, self.reportResolutionTime > 0); // TODO: need some binary (&) compare magic
-        throwUnless(WAIT_UNTIL_CLOSURE, now() >= self.reportResolutionTime);
+        throwUnless(WAIT_MORE, now() >= self.reportResolutionTime);
 
         let reporters = self.reporterCount;
         let disputers = self.disputerCount;
@@ -1061,7 +1066,7 @@ contract JettonWalletSharded {
     inline fun requestUpgrade(from: Address) {
         MessageParameters {
             to: from,
-            value: ton("0.1"),
+            value: ton("0.2"),
             bounce: false,
             mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
             body: RequestUpgradeCode {
@@ -1079,7 +1084,7 @@ contract JettonWalletSharded {
         MessageParameters {
             to,
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
-            value: 0,
+            value: ton("0.2"),
             bounce: false,
             body: Upgrade {
                 sender: self.owner,
@@ -1106,7 +1111,6 @@ contract JettonWalletSharded {
             }
         }
         // notify
-
     }
 
     inline fun voteProposal(proposer: Address) {
@@ -1311,6 +1315,7 @@ contract JettonWalletSharded {
         let timeSinceLastTxn = now() - self.lastTxnTime;
 
         // if ((timeSinceLastTxn < 86400 || amount > ton("100")) ||&& !self.connected()) { // .1% fees levied on frequent and significant txns to balance bounced burns, insurance etc
+        // let fee = amount / ton("1000"); // 0.1%
         let fee = divc(amount, ton("1000")); // 0.1%
         amount += fee;
         // } // extra fixed fees for payment channels/contracts?
@@ -1321,7 +1326,7 @@ contract JettonWalletSharded {
         }
 
         self.balance -= amount;
-        throwUnless(INSUFFICIENT_BALANCE, self.balance < 0);
+        throwUnless(INSUFFICIENT_BALANCE, self.balance >= 0);
         self.turnover += amount;
     }
 
@@ -1343,6 +1348,46 @@ contract JettonWalletSharded {
             }.toCell(),
         }.send();
     }
+
+    inline fun engagementReward() {
+        // if (self.mintable && (now() > self.lastRewardClaimTime + 86400)) { // 1 day
+        // if (now() > self.lastRewardClaimTime + 86400) { // 1 day
+        let now = now();
+        throwUnless(WAIT_MORE, (now() > self.lastRewardClaimTime + 86400) && (now - self.accountInitTime < 31_536_000)); // 1 day & accountInit < 1 years
+        self.mintInternal(ton("10")); // a little temp UBI
+        self.lastRewardClaimTime = now();
+
+        // update supply
+        MessageParameters {
+            to: self.minter,
+            value: ton("0.01"),
+            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
+            bounce: false,
+            body: MintNotify {
+                amount: ton("10"),
+                sender: self.owner,
+            }.toCell(),
+        }.send();
+        // }
+    }
+
+    // receive(msg: StopEngageMint) {
+    //     throwUnless(INCORRECT_SENDER, msg.sender == self.invitor || sender() == self.minter);
+    //     self.mintable = false;
+    //     if (msg.sender == self.invitor) {
+    //         foreach (invited, _ in self.invited) {
+    //             MessageParameters {
+    //                 to: self.getJettonWalletByOwner(invited),
+    //                 value: ton("0.01"),
+    //                 mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
+    //                 bounce: false,
+    //                 body: StopEngageMint {
+    //                     sender: self.owner,
+    //                 }.toCell(),
+    //             };
+    //         }
+    //     }
+    // }
 
     get fun get_wallet_data(): JettonWalletData { // tensor, JettonWalletData? for tuple
         // throwUnless(ACCOUNT_TERMINATED, !self.terminated);

@@ -53,7 +53,7 @@ const UNAUTHORIZED_BURN: Int = 724;
 const MINT_CLOSED: Int = 730;
 
 const WRONG_WORKCHAIN: Int = 734;
-const WAIT_UNTIL_CLOSURE: Int = 735;
+const WAIT_MORE: Int = 735;
 const NOT_CLOSE_FRIEND: Int = 736;
 const ALREADY_VOUCHED: Int = 737;
 

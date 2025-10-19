@@ -4,32 +4,34 @@
 import "dotenv/config"
 import { getHttpEndpoint } from "@orbs-network/ton-access"
 import { Address } from "@ton/core"
-import { createInterface } from "readline/promises"
+// import { createInterface } from "readline/promises"
 import { TonClient } from "@ton/ton"
 // import {JettonMinter} from "../output/Jetton_JettonMinter"//base
 // import {JettonMinterSharded} from "../output/Shard_JettonMinterSharded" // shard
-import { JettonWalletSharded } from "../output/Root_JettonWalletSharded"
+import { JettonWalletSharded } from "../../build/root/Root_JettonWalletSharded"
 // import chalk from "chalk"
 import { getNetworkFromEnv } from "../utils/utils"
+import { ROOT_ADDRESS } from "./consts"
+import { JettonMinterSharded } from "../../build/root/Root_JettonMinterSharded"
 // import { displayContentCell } from "../utils/jetton-helpers"
 
-const readContractAddress = async () => {
-    const readline = createInterface({
-        input: process.stdin,
-        output: process.stdout,
-    })
+// const readContractAddress = async () => {
+//     const readline = createInterface({
+//         input: process.stdin,
+//         output: process.stdout,
+//     })
 
-    while (true) {
-        try {
-            const walletAddress = await readline.question("Enter wallet address: ")
-            const address = Address.parse(walletAddress)
-            readline.close()
-            return address
-        } catch (_e) {
-            console.error("Invalid address, please try again.")
-        }
-    }
-}
+//     while (true) {
+//         try {
+//             const walletAddress = await readline.question("Enter wallet address: ")
+//             const address = Address.parse(walletAddress)
+//             readline.close()
+//             return address
+//         } catch (_e) {
+//             console.error("Invalid address, please try again.")
+//         }
+//     }
+// }
 
 const main = async () => {
     const network = getNetworkFromEnv()
@@ -39,9 +41,10 @@ const main = async () => {
         endpoint: endpoint,
     })
 
-    // const minterAddress = await readContractAddress()
-    const walletAddress = await readContractAddress()
-    // const minter = client.open(JettonMinterSharded.fromAddress(minterAddress))
+    // const minterAddress = Address.parse(ROOT_ADDRESS)
+    // const walletAddress = await readContractAddress()
+    const minter = client.open(JettonMinterSharded.fromAddress(Address.parse(ROOT_ADDRESS))) // TODO GIVE CHOICE TO ENTER ON CLI
+    const walletAddress = await minter.getGetWalletAddress(Address.parse("0QDkhwjfXtlvCAtETBGGZjJqNHcgNtanCh7zhJiFpNHOHHry")) // TODO derive from env key
     const wallet = client.open(JettonWalletSharded.fromAddress(walletAddress))
 
     // const minterData = await minter.getGetJettonData()
@@ -73,7 +76,7 @@ if (walletAllData.friends.size == 0) {
     //     `Is mintable: ${walletData.mintable ? chalk.greenBright("Yes") : chalk.redBright("No")}`,
     // )
     // await displayContentCell(minterData.jettonContent)
-     console.log(walletAllData)
+     console.log(walletAllData.balance)
 }
 
 void main()

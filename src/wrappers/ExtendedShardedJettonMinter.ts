@@ -13,7 +13,7 @@ import {
     minTonsForStorage,
     ProvideWalletAddress,
     storeMint,
-} from "../output/Root_JettonMinterSharded"
+} from "../../build/root/Root_JettonMinterSharded"
 import {Op} from "./GovernanceJettonConstants"
 import {Address, beginCell, Cell, ContractProvider, Sender, Slice, SendMode, toNano} from "@ton/core"
 
@@ -150,8 +150,7 @@ export class ExtendedShardedJettonMinter extends JettonMinterSharded {
                 $$type: "JettonTransferInternal",
                 queryId: 0n,
                 amount: jettonAmount,
-                version: 0n,
-                currentCode: null,
+                walletVersion: 0n,
                 sender: this.address,
                 responseDestination: this.address,
                 forwardTonAmount: forwardTonAmount,
@@ -231,8 +230,7 @@ export class ExtendedShardedJettonMinter extends JettonMinterSharded {
                     mintMessage: {
                         $$type: "JettonTransferInternal",
                         amount: mintAmount,
-                        version: 0n,
-                        currentCode: null,
+                        walletVersion: 0n,
                         sender: sender,
                         responseDestination: responseDestination,
                         queryId: 0n,

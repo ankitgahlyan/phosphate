@@ -1,6 +1,3 @@
-//  SPDX-License-Identifier: MIT
-//  Copyright © 2025 TON Studio
-
 import {
     beginCell,
     toNano,
@@ -10,14 +7,14 @@ import {
     internal,
     fromNano,
 } from "@ton/ton"
-import {getHttpEndpoint} from "@orbs-network/ton-access"
-import {mnemonicToPrivateKey} from "@ton/crypto"
-import {buildJettonMinterFromEnv} from "../utils/jetton-helpers"
-import {storeMint} from "../output/Root_JettonMinterSharded"
+import { getHttpEndpoint } from "@orbs-network/ton-access"
+import { mnemonicToPrivateKey } from "@ton/crypto"
+import { buildJettonMinterFromEnv } from "../utils/jetton-helpers"
+import { storeMint } from "../../build/root/Root_JettonMinterSharded"
 
-import {printSeparator} from "../utils/print"
+import { printSeparator } from "../utils/print"
 import "dotenv/config"
-import {getJettonHttpLink, getNetworkFromEnv} from "../utils/utils"
+import { getJettonHttpLink, getNetworkFromEnv } from "../utils/utils"
 
 const main = async () => {
     const mnemonics = process.env.MNEMONICS
@@ -32,16 +29,19 @@ const main = async () => {
 
     const network = getNetworkFromEnv()
 
-    const endpoint = await getHttpEndpoint({network})
+    const endpoint = await getHttpEndpoint({ network })
     const client = new TonClient({
         endpoint: endpoint,
+        // endpoint: 'https://toncenter.com/api/v2/jsonRPC', // mainnet
     })
     const keyPair = await mnemonicToPrivateKey(mnemonics.split(" "))
     const secretKey = keyPair.secretKey
     const workchain = 0 // we are working in basechain.
+    // const walletId = loadWalletIdV5R1(2147483645n, -3);
     const deployerWallet = WalletContractV4.create({
         workchain: workchain,
         publicKey: keyPair.publicKey,
+        // walletId: 2147483645,// Maybe<Partial<WalletIdV5R1<number>>> // wallet v5 0QANIS...
     })
 
     const deployerWalletContract = client.open(deployerWallet)
@@ -75,7 +75,7 @@ const main = async () => {
     console.log(`Running deploy script for ${network} network and for Shard Jetton Minter`)
     console.log(
         "🛠️Preparing new outgoing massage from deployment wallet. \n" +
-            deployerWalletContract.address,
+        deployerWalletContract.address // deployerWalletContract.address, // FIXME
     )
     console.log("Seqno: ", seqno + "\n")
     printSeparator()
@@ -102,10 +102,11 @@ const main = async () => {
                 to: jettonMinter!.address,
                 value: deployAmount,
                 body: packed_msg,
-                init: {
-                    code: jettonMinter!.init?.code,
-                    data: jettonMinter!.init?.data,
-                },
+                init: jettonMinter!.init,
+                // init: {
+                //     code: jettonMinter!.init?.code,
+                //     data: jettonMinter!.init?.data,
+                // },
                 // to: 'EQCD39VS5jcptHL8vMjEXrzGaRcCVYto7HUn4bpAOg8xqB2N',
                 //   body: 'Example transfer body',
             }),

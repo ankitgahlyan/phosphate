@@ -350,3 +350,12 @@ message(0xcb862902) ChangeMetadataUri {
     queryId: Int as uint64;
     metadata: Slice as remaining;
 }
+
+message(0x45) StopEngageMint {
+    sender: Address;
+}
+
+message(0x46) MintNotify {
+    amount: Int as coins;
+    sender: Address;
+}
