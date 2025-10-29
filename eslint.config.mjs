@@ -25,6 +25,7 @@ export default [
             ".yarn/*",
             "dist/*",
             "src/output/*",
+            "build/"
         ],
     },
 

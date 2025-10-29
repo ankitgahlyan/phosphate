@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: JettonWalletSharded
-BoC Size: 33683 bytes
+BoC Size: 38951 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 70
+Total structures: 76
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -46,12 +46,48 @@ TL-B: `_ hash:Maybe int257 = BasechainAddress`
 Signature: `BasechainAddress{hash:Maybe int257}`
 
 ### JettonWalletSharded$Data
-TL-B: `_ owner:address ownerAfterRecovery:address minter:address nominee:address invitor:address invitor0:address balance:coins turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
-Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,nominee:address,invitor:address,invitor0:address,balance:coins,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
+TL-B: `_ owner:address ownerAfterRecovery:address minter:address nominee:address invitor:address invitor0:address id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
+Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,nominee:address,invitor:address,invitor0:address,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
+
+### IdInfo
+TL-B: `_ username:^string lattitude:^string longitude:^string address:address = IdInfo`
+Signature: `IdInfo{username:^string,lattitude:^string,longitude:^string,address:address}`
+
+### AddId
+TL-B: `add_id#00000049 username:^string lattitude:^string longitude:^string address:address = AddId`
+Signature: `AddId{username:^string,lattitude:^string,longitude:^string,address:address}`
+
+### RemoveId
+TL-B: `remove_id#00000050 address:address = RemoveId`
+Signature: `RemoveId{address:address}`
 
 ### Insurance
 TL-B: `_ emi:coins startStop:uint42 = Insurance`
 Signature: `Insurance{emi:coins,startStop:uint42}`
+
+### FriendsAndFollowings
+TL-B: `_ friends:Maybe ^cell followings:Maybe ^cell followers:Maybe ^cell invited:Maybe ^cell pendingRequests:Maybe ^cell debts:Maybe ^cell reports:Maybe ^cell = FriendsAndFollowings`
+Signature: `FriendsAndFollowings{friends:Maybe ^cell,followings:Maybe ^cell,followers:Maybe ^cell,invited:Maybe ^cell,pendingRequests:Maybe ^cell,debts:Maybe ^cell,reports:Maybe ^cell}`
+
+### OtherStateConsts
+TL-B: `_ reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool mbrpAmount:coins closureWait:uint32 active:bool lastMsgTo:address insurance:^cell = OtherStateConsts`
+Signature: `OtherStateConsts{reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,mbrpAmount:coins,closureWait:uint32,active:bool,lastMsgTo:address,insurance:^cell}`
+
+### InvitorNominee
+TL-B: `_ invitor:address nominee:address = InvitorNominee`
+Signature: `InvitorNominee{invitor:address,nominee:address}`
+
+### JettonData
+TL-B: `_ totalSupply:coins mintable:bool owner:address content:^cell jettonWalletCode:^cell = JettonData`
+Signature: `JettonData{totalSupply:coins,mintable:bool,owner:address,content:^cell,jettonWalletCode:^cell}`
+
+### JettonWalletData
+TL-B: `_ balance:coins owner:address minter:address code:^cell = JettonWalletData`
+Signature: `JettonWalletData{balance:coins,owner:address,minter:address,code:^cell}`
+
+### MaybeAddress
+TL-B: `_ address:address = MaybeAddress`
+Signature: `MaybeAddress{address:address}`
 
 ### JettonNotification
 TL-B: `jetton_notification#7362d09c queryId:uint64 amount:coins sender:address forwardPayload:remainder<slice> = JettonNotification`
@@ -109,6 +145,10 @@ Signature: `ClaimTON{receiver:address}`
 TL-B: `request_upgrade_code#00000038 version:uint10 = RequestUpgradeCode`
 Signature: `RequestUpgradeCode{version:uint10}`
 
+### UpgradeReqFromMainnet
+TL-B: `upgrade_req_from_mainnet#00000047 sender:address = UpgradeReqFromMainnet`
+Signature: `UpgradeReqFromMainnet{sender:address}`
+
 ### Upgrade
 TL-B: `upgrade#2508d66a rootVersion:Maybe uint10 walletVersion:Maybe uint10 sender:address newRootData:Maybe ^cell newRootCode:Maybe ^cell newWalletData:Maybe ^cell newWalletCode:Maybe ^cell = Upgrade`
 Signature: `Upgrade{rootVersion:Maybe uint10,walletVersion:Maybe uint10,sender:address,newRootData:Maybe ^cell,newRootCode:Maybe ^cell,newWalletData:Maybe ^cell,newWalletCode:Maybe ^cell}`
@@ -117,9 +157,13 @@ Signature: `Upgrade{rootVersion:Maybe uint10,walletVersion:Maybe uint10,sender:a
 TL-B: `change_owner#00000003 queryId:uint64 newOwner:address = ChangeOwner`
 Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
 
+### Invite
+TL-B: `invite#00000048 target:address id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} = Invite`
+Signature: `Invite{target:address,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address}}`
+
 ### InviteInternal
-TL-B: `invite_internal#00000001 version:uint10 amount:coins sender:address invitor:address currentWalletCode:^cell forwardPayload:remainder<slice> = InviteInternal`
-Signature: `InviteInternal{version:uint10,amount:coins,sender:address,invitor:address,currentWalletCode:^cell,forwardPayload:remainder<slice>}`
+TL-B: `invite_internal#00000001 version:uint10 id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} sender:address invitor:address currentWalletCode:^cell = InviteInternal`
+Signature: `InviteInternal{version:uint10,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},sender:address,invitor:address,currentWalletCode:^cell}`
 
 ### Follow
 TL-B: `follow#00000002 target:address amount:coins = Follow`
@@ -172,30 +216,6 @@ Signature: `ProcessComplaint{target:address}`
 ### AdminAction
 TL-B: `admin_action#00000014 action:uint8 value:coins = AdminAction`
 Signature: `AdminAction{action:uint8,value:coins}`
-
-### FriendsAndFollowings
-TL-B: `_ friends:Maybe ^cell followings:Maybe ^cell followers:Maybe ^cell invited:Maybe ^cell pendingRequests:Maybe ^cell debts:Maybe ^cell reports:Maybe ^cell = FriendsAndFollowings`
-Signature: `FriendsAndFollowings{friends:Maybe ^cell,followings:Maybe ^cell,followers:Maybe ^cell,invited:Maybe ^cell,pendingRequests:Maybe ^cell,debts:Maybe ^cell,reports:Maybe ^cell}`
-
-### OtherStateConsts
-TL-B: `_ reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool mbrpAmount:coins closureWait:uint32 active:bool lastMsgTo:address insurance:^cell = OtherStateConsts`
-Signature: `OtherStateConsts{reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,mbrpAmount:coins,closureWait:uint32,active:bool,lastMsgTo:address,insurance:^cell}`
-
-### InvitorNominee
-TL-B: `_ invitor:address nominee:address = InvitorNominee`
-Signature: `InvitorNominee{invitor:address,nominee:address}`
-
-### JettonData
-TL-B: `_ totalSupply:coins mintable:bool owner:address content:^cell jettonWalletCode:^cell = JettonData`
-Signature: `JettonData{totalSupply:coins,mintable:bool,owner:address,content:^cell,jettonWalletCode:^cell}`
-
-### JettonWalletData
-TL-B: `_ balance:coins owner:address minter:address code:^cell = JettonWalletData`
-Signature: `JettonWalletData{balance:coins,owner:address,minter:address,code:^cell}`
-
-### MaybeAddress
-TL-B: `_ address:address = MaybeAddress`
-Signature: `MaybeAddress{address:address}`
 
 ### JettonUpdateContent
 TL-B: `jetton_update_content#00000004 queryId:uint64 content:^cell = JettonUpdateContent`
@@ -277,6 +297,10 @@ Signature: `ShardDeployParameters{deployParameters:DeployParameters{mode:int257,
 TL-B: `_ messageParameters:MessageParameters{mode:int257,body:Maybe ^cell,value:int257,to:address,bounce:bool} shard:uint8 = ShardMessageParameters`
 Signature: `ShardMessageParameters{messageParameters:MessageParameters{mode:int257,body:Maybe ^cell,value:int257,to:address,bounce:bool},shard:uint8}`
 
+### Ids$Data
+TL-B: `_ root:address lat:int257 long:int257 users:dict<address, int> jettonWalletInitialCode:^cell = Ids`
+Signature: `Ids{root:address,lat:int257,long:int257,users:dict<address, int>,jettonWalletInitialCode:^cell}`
+
 ### JettonMinterState
 TL-B: `_ totalSupply:coins mintable:bool adminAddress:address jettonContent:^cell jettonWalletCode:^cell = JettonMinterState`
 Signature: `JettonMinterState{totalSupply:coins,mintable:bool,adminAddress:address,jettonContent:^cell,jettonWalletCode:^cell}`
@@ -294,16 +318,16 @@ No arguments
 ## state
 No arguments
 
-## report_resolution_time
+## reportResolutionTime
 No arguments
 
-## get_invitor_nominee
+## getInvitorNominee
 No arguments
 
-## get_friends_and_followings
+## getFriendsAndFollowings
 No arguments
 
-## other_consts
+## otherConsts
 No arguments
 
 ## Exit codes
@@ -357,4 +381,6 @@ JettonWalletSharded --> BaseTrait
 ```mermaid
 graph TD
 JettonWalletSharded
+JettonWalletSharded --> Ids
+Ids --> JettonWalletSharded
 ```

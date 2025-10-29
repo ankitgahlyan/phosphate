@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: Dns
-BoC Size: 146 bytes
+BoC Size: 3640 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 14
+Total structures: 29
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -57,12 +57,88 @@ Signature: `DeployOk{queryId:uint64}`
 TL-B: `factory_deploy#6d0ff13b queryId:uint64 cashback:address = FactoryDeploy`
 Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 
+### ChangeOwner
+TL-B: `change_owner#819dbe99 queryId:uint64 newOwner:address = ChangeOwner`
+Signature: `ChangeOwner{queryId:uint64,newOwner:address}`
+
+### ChangeOwnerOk
+TL-B: `change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk`
+Signature: `ChangeOwnerOk{queryId:uint64,newOwner:address}`
+
+### DNSResolveResult
+TL-B: `_ prefix:int257 record:Maybe ^cell = DNSResolveResult`
+Signature: `DNSResolveResult{prefix:int257,record:Maybe ^cell}`
+
+### UpdateRecord
+TL-B: `update_record#d294b726 domain:^string category:int257 record:Maybe ^cell = UpdateRecord`
+Signature: `UpdateRecord{domain:^string,category:int257,record:Maybe ^cell}`
+
+### UpdateSubdomain
+TL-B: `update_subdomain#b89f6610 domain:^string address:address = UpdateSubdomain`
+Signature: `UpdateSubdomain{domain:^string,address:address}`
+
+### EventPermissionsUpdated
+TL-B: `event_permissions_updated#6cd59be6 permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool} = EventPermissionsUpdated`
+Signature: `EventPermissionsUpdated{permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool}}`
+
+### EventRecordAdded
+TL-B: `event_record_added#a61ddcfd domain:^string category:int257 record:^cell = EventRecordAdded`
+Signature: `EventRecordAdded{domain:^string,category:int257,record:^cell}`
+
+### EventRecordUpdated
+TL-B: `event_record_updated#ef2db883 domain:^string category:int257 oldRecord:^cell newRecord:^cell = EventRecordUpdated`
+Signature: `EventRecordUpdated{domain:^string,category:int257,oldRecord:^cell,newRecord:^cell}`
+
+### EventRecordRemoved
+TL-B: `event_record_removed#ff9494f1 domain:^string category:int257 = EventRecordRemoved`
+Signature: `EventRecordRemoved{domain:^string,category:int257}`
+
+### EventSubdomainAdded
+TL-B: `event_subdomain_added#ff1b3b14 domain:^string address:address = EventSubdomainAdded`
+Signature: `EventSubdomainAdded{domain:^string,address:address}`
+
+### EventSubdomainRemoved
+TL-B: `event_subdomain_removed#b5f1b4b5 domain:^string = EventSubdomainRemoved`
+Signature: `EventSubdomainRemoved{domain:^string}`
+
+### EventSubdomainUpdated
+TL-B: `event_subdomain_updated#ab7c80bd domain:^string oldAddress:address newAddress:address = EventSubdomainUpdated`
+Signature: `EventSubdomainUpdated{domain:^string,oldAddress:address,newAddress:address}`
+
+### DNSRecord
+TL-B: `_ name:^string categories:dict<uint256, ^cell> = DNSRecord`
+Signature: `DNSRecord{name:^string,categories:dict<uint256, ^cell>}`
+
+### Permissions
+TL-B: `_ canAdd:bool canRemove:bool canReplace:bool = Permissions`
+Signature: `Permissions{canAdd:bool,canRemove:bool,canReplace:bool}`
+
 ### Dns$Data
-TL-B: `_  = Dns`
-Signature: `Dns{}`
+TL-B: `_ owner:address permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool} records:dict<uint256, ^DNSRecord{name:^string,categories:dict<uint256, ^cell>}> subdomains:dict<uint256, address> = Dns`
+Signature: `Dns{owner:address,permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool},records:dict<uint256, ^DNSRecord{name:^string,categories:dict<uint256, ^cell>}>,subdomains:dict<uint256, address>}`
+
+### SimpleDNSFactory$Data
+TL-B: `_ counter:uint64 = SimpleDNSFactory`
+Signature: `SimpleDNSFactory{counter:uint64}`
 
 ## Get methods
-Total get methods: 0
+Total get methods: 5
+
+## records
+No arguments
+
+## subdomains
+No arguments
+
+## permissions
+No arguments
+
+## owner
+No arguments
+
+## dnsresolve
+Argument: subdomain
+Argument: category
 
 ## Exit codes
 * 2: Stack underflow
@@ -101,6 +177,13 @@ Total get methods: 0
 * 135: Code of a contract was not found
 * 136: Invalid standard address
 * 138: Not a basechain address
+* 21519: Can't remove records
+* 22696: Invalid domain
+* 24161: Invalid DNS name
+* 25569: Can't destroy contract
+* 26438: Fuse already burned
+* 43961: Can't add records
+* 55590: Can't replace records
 
 ## Trait inheritance diagram
 
@@ -110,6 +193,14 @@ Dns
 Dns --> BaseTrait
 Dns --> Deployable
 Deployable --> BaseTrait
+Dns --> FactoryDeployable
+FactoryDeployable --> BaseTrait
+Dns --> OwnableTransferable
+OwnableTransferable --> Ownable
+Ownable --> BaseTrait
+OwnableTransferable --> BaseTrait
+Dns --> Ownable
+Dns --> DNSResolver
 ```
 
 ## Contract dependency diagram

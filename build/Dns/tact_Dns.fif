@@ -1,28 +1,153 @@
 // automatically generated from `@stdlib/std/stdlib.fc` `/home/zeta/connected/ton/fossfiatContract/build/Dns/tact_Dns.fc` 
 PROGRAM{
+  DECLPROC __tact_not_null
   DECLPROC __tact_context_get
   DECLPROC __tact_context_get_sender
+  DECLPROC __tact_dict_get_uint_slice
+  DECLPROC __tact_dict_set_uint_slice
+  DECLPROC __tact_dict_get_uint_cell
+  DECLPROC __tact_dict_set_uint_cell
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
+  DECLPROC $ChangeOwnerOk$_store
+  DECLPROC $ChangeOwnerOk$_store_cell
+  DECLPROC $Permissions$_store
+  DECLPROC $Permissions$_load
+  DECLPROC $EventPermissionsUpdated$_store
+  DECLPROC $EventPermissionsUpdated$_store_cell
+  DECLPROC $EventRecordAdded$_store
+  DECLPROC $EventRecordAdded$_store_cell
+  DECLPROC $EventRecordUpdated$_store
+  DECLPROC $EventRecordUpdated$_store_cell
+  DECLPROC $EventRecordRemoved$_store
+  DECLPROC $EventRecordRemoved$_store_cell
+  DECLPROC $EventSubdomainAdded$_store
+  DECLPROC $EventSubdomainAdded$_store_cell
+  DECLPROC $EventSubdomainRemoved$_store
+  DECLPROC $EventSubdomainRemoved$_store_cell
+  DECLPROC $EventSubdomainUpdated$_store
+  DECLPROC $EventSubdomainUpdated$_store_cell
+  DECLPROC $DNSRecord$_store
+  DECLPROC $DNSRecord$_store_cell
+  DECLPROC $DNSRecord$_load
+  DECLPROC $DNSRecord$_as_optional
+  DECLPROC $DNSRecord$_load_opt
+  DECLPROC $Dns$_store
+  DECLPROC $Dns$_load
+  DECLPROC $StateInit$_get_code
+  DECLPROC $StateInit$_get_data
+  DECLPROC $StateInit$_not_null
   DECLPROC $Context$_get_value
+  DECLPROC $DNSResolveResult$_to_external
+  DECLPROC $DNSRecord$_get_categories
+  DECLPROC $DNSRecord$_not_null
+  DECLPROC $Permissions$_to_external
+  DECLPROC $Dns$init$_load
+  DECLPROC $Permissions$_constructor_canAdd_canRemove_canReplace
   DECLPROC $Dns$_contract_init
   DECLPROC $Dns$_contract_load
   DECLPROC $Dns$_contract_store
+  DECLPROC $global_emit
+  DECLPROC $global_dnsExtractTopDomainLength
+  DECLPROC $global_dnsExtractTopDomain
+  DECLPROC $global_dnsResolveNext
+  DECLPROC $DNSResolveResult$_constructor_prefix_record
+  DECLPROC $Dns$_fun_resolveByKey
+  DECLPROC $Dns$_fun_doResolveDNS
+  DECLPROC $Dns$_fun_records
+  DECLPROC $Dns$_fun_subdomains
+  DECLPROC $Dns$_fun_permissions
   DECLPROC $MessageParameters$_constructor_bounce_to_value_mode_body
+  DECLPROC $Dns$_fun_reply
   DECLPROC $Dns$_fun_notify
+  DECLPROC $SendParameters$_constructor_to_mode_body_value_bounce_code_data
+  DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
+  DECLPROC $Dns$_fun_forward
+  DECLPROC $Dns$_fun_requireOwner
+  DECLPROC $Dns$_fun_owner
+  DECLPROC $Dns$_fun_dnsresolve
+  DECLPROC $EventSubdomainRemoved$_constructor_domain
+  DECLPROC $EventSubdomainAdded$_constructor_domain_address
+  DECLPROC $EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress
+  DECLPROC $EventRecordRemoved$_constructor_domain_category
+  DECLPROC $EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord
+  DECLPROC $EventRecordAdded$_constructor_domain_category_record
+  DECLPROC $DNSRecord$_constructor_name_categories
   DECLPROC $DeployOk$_constructor_queryId
+  DECLPROC $ChangeOwnerOk$_constructor_queryId_newOwner
+  DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body
+  DECLPROC $EventPermissionsUpdated$_constructor_permissions
+  DECLPROC dns_internal_verify
+  DECLPROC dns_string_to_internal
+  DECLPROC dns_internal_normalize
+  114139 DECLMETHOD %records
+  76907 DECLMETHOD %subdomains
+  73541 DECLMETHOD %permissions
+  83229 DECLMETHOD %owner
+  123660 DECLMETHOD %dnsresolve
   DECLPROC recv_internal
   65535 DECLMETHOD __tact_selector_hack
   DECLGLOBVAR __tact_context
   DECLGLOBVAR __tact_context_sender
   DECLGLOBVAR __tact_child_contract_codes
   DECLGLOBVAR __tact_randomized
+  __tact_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+  }>
   __tact_context_get PROCINLINE:<{
     __tact_context GETGLOB
     4 UNTUPLE
   }>
   __tact_context_get_sender PROCINLINE:<{
     __tact_context_sender GETGLOB
+  }>
+  __tact_dict_get_uint_slice PROCINLINE:<{
+    -ROT
+    DICTUGET
+    NULLSWAPIFNOT
+    IF:<{
+    }>ELSE<{
+      DROP
+      PUSHNULL
+    }>
+  }>
+  __tact_dict_set_uint_slice PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      -ROT
+      DICTUDEL
+      DROP
+    }>ELSE<{
+      s1 s3 s3 XCHG3
+      DICTUSET
+    }>
+  }>
+  __tact_dict_get_uint_cell PROCINLINE:<{
+    -ROT
+    DICTUGETREF
+    NULLSWAPIFNOT
+    IF:<{
+    }>ELSE<{
+      DROP
+      PUSHNULL
+    }>
+  }>
+  __tact_dict_set_uint_cell PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      -ROT
+      DICTUDEL
+      DROP
+    }>ELSE<{
+      s1 s3 s3 XCHG3
+      DICTUSETREF
+    }>
   }>
   $DeployOk$_store PROCINLINE:<{
     2952335191 PUSHINT
@@ -35,45 +160,690 @@ PROGRAM{
     $DeployOk$_store INLINECALLDICT
     ENDC
   }>
+  $ChangeOwnerOk$_store PROCINLINE:<{
+    846932810 PUSHINT
+    s0 s3 XCHG2
+    32 STU
+    64 STU
+    STSLICE
+  }>
+  $ChangeOwnerOk$_store_cell PROCINLINE:<{
+    -ROT
+    $ChangeOwnerOk$_store INLINECALLDICT
+    ENDC
+  }>
+  $Permissions$_store PROCINLINE:<{
+    s2 s3 XCHG2
+    1 STI
+    1 STI
+    1 STI
+  }>
+  $Permissions$_load PROCINLINE:<{
+    1 LDI
+    1 LDI
+    1 LDI
+    3 -ROLL
+  }>
+  $EventPermissionsUpdated$_store PROCINLINE:<{
+    1825938406 PUSHINT
+    s0 s4 XCHG2
+    32 STU
+    s0 s3 XCHG
+    $Permissions$_store INLINECALLDICT
+  }>
+  $EventPermissionsUpdated$_store_cell PROCINLINE:<{
+    3 -ROLL
+    $EventPermissionsUpdated$_store INLINECALLDICT
+    ENDC
+  }>
+  $EventRecordAdded$_store PROCINLINE:<{
+    2786974973 PUSHINT
+    s0 s4 XCHG2
+    32 STU
+    s0 s2 XCHG
+    NEWC
+    STSLICE
+    s1 s2 XCHG
+    STBREFR
+    257 PUSHINT
+    STIX
+    STREF
+  }>
+  $EventRecordAdded$_store_cell PROCINLINE:<{
+    3 -ROLL
+    $EventRecordAdded$_store INLINECALLDICT
+    ENDC
+  }>
+  $EventRecordUpdated$_store PROCINLINE:<{
+    4012750979 PUSHINT
+    s0 s5 XCHG2
+    32 STU
+    s0 s3 XCHG
+    NEWC
+    STSLICE
+    s1 s3 XCHG
+    STBREFR
+    257 PUSHINT
+    STIX
+    STREF
+    STREF
+  }>
+  $EventRecordUpdated$_store_cell PROCINLINE:<{
+    4 -ROLL
+    $EventRecordUpdated$_store INLINECALLDICT
+    ENDC
+  }>
+  $EventRecordRemoved$_store PROCINLINE:<{
+    4287927537 PUSHINT
+    s0 s3 XCHG2
+    32 STU
+    SWAP
+    NEWC
+    STSLICE
+    STBREFR
+    257 PUSHINT
+    STIX
+  }>
+  $EventRecordRemoved$_store_cell PROCINLINE:<{
+    -ROT
+    $EventRecordRemoved$_store INLINECALLDICT
+    ENDC
+  }>
+  $EventSubdomainAdded$_store PROCINLINE:<{
+    4279974676 PUSHINT
+    s0 s3 XCHG2
+    32 STU
+    SWAP
+    NEWC
+    STSLICE
+    STBREFR
+    STSLICE
+  }>
+  $EventSubdomainAdded$_store_cell PROCINLINE:<{
+    -ROT
+    $EventSubdomainAdded$_store INLINECALLDICT
+    ENDC
+  }>
+  $EventSubdomainRemoved$_store PROCINLINE:<{
+    3052516533 PUSHINT
+    ROT
+    32 STU
+    SWAP
+    NEWC
+    STSLICE
+    STBREFR
+  }>
+  $EventSubdomainRemoved$_store_cell PROCINLINE:<{
+    SWAP
+    $EventSubdomainRemoved$_store INLINECALLDICT
+    ENDC
+  }>
+  $EventSubdomainUpdated$_store PROCINLINE:<{
+    2877063357 PUSHINT
+    s0 s4 XCHG2
+    32 STU
+    s0 s2 XCHG
+    NEWC
+    STSLICE
+    s1 s2 XCHG
+    STBREFR
+    STSLICE
+    STSLICE
+  }>
+  $EventSubdomainUpdated$_store_cell PROCINLINE:<{
+    3 -ROLL
+    $EventSubdomainUpdated$_store INLINECALLDICT
+    ENDC
+  }>
+  $DNSRecord$_store PROCINLINE:<{
+    SWAP
+    NEWC
+    STSLICE
+    s1 s2 XCHG
+    STBREFR
+    STDICT
+  }>
+  $DNSRecord$_store_cell PROCINLINE:<{
+    -ROT
+    $DNSRecord$_store INLINECALLDICT
+    ENDC
+  }>
+  $DNSRecord$_load PROCINLINE:<{
+    LDREF
+    SWAP
+    CTOS
+    SWAP
+    LDDICT
+    -ROT
+  }>
+  $DNSRecord$_as_optional PROCINLINE:<{
+        2 TUPLE
+  }>
+  $DNSRecord$_load_opt PROCINLINE:<{
+    DUP
+    ISNULL
+    IF:<{
+      DROP
+      PUSHNULL
+    }>ELSE<{
+      CTOS
+      $DNSRecord$_load INLINECALLDICT
+      1 2 BLKDROP2
+      $DNSRecord$_as_optional INLINECALLDICT
+    }>
+  }>
+  $Dns$_store PROCINLINE:<{
+    s5 s6 XCHG2
+    STSLICE
+    3 -ROLL
+    $Permissions$_store INLINECALLDICT
+    STDICT
+    STDICT
+  }>
+  $Dns$_load PROCINLINE:<{
+    LDMSGADDR
+    $Permissions$_load INLINECALLDICT
+    s0 s3 XCHG
+    LDDICT
+    LDDICT
+    s0 s6 XCHG
+    s5 s5 s5 XCHG3
+  }>
+  $StateInit$_get_code PROCINLINE:<{
+    DROP
+  }>
+  $StateInit$_get_data PROCINLINE:<{
+    NIP
+  }>
+  $StateInit$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+        2 UNTUPLE
+  }>
   $Context$_get_value PROCINLINE:<{
     s1 s3 XCHG
     3 BLKDROP
   }>
+  $DNSResolveResult$_to_external PROCINLINE:<{
+  }>
+  $DNSRecord$_get_categories PROCINLINE:<{
+    NIP
+  }>
+  $DNSRecord$_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+        2 UNTUPLE
+  }>
+  $Permissions$_to_external PROCINLINE:<{
+  }>
+  $Dns$init$_load PROCINLINE:<{
+    LDMSGADDR
+    257 PUSHINT
+    LDIX
+    -ROT
+  }>
+  $Permissions$_constructor_canAdd_canRemove_canReplace PROCINLINE:<{
+  }>
   $Dns$_contract_init PROCINLINE:<{
+    DROP
     PUSHNULL
+    PUSHNULL
+    TRUE
+    TRUE
+    TRUE
+    $Permissions$_constructor_canAdd_canRemove_canReplace INLINECALLDICT
+    s0 s3 s4 XCHG3
   }>
   $Dns$_contract_load PROCINLINE:<{
     c4 PUSH
     CTOS
     1 LDI
-    DROP
+    SWAP
     IF:<{
-      PUSHNULL
+      $Dns$_load INLINECALLDICT
+      1 6 BLKDROP2
     }>ELSE<{
+      $Dns$init$_load INLINECALLDICT
+      s0 s2 XCHG
+      ENDS
+      SWAP
       $Dns$_contract_init INLINECALLDICT
     }>
   }>
   $Dns$_contract_store PROCINLINE:<{
-    DROP
     NEWC
     TRUE
     SWAP
     1 STI
+    6 -ROLL
+    $Dns$_store INLINECALLDICT
     ENDC
     c4 POP
+  }>
+  $global_emit PROCINLINE:<{
+        NEWC
+    15211807202738752817960438464513 PUSHINT
+    SWAP
+    104 STU
+        STREF
+        ENDC
+    0 PUSHINT
+        SENDRAWMSG
+  }>
+  $global_dnsExtractTopDomainLength PROCREF:<{
+    0 PUSHINT
+    UNTIL:<{
+      SWAP
+      8 LDU
+      SWAP
+      0 EQINT
+      DUP
+      IFNOT:<{
+        s0 s2 XCHG
+        8 ADDCONST
+        s0 s2 XCHG
+      }>
+      s1 s2 XCHG
+    }>
+    NIP
+    24161 PUSHINT
+    OVER
+    0 NEQINT
+    THROWANYIFNOT
+  }>
+  $global_dnsExtractTopDomain PROCREF:<{
+    DUP
+    $global_dnsExtractTopDomainLength INLINECALLDICT
+    LDSLICEX
+    DROP
+  }>
+  $global_dnsResolveNext PROCREF:<{
+        NEWC
+    47763 PUSHINT
+    SWAP
+    16 STU
+    SWAP
+        STSLICER
+        ENDC
+  }>
+  $DNSResolveResult$_constructor_prefix_record PROCINLINE:<{
+  }>
+  $Dns$_fun_resolveByKey PROCREF:<{
+    8 PUSHPOW2
+    s5 s0 s2 PUXC2
+    __tact_dict_get_uint_cell INLINECALLDICT
+    $DNSRecord$_load_opt INLINECALLDICT
+    DUP
+    ISNULL
+    IFJMP:<{
+      2DROP
+      PUSHNULL
+      $DNSResolveResult$_constructor_prefix_record INLINECALLDICT
+    }>
+    OVER
+    IFNOTJMP:<{
+      NIP
+      $DNSRecord$_not_null INLINECALLDICT
+      $DNSRecord$_get_categories INLINECALLDICT
+      $DNSResolveResult$_constructor_prefix_record INLINECALLDICT
+    }>
+    $DNSRecord$_not_null INLINECALLDICT
+    $DNSRecord$_get_categories INLINECALLDICT
+    8 PUSHPOW2
+    ROT
+    __tact_dict_get_uint_cell INLINECALLDICT
+    $DNSResolveResult$_constructor_prefix_record INLINECALLDICT
+  }>
+  $Dns$_fun_doResolveDNS PROCREF:<{
+    OVER
+        SBITS
+    IFNOTJMP:<{
+      SWAP
+          SBITS
+      0 PUSHINT
+      ROT
+      $Dns$_fun_resolveByKey INLINECALLDICT
+    }>
+    OVER
+    $global_dnsExtractTopDomain INLINECALLDICT
+    8 PUSHPOW2
+    OVER
+        HASHSU
+    s5 PUSH
+    -ROT
+    __tact_dict_get_uint_slice INLINECALLDICT
+    DUP
+    ISNULL
+    NOT
+    IFJMP:<{
+      s3 POP
+      NIP
+          SBITS
+      SWAP
+      __tact_not_null INLINECALLDICT
+      $global_dnsResolveNext INLINECALLDICT
+      $DNSResolveResult$_constructor_prefix_record INLINECALLDICT
+    }>
+    2DROP
+    OVER
+        SBITS
+    s0 s2 XCHG
+        HASHSU
+    SWAP
+    $Dns$_fun_resolveByKey INLINECALLDICT
+  }>
+  $Dns$_fun_records PROCREF:<{
+    OVER
+  }>
+  $Dns$_fun_subdomains PROCREF:<{
+    DUP
+  }>
+  $Dns$_fun_permissions PROCREF:<{
+    s4 s3 s2 PUSH3
   }>
   $MessageParameters$_constructor_bounce_to_value_mode_body PROCINLINE:<{
     s3 s3 XCHG2
     s0 s4 XCHG
   }>
+  $Dns$_fun_reply PROCINLINE:<{
+    __tact_context_get_sender INLINECALLDICT
+    TRUE
+        BALANCE FIRST
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    SUB
+    100000000 PUSHINT
+    LESS
+    IF:<{
+      100000000 PUSHINT
+      0 PUSHINT
+          RAWRESERVE
+      0 PUSHINT
+      s0 s3 XCHG2
+      130 PUSHINT
+      SWAP
+      $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+          STZEROES
+          // → Stack state
+          // s0: Builder
+          // s1: `body`
+          // s2: `mode`
+          STDICT
+          ENDC
+          SWAP
+          SENDRAWMSG
+    }>ELSE<{
+      0 PUSHINT
+      s0 s3 XCHG2
+      66 PUSHINT
+      SWAP
+      $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+          STZEROES
+          // → Stack state
+          // s0: Builder
+          // s1: `body`
+          // s2: `mode`
+          STDICT
+          ENDC
+          SWAP
+          SENDRAWMSG
+    }>
+  }>
   $Dns$_fun_notify PROCINLINE:<{
     __tact_context_get_sender INLINECALLDICT
     FALSE
-    0 PUSHINT
-    s0 s3 XCHG2
-    66 PUSHINT
+        BALANCE FIRST
+    __tact_context_get INLINECALLDICT
+    $Context$_get_value INLINECALLDICT
+    SUB
+    100000000 PUSHINT
+    LESS
+    IF:<{
+      100000000 PUSHINT
+      0 PUSHINT
+          RAWRESERVE
+      0 PUSHINT
+      s0 s3 XCHG2
+      130 PUSHINT
+      SWAP
+      $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+          STZEROES
+          // → Stack state
+          // s0: Builder
+          // s1: `body`
+          // s2: `mode`
+          STDICT
+          ENDC
+          SWAP
+          SENDRAWMSG
+    }>ELSE<{
+      0 PUSHINT
+      s0 s3 XCHG2
+      66 PUSHINT
+      SWAP
+      $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+          STZEROES
+          // → Stack state
+          // s0: Builder
+          // s1: `body`
+          // s2: `mode`
+          STDICT
+          ENDC
+          SWAP
+          SENDRAWMSG
+    }>
+  }>
+  $SendParameters$_constructor_to_mode_body_value_bounce_code_data PROCINLINE:<{
+    s5 s6 XCHG
+    s3 s4 s3 XCHG3
+    s1 s5 XCHG
+  }>
+  $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
+    s3 s6 XCHG
+    3 3 BLKSWAP
+    s1 s2 XCHG
+  }>
+  $Dns$_fun_forward PROCREF:<{
+    DUP
+    ISNULL
+    IFJMP:<{
+      DROP
+      __tact_context_get INLINECALLDICT
+      s1 s3 XCHG
+      3 BLKDROP
+          BALANCE FIRST
+      SWAP
+      SUB
+      100000000 PUSHINT
+      LESS
+      IFJMP:<{
+        100000000 PUSHINT
+        0 PUSHINT
+            RAWRESERVE
+        s0 s2 XCHG
+        0 PUSHINT
+        ROT
+        130 PUSHINT
+        SWAP
+        $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+            NEWC
+            b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+            1 STI               // store `bounce`
+            b{000} STSLICECONST // store bounced = false and src = addr_none
+            STSLICE             // store `to`
+            SWAP
+            STGRAMS             // store `value`
+            106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+            STZEROES
+            // → Stack state
+            // s0: Builder
+            // s1: `body`
+            // s2: `mode`
+            STDICT
+            ENDC
+            SWAP
+            SENDRAWMSG
+      }>
+      s0 s2 XCHG
+      0 PUSHINT
+      ROT
+      66 PUSHINT
+      SWAP
+      $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+          STZEROES
+          // → Stack state
+          // s0: Builder
+          // s1: `body`
+          // s2: `mode`
+          STDICT
+          ENDC
+          SWAP
+          SENDRAWMSG
+    }>
+    __tact_context_get INLINECALLDICT
+    s1 s3 XCHG
+    3 BLKDROP
+        BALANCE FIRST
     SWAP
-    $MessageParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+    SUB
+    100000000 PUSHINT
+    LESS
+    IFJMP:<{
+      100000000 PUSHINT
+      0 PUSHINT
+          RAWRESERVE
+      130 PUSHINT
+      0 PUSHINT
+      s2 PUSH
+      $StateInit$_not_null INLINECALLDICT
+      $StateInit$_get_code INLINECALLDICT
+      s0 s3 XCHG
+      $StateInit$_not_null INLINECALLDICT
+      $StateInit$_get_data INLINECALLDICT
+      s2 s5 XCHG
+      s4 s3 s0 XCHG3
+      $SendParameters$_constructor_to_mode_body_value_bounce_code_data INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          105 PUSHINT         // 1 + 4 + 4 + 64 + 32
+          STZEROES            // store currency_collection, ihr_fee, fwd_fee, created_lt and created_at
+          // → Stack state
+          // s0: Builder
+          // s1: `data`
+          // s2: `code`
+          // s3: `body`
+          // s4: `mode`
+          // Group 2: Placing the Builder after code and data, then checking those for nullability
+          s2 XCHG0
+          DUP2
+          ISNULL
+          SWAP
+          ISNULL
+          AND
+          // → Stack state
+          // s0: -1 (true) if `data` and `code` are both null, 0 (false) otherwise
+          // s1: `code`
+          // s2: `data`
+          // s3: Builder
+          // s4: `body`
+          // s5: `mode`
+          // Group 3: Left branch of the IFELSE, executed if s0 is -1 (true)
+          <{
+              DROP2 // drop `data` and `code`, since either of those is null
+              b{0} STSLICECONST
+          }> PUSHCONT
+          // Group 3: Right branch of the IFELSE, executed if s0 is 0 (false)
+          <{
+              // _ split_depth:(Maybe (## 5))
+              //   special:(Maybe TickTock)
+              //   code:(Maybe ^Cell)
+              //   data:(Maybe ^Cell)
+              //   library:(Maybe ^Cell)
+              // = StateInit;
+              ROT                // place message Builder on top
+              b{10} STSLICECONST // store Maybe = true, Either = false
+              // Start composing inlined StateInit
+              b{00} STSLICECONST // store split_depth and special first
+              STDICT             // store code
+              STDICT             // store data
+              b{0} STSLICECONST  // store library
+          }> PUSHCONT
+          // Group 3: IFELSE that does the branching shown above
+          IFELSE
+          // → Stack state
+          // s0: Builder
+          // s1: null or StateInit
+          // s2: `body`
+          // s3: `mode`
+          // Group 4: Finalizing the message
+          STDICT // store `body` as ref with an extra Maybe bit, since `body` might be null
+          ENDC
+          // → Stack state
+          // s0: Cell
+          // s1: `mode`
+          // Group 5: Sending the message, with `mode` on top
+          SWAP
+          SENDRAWMSG // https://github.com/tact-lang/tact/issues/1558
+    }>
+    0 PUSHINT
+    66 PUSHINT
+    s2 PUSH
+    $StateInit$_not_null INLINECALLDICT
+    $StateInit$_get_code INLINECALLDICT
+    s0 s3 XCHG
+    $StateInit$_not_null INLINECALLDICT
+    $StateInit$_get_data INLINECALLDICT
+    s4 s6 XCHG
+    s4 s5 XCHG
+    s4 s3 s0 XCHG3
+    $SendParameters$_constructor_bounce_to_value_mode_body_code_data INLINECALLDICT
         NEWC
         b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
         1 STI               // store `bounce`
@@ -81,20 +851,488 @@ PROGRAM{
         STSLICE             // store `to`
         SWAP
         STGRAMS             // store `value`
-        106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
-        STZEROES
+        105 PUSHINT         // 1 + 4 + 4 + 64 + 32
+        STZEROES            // store currency_collection, ihr_fee, fwd_fee, created_lt and created_at
         // → Stack state
         // s0: Builder
-        // s1: `body`
-        // s2: `mode`
-        STDICT
-        ENDC
+        // s1: `data`
+        // s2: `code`
+        // s3: `body`
+        // s4: `mode`
+        // Group 2: Placing the Builder after code and data, then checking those for nullability
+        s2 XCHG0
+        DUP2
+        ISNULL
         SWAP
-        SENDRAWMSG
+        ISNULL
+        AND
+        // → Stack state
+        // s0: -1 (true) if `data` and `code` are both null, 0 (false) otherwise
+        // s1: `code`
+        // s2: `data`
+        // s3: Builder
+        // s4: `body`
+        // s5: `mode`
+        // Group 3: Left branch of the IFELSE, executed if s0 is -1 (true)
+        <{
+            DROP2 // drop `data` and `code`, since either of those is null
+            b{0} STSLICECONST
+        }> PUSHCONT
+        // Group 3: Right branch of the IFELSE, executed if s0 is 0 (false)
+        <{
+            // _ split_depth:(Maybe (## 5))
+            //   special:(Maybe TickTock)
+            //   code:(Maybe ^Cell)
+            //   data:(Maybe ^Cell)
+            //   library:(Maybe ^Cell)
+            // = StateInit;
+            ROT                // place message Builder on top
+            b{10} STSLICECONST // store Maybe = true, Either = false
+            // Start composing inlined StateInit
+            b{00} STSLICECONST // store split_depth and special first
+            STDICT             // store code
+            STDICT             // store data
+            b{0} STSLICECONST  // store library
+        }> PUSHCONT
+        // Group 3: IFELSE that does the branching shown above
+        IFELSE
+        // → Stack state
+        // s0: Builder
+        // s1: null or StateInit
+        // s2: `body`
+        // s3: `mode`
+        // Group 4: Finalizing the message
+        STDICT // store `body` as ref with an extra Maybe bit, since `body` might be null
+        ENDC
+        // → Stack state
+        // s0: Cell
+        // s1: `mode`
+        // Group 5: Sending the message, with `mode` on top
+        SWAP
+        SENDRAWMSG // https://github.com/tact-lang/tact/issues/1558
+  }>
+  $Dns$_fun_requireOwner PROCREF:<{
+    __tact_context_get_sender INLINECALLDICT
+    s6 PUSH
+    SDEQ
+    132 THROWIFNOT
+  }>
+  $Dns$_fun_owner PROCREF:<{
+    s5 PUSH
+  }>
+  $Dns$_fun_dnsresolve PROCREF:<{
+    0 PUSHINT
+    s2 PUSH
+    8 PLDU
+    IFNOT:<{
+      DROP
+      SWAP
+      8 LDU
+      NIP
+      SWAP
+      8 PUSHINT
+    }>
+    24161 PUSHINT
+    s3 PUSH
+    dns_internal_verify INLINECALLDICT
+    THROWANYIFNOT
+    8 -ROLL
+    $Dns$_fun_doResolveDNS INLINECALLDICT
+    s0 s8 XCHG
+    ADD
+    s0 s7 XCHG2
+    $DNSResolveResult$_constructor_prefix_record INLINECALLDICT
+    s6 s7 XCHG
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s2 s3 XCHG
+  }>
+  $EventSubdomainRemoved$_constructor_domain PROCINLINE:<{
+  }>
+  $EventSubdomainAdded$_constructor_domain_address PROCINLINE:<{
+  }>
+  $EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress PROCINLINE:<{
+  }>
+  $EventRecordRemoved$_constructor_domain_category PROCINLINE:<{
+  }>
+  $EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord PROCINLINE:<{
+  }>
+  $EventRecordAdded$_constructor_domain_category_record PROCINLINE:<{
+  }>
+  $DNSRecord$_constructor_name_categories PROCINLINE:<{
   }>
   $DeployOk$_constructor_queryId PROCINLINE:<{
   }>
+  $ChangeOwnerOk$_constructor_queryId_newOwner PROCINLINE:<{
+  }>
+  $SendParameters$_constructor_bounce_to_value_mode_body PROCINLINE:<{
+    s1 s4 XCHG
+    PUSHNULL
+    s4 s3 XCHG2
+    PUSHNULL
+    s2 s3 XCHG2
+  }>
+  $EventPermissionsUpdated$_constructor_permissions PROCINLINE:<{
+  }>
+  dns_internal_verify PROCREF:<{
+    c2 SAVE
+    SAMEALTSAVE
+    DUP
+    SREFS
+    0 NEQINT
+    IFJMP:<{
+      DROP
+      FALSE
+    }>
+    DUP
+    SBITS
+    DUP
+    3 MODPOW2#
+    0 NEQINT
+    IFJMP:<{
+      2DROP
+      FALSE
+    }>
+    DUP
+    0 EQINT
+    IFJMP:<{
+      2DROP
+      TRUE
+    }>
+    3 RSHIFT#
+    0 PUSHINT
+    TRUE
+    FALSE
+    s0 s3 XCHG
+    REPEAT:<{
+      s0 s3 XCHG
+      8 LDU
+      OVER
+      0 EQINT
+      IF:<{
+        NIP
+        s3 POP
+        0 EQINT
+        IFJMP:<{
+          2DROP
+          FALSE
+          RETALT
+        }>
+        IFJMP:<{
+          DROP
+          FALSE
+          RETALT
+        }>
+        0 PUSHINT
+        FALSE
+        TRUE
+      }>ELSE<{
+        s3 POP
+        DUP
+        45 EQINT
+        OVER
+        47 GTINT
+        s2 PUSH
+        58 LESSINT
+        AND
+        s1 s(-1) PUXC
+        OR
+        s2 PUSH
+        96 GTINT
+        s0 s3 XCHG
+        123 LESSINT
+        s1 s3 XCHG
+        AND
+        s1 s2 XCHG
+        OR
+        NOT
+        IFJMP:<{
+          4 BLKDROP
+          FALSE
+          RETALT
+        }>
+        s0 s3 PUXC
+        AND
+        IFJMP:<{
+          3 BLKDROP
+          FALSE
+          RETALT
+        }>
+        FALSE
+        SWAP
+        INC
+        s0 s3 s3 XCHG3
+      }>
+      s1 s2 XCHG
+    }>
+    DROP
+    s2 POP
+    0 PUSHINT
+    SWAP
+    NOT
+    AND
+    EQUAL
+  }>
+  dns_string_to_internal PROCREF:<{
+    c2 SAVE
+    SAMEALTSAVE
+    DUP
+    SBITS
+    8 EQINT
+    OVER
+    SREFS
+    0 EQINT
+    AND
+    IF:<{
+      DUP
+      8 PLDU
+      46 EQINT
+      IFJMP:<{
+        DROP
+        NEWC
+        0 PUSHINT
+        SWAP
+        8 STU
+        ENDC
+        CTOS
+        RETALT
+      }>
+    }>
+    PUSHNULL
+    NEWC
+    TRUE
+    TRUE
+    FALSE
+    TRUE
+    UNTIL:<{
+      s6 PUSH
+      SBITS
+      0 EQINT
+      IF:<{
+        DROP
+        s5 PUSH
+        SREFS
+        DUP
+        1 EQINT
+        IF:<{
+          DROP
+          s0 s5 XCHG
+          LDREF
+          DROP
+          CTOS
+        }>ELSE<{
+          1 GTINT
+          IFJMP:<{
+            6 BLKDROP
+            PUSHNULL
+            RETALT
+          }>
+          s0 s5 XCHG
+        }>
+        s0 s5 XCHG
+        FALSE
+      }>
+      DUP
+      IF:<{
+        NIP
+        s2 POP
+        s0 s4 XCHG
+        8 LDU
+        OVER
+        45 EQINT
+        s2 PUSH
+        46 EQINT
+        2DUP
+        OR
+        s4 PUSH
+        47 GTINT
+        s5 PUSH
+        58 LESSINT
+        AND
+        OR
+        s4 PUSH
+        96 GTINT
+        s5 PUSH
+        123 LESSINT
+        AND
+        OR
+        NOT
+        s8 s2 PUSH2
+        AND
+        OR
+        IFJMP:<{
+          8 BLKDROP
+          PUSHNULL
+          RETALT
+        }>
+        IF:<{
+          s2 POP
+          s5 s5 XCHG2
+          OR
+          IFJMP:<{
+            4 BLKDROP
+            PUSHNULL
+            RETALT
+          }>
+          s0 s2 XCHG
+          CONS
+          NEWC
+          FALSE
+          TRUE
+          TRUE
+        }>ELSE<{
+          s6 POP
+          FALSE
+          s0 s2 XCHG
+          FALSE
+          s0 s5 XCHG
+          8 STU
+          s0 s3 XCHG
+          s0 s5 XCHG
+          s6 s6 s4 XCHG3
+        }>
+        s4 s5 XCHG
+        s0 s3 XCHG
+        s2 s4 XCHG2
+      }>
+      DUP
+      NOT
+    }>
+    DROP
+    NIP
+    s4 POP
+    s0 s3 XCHG
+    IFJMP:<{
+      3 BLKDROP
+      PUSHNULL
+    }>
+    s0 s2 XCHG
+    NOT
+    IF:<{
+      CONS
+    }>ELSE<{
+      NIP
+    }>
+    NEWC
+    SWAP
+    UNCONS
+    -ROT
+    STBR
+    WHILE:<{
+      OVER
+      ISNULL
+      NOT
+    }>DO<{
+      SWAP
+      UNCONS
+      0 PUSHINT
+      s0 s3 XCHG2
+      8 STU
+      SWAP
+      STBR
+    }>
+    0 PUSHINT
+    s2 POP
+    8 STU
+    ENDC
+    CTOS
+  }>
+  dns_internal_normalize PROCREF:<{
+    DUP
+    SREFS
+    0 EQINT
+    134 THROWIFNOT
+    NEWC
+    OVER
+    SBITS
+    3 RSHIFT#
+    REPEAT:<{
+      SWAP
+      8 LDU
+      OVER
+      98 EQINT
+      IF:<{
+        54 PUSHINT
+        s2 POP
+      }>
+      OVER
+      103 EQINT
+      s2 PUSH
+      113 EQINT
+      OR
+      IF:<{
+        57 PUSHINT
+        s2 POP
+      }>
+      OVER
+      108 EQINT
+      IF:<{
+        49 PUSHINT
+        s2 POP
+      }>
+      OVER
+      111 EQINT
+      IF:<{
+        48 PUSHINT
+        s2 POP
+      }>
+      OVER
+      115 EQINT
+      IF:<{
+        53 PUSHINT
+        s2 POP
+      }>
+      OVER
+      117 EQINT
+      IF:<{
+        118 PUSHINT
+        s2 POP
+      }>
+      OVER
+      122 EQINT
+      IF:<{
+        50 PUSHINT
+        s2 POP
+      }>
+      s0 s2 XCHG
+      8 STU
+    }>
+    NIP
+    ENDC
+    CTOS
+  }>
+  %records PROC:<{
+    $Dns$_contract_load INLINECALLDICT
+    $Dns$_fun_records INLINECALLDICT
+    6 1 BLKDROP2
+  }>
+  %subdomains PROC:<{
+    $Dns$_contract_load INLINECALLDICT
+    $Dns$_fun_subdomains INLINECALLDICT
+    6 1 BLKDROP2
+  }>
+  %permissions PROC:<{
+    $Dns$_contract_load INLINECALLDICT
+    $Dns$_fun_permissions INLINECALLDICT
+    6 3 BLKDROP2
+    $Permissions$_to_external INLINECALLDICT
+  }>
+  %owner PROC:<{
+    $Dns$_contract_load INLINECALLDICT
+    $Dns$_fun_owner INLINECALLDICT
+    6 1 BLKDROP2
+  }>
+  %dnsresolve PROC:<{
+    $Dns$_contract_load INLINECALLDICT
+    2 6 BLKSWAP
+    $Dns$_fun_dnsresolve INLINECALLDICT
+    6 2 BLKDROP2
+    $DNSResolveResult$_to_external INLINECALLDICT
+  }>
   recv_internal PROC:<{
+    c2 SAVE
+    SAMEALTSAVE
     SWAP
     CTOS
     2 PUSHINT
@@ -110,24 +1348,595 @@ PROGRAM{
     s0 s2 XCHG
     __tact_context_sender SETGLOB
     $Dns$_contract_load INLINECALLDICT
-    s0 s2 XCHG
+    s0 s7 XCHG
     IFJMP:<{
-      2DROP
+      7 BLKDROP
     }>
-    32 LDUQ 130 THROWIFNOT
-    SWAP
-    2490013878 PUSHINT
+    s5 PUSH
+    SBITS
+    31 GTINT
+    IF:<{
+      s0 s5 XCHG
+      32 LDU
+      OVER
+      3097454096 PUSHINT
+      EQUAL
+      IFJMP:<{
+        NIP
+        LDREF
+        SWAP
+        CTOS
+        SWAP
+                    b{00} SDBEGINSQ
+                    IF:<{
+                      PUSHNULL
+                    }>ELSE<{
+                      LDMSGADDR
+                      SWAP
+                    }>
+        NIP
+        s6 s7 XCHG2
+        $Dns$_fun_requireOwner INLINECALLDICT
+        s6 PUSH
+        dns_string_to_internal INLINECALLDICT
+        22696 PUSHINT
+        OVER
+        ISNULL
+        NOT
+        THROWANYIFNOT
+        DUP
+        __tact_not_null INLINECALLDICT
+        $global_dnsExtractTopDomainLength INLINECALLDICT
+        22696 PUSHINT
+        s2 PUSH
+        __tact_not_null INLINECALLDICT
+            SBITS
+        ROT
+        EQUAL
+        THROWANYIFNOT
+        __tact_not_null INLINECALLDICT
+            HASHSU
+        OVER
+        8 PUSHPOW2
+        s2 PUSH
+        __tact_dict_get_uint_slice INLINECALLDICT
+        DUP
+        ISNULL
+        NOT
+        IF:<{
+          s9 PUSH
+          ISNULL
+        }>ELSE<{
+          FALSE
+        }>
+        IFJMP:<{
+          DROP
+          s8 POP
+          21519 PUSHINT
+          s4 PUSH
+          THROWANYIFNOT
+          8 PUSHPOW2
+          ROT
+          s0 s8 XCHG
+          PUSHNULL
+          __tact_dict_set_uint_slice INLINECALLDICT
+          s0 s5 XCHG
+          $EventSubdomainRemoved$_constructor_domain INLINECALLDICT
+          NEWC
+          $EventSubdomainRemoved$_store_cell INLINECALLDICT
+          $global_emit INLINECALLDICT
+              B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+          s4 s6 XCHG
+          s3 s5 XCHG
+          s4 s3 s0 XCHG3
+          $Dns$_fun_reply INLINECALLDICT
+          $Dns$_contract_store INLINECALLDICT
+          RETALT
+        }>
+        DUP
+        ISNULL
+        IF:<{
+          s9 PUSH
+          ISNULL
+          NOT
+        }>ELSE<{
+          FALSE
+        }>
+        IFJMP:<{
+          DROP
+          43961 PUSHINT
+          s6 PUSH
+          THROWANYIFNOT
+          8 PUSHPOW2
+          s1 s9 XCPU
+          __tact_dict_set_uint_slice INLINECALLDICT
+          s0 s7 XCHG
+          __tact_not_null INLINECALLDICT
+          s1 s6 XCHG
+          $EventSubdomainAdded$_constructor_domain_address INLINECALLDICT
+          NEWC
+          $EventSubdomainAdded$_store_cell INLINECALLDICT
+          $global_emit INLINECALLDICT
+              B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+          s4 s6 XCHG
+          s3 s5 XCHG
+          s4 s3 s0 XCHG3
+          s1 s2 XCHG
+          $Dns$_fun_reply INLINECALLDICT
+          $Dns$_contract_store INLINECALLDICT
+          RETALT
+        }>
+        DUP
+        ISNULL
+        NOT
+        IF:<{
+          s9 PUSH
+          ISNULL
+          NOT
+        }>ELSE<{
+          FALSE
+        }>
+        IFJMP:<{
+          43961 PUSHINT
+          s5 PUSH
+          THROWANYIFNOT
+          s1 s2 XCHG
+          8 PUSHPOW2
+          s0 s3 s10 XC2PU
+          __tact_dict_set_uint_slice INLINECALLDICT
+          SWAP
+          __tact_not_null INLINECALLDICT
+          s0 s8 XCHG
+          __tact_not_null INLINECALLDICT
+          s7 s8 s0 XCHG3
+          $EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress INLINECALLDICT
+          NEWC
+          $EventSubdomainUpdated$_store_cell INLINECALLDICT
+          $global_emit INLINECALLDICT
+              B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+          s4 s6 XCHG
+          s3 s5 XCHG
+          s4 s3 s0 XCHG3
+          s1 s2 XCHG
+          $Dns$_fun_reply INLINECALLDICT
+          $Dns$_contract_store INLINECALLDICT
+          RETALT
+        }>
+        2DROP
+        s6 POP
+        s6 POP
+        134 THROW
+        2 4 BLKSWAP
+        $Dns$_contract_store INLINECALLDICT
+        RETALT
+      }>
+      OVER
+      3532961574 PUSHINT
+      EQUAL
+      IFJMP:<{
+        NIP
+        LDREF
+        SWAP
+        CTOS
+        SWAP
+        257 PUSHINT
+        LDIX
+        LDOPTREF
+        DROP
+        s5 s6 XCHG
+        s4 s6 XCHG
+        s3 s6 XCHG
+        s6 s7 s8 XCHG3
+        $Dns$_fun_requireOwner INLINECALLDICT
+        s6 PUSH
+        dns_string_to_internal INLINECALLDICT
+        22696 PUSHINT
+        OVER
+        ISNULL
+        NOT
+        THROWANYIFNOT
+        __tact_not_null INLINECALLDICT
+            HASHSU
+        s2 PUSH
+        8 PUSHPOW2
+        s2 PUSH
+        __tact_dict_get_uint_cell INLINECALLDICT
+        $DNSRecord$_load_opt INLINECALLDICT
+        DUP
+        ISNULL
+        NOT
+        IF:<{
+          $DNSRecord$_not_null INLINECALLDICT
+          DUP
+          8 PUSHPOW2
+          s12 PUSH
+          __tact_dict_get_uint_cell INLINECALLDICT
+          DUP
+          ISNULL
+          NOT
+          IF:<{
+            s12 PUSH
+            ISNULL
+          }>ELSE<{
+            FALSE
+          }>
+          IFJMP:<{
+            DROP
+            s11 POP
+            21519 PUSHINT
+            s6 PUSH
+            THROWANYIFNOT
+            s0 s10 XCHG
+            8 PUSHPOW2
+            s10 PUSH
+            PUSHNULL
+            __tact_dict_set_uint_cell INLINECALLDICT
+            8 PUSHPOW2
+            s11 s11 XCHG2
+            NEWC
+            $DNSRecord$_store_cell INLINECALLDICT
+            s2 s10 XCHG
+            __tact_dict_set_uint_cell INLINECALLDICT
+            s5 s6 XCHG2
+            $EventRecordRemoved$_constructor_domain_category INLINECALLDICT
+            NEWC
+            $EventRecordRemoved$_store_cell INLINECALLDICT
+            $global_emit INLINECALLDICT
+                B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+            s3 s6 XCHG
+            s5 s4 s0 XCHG3
+            s1 s3 XCHG
+            $Dns$_fun_reply INLINECALLDICT
+            $Dns$_contract_store INLINECALLDICT
+            RETALT
+          }>
+          DUP
+          ISNULL
+          NOT
+          IF:<{
+            s12 PUSH
+            ISNULL
+            NOT
+          }>ELSE<{
+            FALSE
+          }>
+          IFJMP:<{
+            55590 PUSHINT
+            s7 PUSH
+            THROWANYIFNOT
+            SWAP
+            8 PUSHPOW2
+            s12 s13 PUSH2
+            __tact_dict_set_uint_cell INLINECALLDICT
+            8 PUSHPOW2
+            s3 s3 XCHG2
+            NEWC
+            $DNSRecord$_store_cell INLINECALLDICT
+            s1 s5 XCHG
+            s1 s3 XCHG
+            __tact_dict_set_uint_cell INLINECALLDICT
+            s0 s2 XCHG
+            __tact_not_null INLINECALLDICT
+            s0 s9 XCHG
+            __tact_not_null INLINECALLDICT
+            s3 s7 XCHG
+            s8 s9 s0 XCHG3
+            $EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord INLINECALLDICT
+            NEWC
+            $EventRecordUpdated$_store_cell INLINECALLDICT
+            $global_emit INLINECALLDICT
+                B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+            s3 s6 XCHG
+            s5 s4 s0 XCHG3
+            s1 s3 XCHG
+            $Dns$_fun_reply INLINECALLDICT
+            $Dns$_contract_store INLINECALLDICT
+            RETALT
+          }>
+          ISNULL
+          IF:<{
+            s11 PUSH
+            ISNULL
+            NOT
+          }>ELSE<{
+            FALSE
+          }>
+          IFJMP:<{
+            43961 PUSHINT
+            s8 PUSH
+            THROWANYIFNOT
+            8 PUSHPOW2
+            s11 s12 PUSH2
+            __tact_dict_set_uint_cell INLINECALLDICT
+            8 PUSHPOW2
+            -ROT
+            NEWC
+            $DNSRecord$_store_cell INLINECALLDICT
+            s3 s4 XCHG
+            s1 s2 XCHG
+            __tact_dict_set_uint_cell INLINECALLDICT
+            s0 s8 XCHG
+            __tact_not_null INLINECALLDICT
+            s6 s7 s0 XCHG3
+            $EventRecordAdded$_constructor_domain_category_record INLINECALLDICT
+            NEWC
+            $EventRecordAdded$_store_cell INLINECALLDICT
+            $global_emit INLINECALLDICT
+                B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+            s3 s6 XCHG
+            s5 s4 s0 XCHG3
+            s3 s3 s0 XCHG3
+            $Dns$_fun_reply INLINECALLDICT
+            $Dns$_contract_store INLINECALLDICT
+            RETALT
+          }>
+          3 BLKDROP
+          s6 POP
+          s6 POP
+          s6 POP
+        }>ELSE<{
+          DROP
+          s9 PUSH
+          ISNULL
+          NOT
+          IFJMP:<{
+            43961 PUSHINT
+            s6 PUSH
+            THROWANYIFNOT
+            s7 PUSH
+            PUSHNULL
+            $DNSRecord$_constructor_name_categories INLINECALLDICT
+            8 PUSHPOW2
+            s11 s12 PUSH2
+            __tact_dict_set_uint_cell INLINECALLDICT
+            8 PUSHPOW2
+            -ROT
+            NEWC
+            $DNSRecord$_store_cell INLINECALLDICT
+            s3 s4 XCHG
+            s1 s2 XCHG
+            __tact_dict_set_uint_cell INLINECALLDICT
+            s0 s8 XCHG
+            __tact_not_null INLINECALLDICT
+            s6 s7 s0 XCHG3
+            $EventRecordAdded$_constructor_domain_category_record INLINECALLDICT
+            NEWC
+            $EventRecordAdded$_store_cell INLINECALLDICT
+            $global_emit INLINECALLDICT
+                B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+            s3 s6 XCHG
+            s5 s4 s0 XCHG3
+            s3 s3 s0 XCHG3
+            $Dns$_fun_reply INLINECALLDICT
+            $Dns$_contract_store INLINECALLDICT
+            RETALT
+          }>
+          DROP
+          s6 POP
+          s6 POP
+          s6 POP
+        }>
+        134 THROW
+        3 3 BLKSWAP
+        $Dns$_contract_store INLINECALLDICT
+        RETALT
+      }>
+      OVER
+      2490013878 PUSHINT
+      EQUAL
+      IFJMP:<{
+        NIP
+        64 LDU
+        DROP
+        $DeployOk$_constructor_queryId INLINECALLDICT
+        NEWC
+        $DeployOk$_store_cell INLINECALLDICT
+        s4 s6 XCHG
+        s3 s5 XCHG
+        s4 s3 s0 XCHG3
+        s1 s2 XCHG
+        $Dns$_fun_notify INLINECALLDICT
+        $Dns$_contract_store INLINECALLDICT
+        RETALT
+      }>
+      OVER
+      1829761339 PUSHINT
+      EQUAL
+      IFJMP:<{
+        NIP
+        64 LDU
+        LDMSGADDR
+        DROP
+        SWAP
+        $DeployOk$_constructor_queryId INLINECALLDICT
+        NEWC
+        $DeployOk$_store_cell INLINECALLDICT
+        s5 s7 XCHG
+        s4 s6 XCHG
+        s3 s5 XCHG
+        s2 s4 XCHG
+        s2 s3 XCHG
+        FALSE
+        PUSHNULL
+        $Dns$_fun_forward INLINECALLDICT
+        $Dns$_contract_store INLINECALLDICT
+        RETALT
+      }>
+      SWAP
+      2174598809 PUSHINT
+      EQUAL
+      IFJMP:<{
+        64 LDU
+        LDMSGADDR
+        DROP
+        s6 s7 XCHG2
+        $Dns$_fun_requireOwner INLINECALLDICT
+        s5 POP
+        s5 s6 XCPU
+        $ChangeOwnerOk$_constructor_queryId_newOwner INLINECALLDICT
+        NEWC
+        $ChangeOwnerOk$_store_cell INLINECALLDICT
+        s3 s5 XCHG
+        s4 s3 s0 XCHG3
+        s1 s2 XCHG
+        $Dns$_fun_reply INLINECALLDICT
+        $Dns$_contract_store INLINECALLDICT
+        RETALT
+      }>
+      s0 s5 XCHG
+    }>
+    s0 s5 XCHG
+    HASHSU
+    DUP
+    85065200150926347494302230140883354205378363617985253052539014752093282916000 PUSHINT
     EQUAL
     IFJMP:<{
-      64 LDU
       DROP
-      $DeployOk$_constructor_queryId INLINECALLDICT
-      NEWC
-      $DeployOk$_store_cell INLINECALLDICT
-      $Dns$_fun_notify INLINECALLDICT
+      s3 s5 XCHG
+      2 3 BLKSWAP
+      $Dns$_fun_requireOwner INLINECALLDICT
+      25569 PUSHINT
+      s4 PUSH
+      THROWANYIFNOT
+      FALSE
+      __tact_context_get_sender INLINECALLDICT
+      0 PUSHINT
+      160 PUSHINT
+          B{b5ee9c7241010101001800002c00000000436f6e74726163742064657374726f79656454dbd534} B>boc PUSHREF
+      $SendParameters$_constructor_bounce_to_value_mode_body INLINECALLDICT
+          NEWC
+          b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+          1 STI               // store `bounce`
+          b{000} STSLICECONST // store bounced = false and src = addr_none
+          STSLICE             // store `to`
+          SWAP
+          STGRAMS             // store `value`
+          105 PUSHINT         // 1 + 4 + 4 + 64 + 32
+          STZEROES            // store currency_collection, ihr_fee, fwd_fee, created_lt and created_at
+          // → Stack state
+          // s0: Builder
+          // s1: `data`
+          // s2: `code`
+          // s3: `body`
+          // s4: `mode`
+          // Group 2: Placing the Builder after code and data, then checking those for nullability
+          s2 XCHG0
+          DUP2
+          ISNULL
+          SWAP
+          ISNULL
+          AND
+          // → Stack state
+          // s0: -1 (true) if `data` and `code` are both null, 0 (false) otherwise
+          // s1: `code`
+          // s2: `data`
+          // s3: Builder
+          // s4: `body`
+          // s5: `mode`
+          // Group 3: Left branch of the IFELSE, executed if s0 is -1 (true)
+          <{
+              DROP2 // drop `data` and `code`, since either of those is null
+              b{0} STSLICECONST
+          }> PUSHCONT
+          // Group 3: Right branch of the IFELSE, executed if s0 is 0 (false)
+          <{
+              // _ split_depth:(Maybe (## 5))
+              //   special:(Maybe TickTock)
+              //   code:(Maybe ^Cell)
+              //   data:(Maybe ^Cell)
+              //   library:(Maybe ^Cell)
+              // = StateInit;
+              ROT                // place message Builder on top
+              b{10} STSLICECONST // store Maybe = true, Either = false
+              // Start composing inlined StateInit
+              b{00} STSLICECONST // store split_depth and special first
+              STDICT             // store code
+              STDICT             // store data
+              b{0} STSLICECONST  // store library
+          }> PUSHCONT
+          // Group 3: IFELSE that does the branching shown above
+          IFELSE
+          // → Stack state
+          // s0: Builder
+          // s1: null or StateInit
+          // s2: `body`
+          // s3: `mode`
+          // Group 4: Finalizing the message
+          STDICT // store `body` as ref with an extra Maybe bit, since `body` might be null
+          ENDC
+          // → Stack state
+          // s0: Cell
+          // s1: `mode`
+          // Group 5: Sending the message, with `mode` on top
+          SWAP
+          SENDRAWMSG // https://github.com/tact-lang/tact/issues/1558
       $Dns$_contract_store INLINECALLDICT
     }>
-    2DROP
+    DUP
+    102192635935880199185413993327725358436788120921218574323292165538960052116282 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      s3 s5 XCHG
+      2 3 BLKSWAP
+      $Dns$_fun_requireOwner INLINECALLDICT
+      26438 PUSHINT
+      s0 s5 XCHG2
+      THROWANYIFNOT
+      FALSE
+      s0 s3 s2 PUSH3
+      $EventPermissionsUpdated$_constructor_permissions INLINECALLDICT
+      NEWC
+      $EventPermissionsUpdated$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+          B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+      s1 s5 XCHG
+      $Dns$_fun_reply INLINECALLDICT
+      $Dns$_contract_store INLINECALLDICT
+    }>
+    DUP
+    51349479450970136078574157560563122838991118699993969970543300329943031756014 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      s3 s5 XCHG
+      2 3 BLKSWAP
+      $Dns$_fun_requireOwner INLINECALLDICT
+      26438 PUSHINT
+      s0 s4 XCHG2
+      THROWANYIFNOT
+      FALSE
+      s4 s0 s2 PUSH3
+      $EventPermissionsUpdated$_constructor_permissions INLINECALLDICT
+      NEWC
+      $EventPermissionsUpdated$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+          B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+      s1 s4 XCHG
+      $Dns$_fun_reply INLINECALLDICT
+      $Dns$_contract_store INLINECALLDICT
+    }>
+    62026879580756838420096967973191089222669735900552645648186588279373504532041 PUSHINT
+    EQUAL
+    IFJMP:<{
+      s3 s5 XCHG
+      2 3 BLKSWAP
+      $Dns$_fun_requireOwner INLINECALLDICT
+      26438 PUSHINT
+      s0 s3 XCHG2
+      THROWANYIFNOT
+      FALSE
+      s4 s3 s0 PUSH3
+      $EventPermissionsUpdated$_constructor_permissions INLINECALLDICT
+      NEWC
+      $EventPermissionsUpdated$_store_cell INLINECALLDICT
+      $global_emit INLINECALLDICT
+          B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+      s1 s3 XCHG
+      $Dns$_fun_reply INLINECALLDICT
+      $Dns$_contract_store INLINECALLDICT
+    }>
+    6 BLKDROP
     130 THROW
   }>
   __tact_selector_hack PROC:<{

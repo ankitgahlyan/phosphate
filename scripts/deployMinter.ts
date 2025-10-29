@@ -4,6 +4,7 @@ import { buildJettonMinterFromEnv } from '../src/utils/jetton-helpers';
 import { Mint, storeMint } from '../build/root/Root_JettonMinterSharded';
 import { getJettonHttpLink, getNetworkFromEnv } from '../src/utils/utils';
 import { printSeparator } from '../src/utils/print';
+import "dotenv/config";
 
 export async function run(provider: NetworkProvider) {
     const deployer = process.env.DEPLOYER;
@@ -11,7 +12,7 @@ export async function run(provider: NetworkProvider) {
         console.error("deployer address is not provided, please add it to .env file")
         throw new Error("deployer address is not provided")
     }
-    const supply = toNano(Number(process.env.JETTON_SUPPLY ?? 1000000000)) // 1_000_000_000 jettons
+    const supply = toNano(process.env.JETTON_SUPPLY ?? 1000000000) // 1_000_000_000 jettons
     const deployAmount = toNano("2");
     const deployerAddress = Address.parse(deployer);
     const minter = provider.open(await buildJettonMinterFromEnv(deployerAddress));
@@ -59,7 +60,7 @@ export async function run(provider: NetworkProvider) {
     console.log(`Running deploy script for ${network} network and for Shard Jetton Minter`)
     console.log(
         "Make sure to send txn from following wallet:. \n" +
-        deployerAddress
+        deployerAddress.toString({testOnly: true})
     )
     printSeparator()
     console.log("Minting:: ", fromNano(supply))

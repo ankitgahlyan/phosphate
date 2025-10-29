@@ -8,11 +8,26 @@
 ;; NOTE: declarations are sorted for optimal order
 ;;
 
+;; __tact_not_null
+forall X -> X __tact_not_null(X x) impure inline;
+
 ;; __tact_context_get
 (int, slice, int, slice) __tact_context_get() inline;
 
 ;; __tact_context_get_sender
 slice __tact_context_get_sender() inline;
+
+;; __tact_dict_get_uint_slice
+slice __tact_dict_get_uint_slice(cell d, int kl, int k) inline;
+
+;; __tact_dict_set_uint_slice
+(cell, ()) __tact_dict_set_uint_slice(cell d, int kl, int k, slice v) inline;
+
+;; __tact_dict_get_uint_cell
+cell __tact_dict_get_uint_cell(cell d, int kl, int k) inline;
+
+;; __tact_dict_set_uint_cell
+(cell, ()) __tact_dict_set_uint_cell(cell d, int kl, int k, cell v) inline;
 
 ;; $DeployOk$_store
 builder $DeployOk$_store(builder build_0, (int) v) inline;
@@ -20,26 +35,209 @@ builder $DeployOk$_store(builder build_0, (int) v) inline;
 ;; $DeployOk$_store_cell
 cell $DeployOk$_store_cell((int) v, builder b) inline;
 
+;; $ChangeOwnerOk$_store
+builder $ChangeOwnerOk$_store(builder build_0, (int, slice) v) inline;
+
+;; $ChangeOwnerOk$_store_cell
+cell $ChangeOwnerOk$_store_cell((int, slice) v, builder b) inline;
+
+;; $Permissions$_store
+builder $Permissions$_store(builder build_0, (int, int, int) v) inline;
+
+;; $Permissions$_load
+(slice, ((int, int, int))) $Permissions$_load(slice sc_0) inline;
+
+;; $EventPermissionsUpdated$_store
+builder $EventPermissionsUpdated$_store(builder build_0, ((int, int, int)) v) inline;
+
+;; $EventPermissionsUpdated$_store_cell
+cell $EventPermissionsUpdated$_store_cell(((int, int, int)) v, builder b) inline;
+
+;; $EventRecordAdded$_store
+builder $EventRecordAdded$_store(builder build_0, (slice, int, cell) v) inline;
+
+;; $EventRecordAdded$_store_cell
+cell $EventRecordAdded$_store_cell((slice, int, cell) v, builder b) inline;
+
+;; $EventRecordUpdated$_store
+builder $EventRecordUpdated$_store(builder build_0, (slice, int, cell, cell) v) inline;
+
+;; $EventRecordUpdated$_store_cell
+cell $EventRecordUpdated$_store_cell((slice, int, cell, cell) v, builder b) inline;
+
+;; $EventRecordRemoved$_store
+builder $EventRecordRemoved$_store(builder build_0, (slice, int) v) inline;
+
+;; $EventRecordRemoved$_store_cell
+cell $EventRecordRemoved$_store_cell((slice, int) v, builder b) inline;
+
+;; $EventSubdomainAdded$_store
+builder $EventSubdomainAdded$_store(builder build_0, (slice, slice) v) inline;
+
+;; $EventSubdomainAdded$_store_cell
+cell $EventSubdomainAdded$_store_cell((slice, slice) v, builder b) inline;
+
+;; $EventSubdomainRemoved$_store
+builder $EventSubdomainRemoved$_store(builder build_0, (slice) v) inline;
+
+;; $EventSubdomainRemoved$_store_cell
+cell $EventSubdomainRemoved$_store_cell((slice) v, builder b) inline;
+
+;; $EventSubdomainUpdated$_store
+builder $EventSubdomainUpdated$_store(builder build_0, (slice, slice, slice) v) inline;
+
+;; $EventSubdomainUpdated$_store_cell
+cell $EventSubdomainUpdated$_store_cell((slice, slice, slice) v, builder b) inline;
+
+;; $DNSRecord$_store
+builder $DNSRecord$_store(builder build_0, (slice, cell) v) inline;
+
+;; $DNSRecord$_store_cell
+cell $DNSRecord$_store_cell((slice, cell) v, builder b) inline;
+
+;; $DNSRecord$_load
+(slice, ((slice, cell))) $DNSRecord$_load(slice sc_0) inline;
+
+;; $DNSRecord$_as_optional
+tuple $DNSRecord$_as_optional((slice, cell) v) inline;
+
+;; $DNSRecord$_load_opt
+tuple $DNSRecord$_load_opt(cell cl) inline;
+
+;; $Dns$_store
+builder $Dns$_store(builder build_0, (slice, (int, int, int), cell, cell) v) inline;
+
+;; $Dns$_load
+(slice, ((slice, (int, int, int), cell, cell))) $Dns$_load(slice sc_0) inline;
+
+;; $StateInit$_get_code
+_ $StateInit$_get_code((cell, cell) v) inline;
+
+;; $StateInit$_get_data
+_ $StateInit$_get_data((cell, cell) v) inline;
+
+;; $StateInit$_not_null
+((cell, cell)) $StateInit$_not_null(tuple v) inline;
+
 ;; $Context$_get_value
 _ $Context$_get_value((int, slice, int, slice) v) inline;
 
+;; $DNSResolveResult$_to_external
+(int, cell) $DNSResolveResult$_to_external(((int, cell)) v) inline;
+
+;; $DNSRecord$_get_categories
+_ $DNSRecord$_get_categories((slice, cell) v) inline;
+
+;; $DNSRecord$_not_null
+((slice, cell)) $DNSRecord$_not_null(tuple v) inline;
+
+;; $Permissions$_to_external
+(int, int, int) $Permissions$_to_external(((int, int, int)) v) inline;
+
+;; $Dns$init$_load
+(slice, ((slice, int))) $Dns$init$_load(slice sc_0) inline;
+
+;; $Permissions$_constructor_canAdd_canRemove_canReplace
+((int, int, int)) $Permissions$_constructor_canAdd_canRemove_canReplace(int $canAdd, int $canRemove, int $canReplace) inline;
+
 ;; $Dns$_contract_init
-tuple $Dns$_contract_init() impure inline;
+(slice, (int, int, int), cell, cell) $Dns$_contract_init(slice $owner, int $seed) impure inline;
 
 ;; $Dns$_contract_load
-tuple $Dns$_contract_load() impure inline;
+(slice, (int, int, int), cell, cell) $Dns$_contract_load() impure inline;
 
 ;; $Dns$_contract_store
-() $Dns$_contract_store(tuple v) impure inline;
+() $Dns$_contract_store((slice, (int, int, int), cell, cell) v) impure inline;
+
+;; $global_emit
+() $global_emit(cell $body) impure inline;
+
+;; $global_dnsExtractTopDomainLength
+int $global_dnsExtractTopDomainLength(slice $subdomain) impure inline_ref;
+
+;; $global_dnsExtractTopDomain
+slice $global_dnsExtractTopDomain(slice $subdomain) impure inline_ref;
+
+;; $global_dnsResolveNext
+cell $global_dnsResolveNext(slice $address) impure inline_ref;
+
+;; $DNSResolveResult$_constructor_prefix_record
+((int, cell)) $DNSResolveResult$_constructor_prefix_record(int $prefix, cell $record) inline;
+
+;; $Dns$_fun_resolveByKey
+((slice, (int, int, int), cell, cell), (int, cell)) $Dns$_fun_resolveByKey((slice, (int, int, int), cell, cell) $self, int $totalBits, int $id, int $category) impure inline_ref;
+
+;; $Dns$_fun_doResolveDNS
+((slice, (int, int, int), cell, cell), (int, cell)) $Dns$_fun_doResolveDNS((slice, (int, int, int), cell, cell) $self, slice $subdomain, int $category) impure inline_ref;
+
+;; $Dns$_fun_records
+((slice, (int, int, int), cell, cell), cell) $Dns$_fun_records((slice, (int, int, int), cell, cell) $self) impure inline_ref;
+
+;; $Dns$_fun_subdomains
+((slice, (int, int, int), cell, cell), cell) $Dns$_fun_subdomains((slice, (int, int, int), cell, cell) $self) impure inline_ref;
+
+;; $Dns$_fun_permissions
+((slice, (int, int, int), cell, cell), (int, int, int)) $Dns$_fun_permissions((slice, (int, int, int), cell, cell) $self) impure inline_ref;
 
 ;; $MessageParameters$_constructor_bounce_to_value_mode_body
 ((int, cell, int, slice, int)) $MessageParameters$_constructor_bounce_to_value_mode_body(int $bounce, slice $to, int $value, int $mode, cell $body) inline;
 
+;; $Dns$_fun_reply
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_reply((slice, (int, int, int), cell, cell) $self, cell $body) impure inline;
+
 ;; $Dns$_fun_notify
-(tuple, ()) $Dns$_fun_notify(tuple $self, cell $body) impure inline;
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_notify((slice, (int, int, int), cell, cell) $self, cell $body) impure inline;
+
+;; $SendParameters$_constructor_to_mode_body_value_bounce_code_data
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_to_mode_body_value_bounce_code_data(slice $to, int $mode, cell $body, int $value, int $bounce, cell $code, cell $data) inline;
+
+;; $SendParameters$_constructor_bounce_to_value_mode_body_code_data
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline;
+
+;; $Dns$_fun_forward
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_forward((slice, (int, int, int), cell, cell) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref;
+
+;; $Dns$_fun_requireOwner
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_requireOwner((slice, (int, int, int), cell, cell) $self) impure inline_ref;
+
+;; $Dns$_fun_owner
+((slice, (int, int, int), cell, cell), slice) $Dns$_fun_owner((slice, (int, int, int), cell, cell) $self) impure inline_ref;
+
+;; $Dns$_fun_dnsresolve
+((slice, (int, int, int), cell, cell), (int, cell)) $Dns$_fun_dnsresolve((slice, (int, int, int), cell, cell) $self, slice $subdomain, int $category) impure inline_ref;
+
+;; $EventSubdomainRemoved$_constructor_domain
+((slice)) $EventSubdomainRemoved$_constructor_domain(slice $domain) inline;
+
+;; $EventSubdomainAdded$_constructor_domain_address
+((slice, slice)) $EventSubdomainAdded$_constructor_domain_address(slice $domain, slice $address) inline;
+
+;; $EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress
+((slice, slice, slice)) $EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress(slice $domain, slice $oldAddress, slice $newAddress) inline;
+
+;; $EventRecordRemoved$_constructor_domain_category
+((slice, int)) $EventRecordRemoved$_constructor_domain_category(slice $domain, int $category) inline;
+
+;; $EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord
+((slice, int, cell, cell)) $EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord(slice $domain, int $category, cell $oldRecord, cell $newRecord) inline;
+
+;; $EventRecordAdded$_constructor_domain_category_record
+((slice, int, cell)) $EventRecordAdded$_constructor_domain_category_record(slice $domain, int $category, cell $record) inline;
+
+;; $DNSRecord$_constructor_name_categories
+((slice, cell)) $DNSRecord$_constructor_name_categories(slice $name, cell $categories) inline;
 
 ;; $DeployOk$_constructor_queryId
 ((int)) $DeployOk$_constructor_queryId(int $queryId) inline;
+
+;; $ChangeOwnerOk$_constructor_queryId_newOwner
+((int, slice)) $ChangeOwnerOk$_constructor_queryId_newOwner(int $queryId, slice $newOwner) inline;
+
+;; $SendParameters$_constructor_bounce_to_value_mode_body
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_bounce_to_value_mode_body(int $bounce, slice $to, int $value, int $mode, cell $body) inline;
+
+;; $EventPermissionsUpdated$_constructor_permissions
+(((int, int, int))) $EventPermissionsUpdated$_constructor_permissions((int, int, int) $permissions) inline;
 
 
 ;; tact_Dns.stdlib.fc
@@ -48,6 +246,22 @@ global slice __tact_context_sender;
 global cell __tact_child_contract_codes;
 global int __tact_randomized;
 
+(slice, slice) __tact_load_address_opt(slice cs) asm """
+
+            b{00} SDBEGINSQ
+            IF:<{
+              PUSHNULL
+            }>ELSE<{
+              LDMSGADDR
+              SWAP
+            }>
+
+""";
+
+forall X -> X __tact_not_null(X x) impure inline {
+    throw_if(128, null?(x)); return x;
+}
+
 (int, slice, int, slice) __tact_context_get() inline {
     return __tact_context;
 }
@@ -55,6 +269,54 @@ global int __tact_randomized;
 slice __tact_context_get_sender() inline {
     return __tact_context_sender;
 }
+
+forall X0, X1 -> tuple __tact_tuple_create_2((X0, X1) v) asm """
+    2 TUPLE
+""";
+
+forall X0, X1 -> (X0, X1) __tact_tuple_destroy_2(tuple v) asm """
+    2 UNTUPLE
+""";
+
+slice __tact_dict_get_uint_slice(cell d, int kl, int k) inline {
+    var (r, ok) = udict_get?(d, kl, k);
+    if (ok) {
+        return r;
+    } else {
+        return null();
+    }
+}
+
+(cell, ()) __tact_dict_set_uint_slice(cell d, int kl, int k, slice v) inline {
+    if (null?(v)) {
+        var (r, ok) = udict_delete?(d, kl, k);
+        return (r, ());
+    } else {
+        return (udict_set(d, kl, k, v), ());
+    }
+}
+
+cell __tact_dict_get_uint_cell(cell d, int kl, int k) inline {
+    var (r, ok) = udict_get_ref?(d, kl, k);
+    if (ok) {
+        return r;
+    } else {
+        return null();
+    }
+}
+
+(cell, ()) __tact_dict_set_uint_cell(cell d, int kl, int k, cell v) inline {
+    if (null?(v)) {
+        var (r, ok) = udict_delete?(d, kl, k);
+        return (r, ());
+    } else {
+        return (udict_set_ref(d, kl, k, v), ());
+    }
+}
+
+builder $global_beginCell() impure asm """
+    NEWC
+""";
 
 int $global_myBalance() impure asm """
     BALANCE FIRST
@@ -84,24 +346,427 @@ int $global_myBalance() impure asm """
     SENDRAWMSG
 """;
 
-(tuple, ()) $Dns$_fun_notify(tuple $self, cell $body) impure inline {
-    var ($self) = $self;
+() $global_send((int, cell, cell, cell, int, slice, int) $params) impure asm """
+    NEWC
+    b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+    1 STI               // store `bounce`
+    b{000} STSLICECONST // store bounced = false and src = addr_none
+    STSLICE             // store `to`
+    SWAP
+    STGRAMS             // store `value`
+    105 PUSHINT         // 1 + 4 + 4 + 64 + 32
+    STZEROES            // store currency_collection, ihr_fee, fwd_fee, created_lt and created_at
+    // → Stack state
+    // s0: Builder
+    // s1: `data`
+    // s2: `code`
+    // s3: `body`
+    // s4: `mode`
+
+    // Group 2: Placing the Builder after code and data, then checking those for nullability
+    s2 XCHG0
+    DUP2
+    ISNULL
+    SWAP
+    ISNULL
+    AND
+    // → Stack state
+    // s0: -1 (true) if `data` and `code` are both null, 0 (false) otherwise
+    // s1: `code`
+    // s2: `data`
+    // s3: Builder
+    // s4: `body`
+    // s5: `mode`
+
+    // Group 3: Left branch of the IFELSE, executed if s0 is -1 (true)
+    <{
+        DROP2 // drop `data` and `code`, since either of those is null
+        b{0} STSLICECONST
+    }> PUSHCONT
+
+    // Group 3: Right branch of the IFELSE, executed if s0 is 0 (false)
+    <{
+        // _ split_depth:(Maybe (## 5))
+        //   special:(Maybe TickTock)
+        //   code:(Maybe ^Cell)
+        //   data:(Maybe ^Cell)
+        //   library:(Maybe ^Cell)
+        // = StateInit;
+        ROT                // place message Builder on top
+        b{10} STSLICECONST // store Maybe = true, Either = false
+        // Start composing inlined StateInit
+        b{00} STSLICECONST // store split_depth and special first
+        STDICT             // store code
+        STDICT             // store data
+        b{0} STSLICECONST  // store library
+    }> PUSHCONT
+
+    // Group 3: IFELSE that does the branching shown above
+    IFELSE
+    // → Stack state
+    // s0: Builder
+    // s1: null or StateInit
+    // s2: `body`
+    // s3: `mode`
+
+    // Group 4: Finalizing the message
+    STDICT // store `body` as ref with an extra Maybe bit, since `body` might be null
+    ENDC
+    // → Stack state
+    // s0: Cell
+    // s1: `mode`
+
+    // Group 5: Sending the message, with `mode` on top
+    SWAP
+    SENDRAWMSG // https://github.com/tact-lang/tact/issues/1558
+""";
+
+() $global_sendRawMessage(cell $msg, int $mode) impure asm """
+    SENDRAWMSG
+""";
+
+cell $Builder$_fun_endCell(builder $self) impure asm """
+    ENDC
+""";
+
+builder $Builder$_fun_storeRef(cell $cell, builder $self) impure asm """
+    STREF
+""";
+
+() $global_emit(cell $body) impure inline {
+    cell $c = $Builder$_fun_endCell($Builder$_fun_storeRef($body, store_uint($global_beginCell(), 15211807202738752817960438464513, 104)));
+    $global_sendRawMessage($c, 0);
+}
+
+int $global_dnsExtractTopDomainLength(slice $subdomain) impure inline_ref {
+    int $i = 0;
+    int $needBreak = false;
+    do {
+        int $char = $subdomain~load_uint(8);
+        $needBreak = ($char == 0);
+        ifnot ($needBreak) {
+            $i = ($i + 8);
+        }
+    } until ($needBreak);
+    throw_unless(24161, ($i != 0));
+    return $i;
+}
+
+slice $global_dnsExtractTopDomain(slice $subdomain) impure inline_ref {
+    int $len = $global_dnsExtractTopDomainLength($subdomain);
+    return $subdomain~load_bits($len);
+}
+
+builder $Builder$_fun_storeAddress(builder $self, slice $address) impure asm """
+    STSLICER
+""";
+
+cell $global_dnsResolveNext(slice $address) impure inline_ref {
+    return $Builder$_fun_endCell($Builder$_fun_storeAddress(store_uint($global_beginCell(), 47763, 16), $address));
+}
+
+int $Slice$_fun_bits(slice $self) impure asm """
+    SBITS
+""";
+
+int $Slice$_fun_hash(slice $self) impure asm """
+    HASHSU
+""";
+
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_reply((slice, (int, int, int), cell, cell) $self, cell $body) impure inline {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
     slice $to = __tact_context_get_sender();
-    int $bounce = false;
-    if (false) {
+    int $bounce = true;
+    if (true) {
         int $balance = $global_myBalance();
         int $balanceBeforeMessage = ($balance - $Context$_get_value(__tact_context_get()));
-        if (($balanceBeforeMessage < 0)) {
-            $global_nativeReserve(0, 0);
+        if (($balanceBeforeMessage < 100000000)) {
+            $global_nativeReserve(100000000, 0);
             $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 130, $body));
-            return ($self, ());
+            return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
         }
     }
     $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 66, $body));
-    return ($self, ());
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
 }
 
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_notify((slice, (int, int, int), cell, cell) $self, cell $body) impure inline {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    slice $to = __tact_context_get_sender();
+    int $bounce = false;
+    if (true) {
+        int $balance = $global_myBalance();
+        int $balanceBeforeMessage = ($balance - $Context$_get_value(__tact_context_get()));
+        if (($balanceBeforeMessage < 100000000)) {
+            $global_nativeReserve(100000000, 0);
+            $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 130, $body));
+            return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+        }
+    }
+    $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 66, $body));
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+}
+
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_forward((slice, (int, int, int), cell, cell) $self, slice $to, cell $body, int $bounce, tuple $init) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    var ($init) = $init;
+    if (null?($init)) {
+        if (true) {
+            var ($ctx'bounceable, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+            int $balance = $global_myBalance();
+            int $balanceBeforeMessage = ($balance - $ctx'value);
+            if (($balanceBeforeMessage < 100000000)) {
+                $global_nativeReserve(100000000, 0);
+                $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 130, $body));
+                return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+            }
+        }
+        $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 66, $body));
+        return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+    }
+    if (true) {
+        var ($ctx'bounceable, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+        int $balance = $global_myBalance();
+        int $balanceBeforeMessage = ($balance - $ctx'value);
+        if (($balanceBeforeMessage < 100000000)) {
+            $global_nativeReserve(100000000, 0);
+            $global_send($SendParameters$_constructor_to_mode_body_value_bounce_code_data($to, 130, $body, 0, $bounce, $StateInit$_get_code($StateInit$_not_null($init)), $StateInit$_get_data($StateInit$_not_null($init))));
+            return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+        }
+    }
+    $global_send($SendParameters$_constructor_bounce_to_value_mode_body_code_data($bounce, $to, 0, 66, $body, $StateInit$_get_code($StateInit$_not_null($init)), $StateInit$_get_data($StateInit$_not_null($init))));
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+}
+
+((slice, (int, int, int), cell, cell), ()) $Dns$_fun_requireOwner((slice, (int, int, int), cell, cell) $self) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    throw_unless(132, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), ());
+}
+
+((slice, (int, int, int), cell, cell), slice) $Dns$_fun_owner((slice, (int, int, int), cell, cell) $self) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    var $fresh$ret_9 = $self'owner;
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_9);
+}
+
+((slice, (int, int, int), cell, cell), (int, cell)) $Dns$_fun_dnsresolve((slice, (int, int, int), cell, cell) $self, slice $subdomain, int $category) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    int $delta = 0;
+    ifnot (preload_uint($subdomain, 8)) {
+        $subdomain~load_uint(8);
+        $delta = $delta + 8;
+    }
+    throw_unless(24161, dns_internal_verify($subdomain));
+    var ($res'prefix, $res'record) = ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_doResolveDNS($subdomain, $category);
+    var $fresh$ret_10 = $DNSResolveResult$_constructor_prefix_record(($res'prefix + $delta), $res'record);
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_10);
+}
+
+;; tact_Dns.native.fc
+slice dns_string_to_internal(slice domain) inline_ref {
+
+    ;; Special case for root domain
+    if ((domain.slice_bits() == 8) & (domain.slice_refs() == 0)) {
+        if (domain.preload_uint(8) == 46) {
+            return begin_cell().store_uint(0, 8).end_cell().begin_parse();
+        }
+    }
+
+    ;; Split domain into segments
+    tuple segments = null();
+    builder current = begin_cell();
+    int isCurrentEmpty = true;
+    int isFirst = true;
+    int isHyphen = false;
+    slice cs = domain;
+    int continue = true;
+    do {
+
+        ;; Prepare for loading next character
+        if (cs.slice_bits() == 0) {
+            int refs = cs.slice_refs();
+            if (refs == 1) {
+                cs = cs~load_ref().begin_parse();
+            } elseif (refs > 1) {
+                return null();
+            } else {
+                continue = false;
+            }
+            continue = false;
+        }
+
+        ;; Continue loading next character
+        if (continue) {
+            int char = cs~load_uint(8);
+            ;; we can do it because additional UTF-8 character's octets >= 128 -- https://www.ietf.org/rfc/rfc3629.txt
+            int is_hyphen = (char == 45);
+            int is_dot  = (char == 46);
+            int valid_char = is_hyphen | is_dot | ((char >= 48) & (char <= 57)) | ((char >= 97) & (char <= 122)); ;; '-' or 0-9 or a-z
+            if (~ valid_char | (isFirst & is_hyphen)) {
+                return null();
+            }
+            isHyphen = is_hyphen;
+            if (is_dot) {
+                if (isFirst | isHyphen) { ;; Empty or ends with hyphen
+                    return null();
+                }
+                segments = cons(current, segments);
+                current = begin_cell();
+                isHyphen = false;
+                isFirst = true;
+                isCurrentEmpty = true;
+            } else {
+                isFirst = false;
+                isCurrentEmpty = false;
+                current~store_uint(char, 8);
+            }
+        }
+
+    } until (~ continue);
+    if (isHyphen) { ;; ends with hyphen
+        return null();
+    }
+    if (~ isCurrentEmpty) {
+        segments = cons(current, segments);
+    }
+
+    ;; Concatenate segments
+    builder res = begin_cell();
+    (builder b, tuple tail) = uncons(segments);
+    res = res.store_builder(b);
+    while(~ null?(tail)) {
+        (b, tail) = uncons(tail);
+        res = res.store_uint(0, 8); ;; Add \0 separator
+        res = res.store_builder(b);
+    }
+    res = res.store_uint(0, 8); ;; Add \0 separator
+    return res.end_cell().begin_parse();
+}
+
+int dns_internal_verify(slice sc) inline_ref {
+    if (sc.slice_refs() != 0) {
+        return false;
+    }
+    int bits = sc.slice_bits();
+    if (bits % 8 != 0) {
+        return false;
+    }
+    if (bits == 0) { ;; Case for root domain
+        return true;
+    }
+    int len = bits / 8;
+    int counter = 0;
+    int isFirst = true;
+    int isHyphen = false;
+    repeat(len) {
+        int char = sc~load_uint(8);
+        if (char == 0) {
+            if (counter == 0) {
+                return false;
+            }
+            if (isHyphen) {
+                return false;
+            }
+            counter = 0;
+            isHyphen = false;
+            isFirst = true;
+        } else {
+            int charIsHyphen = (char == 45);
+            int isValid = charIsHyphen | ((char >= 48) & (char <= 57)) | ((char >= 97) & (char <= 122));
+            if (~ isValid) {
+                return false;
+            }
+            if (charIsHyphen & isFirst)  {
+                return false;
+            }
+            isHyphen = charIsHyphen;
+            isFirst = false;
+            counter = counter + 1;
+        }
+    }
+    return counter == 0 & ~ isHyphen;
+}
+
+slice dns_internal_normalize(slice src) impure inline_ref {
+    throw_unless(134, src.slice_refs() == 0); ;; Invalid argument error
+    builder target = begin_cell();
+    repeat(src.slice_bits() / 8) {
+        int char = src~load_uint(8);
+
+        ;; b => 6
+        if (char == 98) {
+            char = 54;
+        }
+
+        ;; g, q => 9
+        if ((char == 103) | (char == 113)) {
+            char = 57;    
+        }
+
+        ;; l => 1
+        if (char == 108) {
+            char = 49;
+        }
+
+        ;; o => 0
+        if (char == 111) {
+            char = 48;
+        }
+
+        ;; s => 5
+        if (char == 115) {
+            char = 53;
+        }
+
+        ;; u => v
+        if (char == 117) {
+            char = 118;
+        }
+
+        ;; z => 2
+        if (char == 122) {
+            char = 50;
+        }
+
+        target = target.store_uint(char, 8);
+    }
+    return target.end_cell().begin_parse();
+}
+
+;; tact_Dns.constants.fc
+;; Cell 2+HHl9bS2RTEYxc7HaUxED0u/nR0cSEtH60XD88MddI=
+cell __gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2() asm """
+    B{b5ee9c7241010101000800000c000000004f4b86af522d} B>boc PUSHREF
+""";
+
+;; Cell 0OsIxBveuqV9QmS8HRqM4Jrb9AnsFu5UlRRX1x4+BOk=
+cell __gen_cell_cell_d0eb08c41bdebaa57d4264bc1d1a8ce09adbf409ec16ee54951457d71e3e04e9() asm """
+    B{b5ee9c7241010101001800002c00000000436f6e74726163742064657374726f79656454dbd534} B>boc PUSHREF
+""";
+
 ;; tact_Dns.storage.fc
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+_ $StateInit$_get_code((cell, cell) v) inline {
+    var (v'code, v'data) = v;
+    return v'code;
+}
+
+_ $StateInit$_get_data((cell, cell) v) inline {
+    var (v'code, v'data) = v;
+    return v'data;
+}
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
 ;;
 ;; Type: Context
 ;; TLB: _ bounceable:bool sender:address value:int257 raw:^slice = Context
@@ -110,6 +775,23 @@ int $global_myBalance() impure asm """
 _ $Context$_get_value((int, slice, int, slice) v) inline {
     var (v'bounceable, v'sender, v'value, v'raw) = v;
     return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell value:int257 to:address bounce:bool = SendParameters
+;;
+
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_to_mode_body_value_bounce_code_data(slice $to, int $mode, cell $body, int $value, int $bounce, cell $code, cell $data) inline {
+    return ($mode, $body, $code, $data, $value, $to, $bounce);
+}
+
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($mode, $body, $code, $data, $value, $to, $bounce);
+}
+
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_bounce_to_value_mode_body(int $bounce, slice $to, int $value, int $mode, cell $body) inline {
+    return ($mode, $body, null(), null(), $value, $to, $bounce);
 }
 
 ;;
@@ -143,24 +825,321 @@ cell $DeployOk$_store_cell((int) v, builder b) inline {
 }
 
 ;;
-;; Type: Dns
-;; TLB: _  = Dns
+;; Type: ChangeOwnerOk
+;; Header: 0x327b2b4a
+;; TLB: change_owner_ok#327b2b4a queryId:uint64 newOwner:address = ChangeOwnerOk
 ;;
 
-tuple $Dns$_contract_load() impure inline {
+builder $ChangeOwnerOk$_store(builder build_0, (int, slice) v) inline {
+    var (v'queryId, v'newOwner) = v;
+    build_0 = store_uint(build_0, 846932810, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    build_0 = build_0.store_slice(v'newOwner);
+    return build_0;
+}
+
+cell $ChangeOwnerOk$_store_cell((int, slice) v, builder b) inline {
+    return $ChangeOwnerOk$_store(b, v).end_cell();
+}
+
+((int, slice)) $ChangeOwnerOk$_constructor_queryId_newOwner(int $queryId, slice $newOwner) inline {
+    return ($queryId, $newOwner);
+}
+
+;;
+;; Type: DNSResolveResult
+;; TLB: _ prefix:int257 record:Maybe ^cell = DNSResolveResult
+;;
+
+(int, cell) $DNSResolveResult$_to_external(((int, cell)) v) inline {
+    var (v'prefix, v'record) = v; 
+    return (v'prefix, v'record);
+}
+
+((int, cell)) $DNSResolveResult$_constructor_prefix_record(int $prefix, cell $record) inline {
+    return ($prefix, $record);
+}
+
+;;
+;; Type: Permissions
+;; TLB: _ canAdd:bool canRemove:bool canReplace:bool = Permissions
+;;
+
+builder $Permissions$_store(builder build_0, (int, int, int) v) inline {
+    var (v'canAdd, v'canRemove, v'canReplace) = v;
+    build_0 = build_0.store_int(v'canAdd, 1);
+    build_0 = build_0.store_int(v'canRemove, 1);
+    build_0 = build_0.store_int(v'canReplace, 1);
+    return build_0;
+}
+
+(slice, ((int, int, int))) $Permissions$_load(slice sc_0) inline {
+    var v'canAdd = sc_0~load_int(1);
+    var v'canRemove = sc_0~load_int(1);
+    var v'canReplace = sc_0~load_int(1);
+    return (sc_0, (v'canAdd, v'canRemove, v'canReplace));
+}
+
+(int, int, int) $Permissions$_to_external(((int, int, int)) v) inline {
+    var (v'canAdd, v'canRemove, v'canReplace) = v; 
+    return (v'canAdd, v'canRemove, v'canReplace);
+}
+
+((int, int, int)) $Permissions$_constructor_canAdd_canRemove_canReplace(int $canAdd, int $canRemove, int $canReplace) inline {
+    return ($canAdd, $canRemove, $canReplace);
+}
+
+;;
+;; Type: EventPermissionsUpdated
+;; Header: 0x6cd59be6
+;; TLB: event_permissions_updated#6cd59be6 permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool} = EventPermissionsUpdated
+;;
+
+builder $EventPermissionsUpdated$_store(builder build_0, ((int, int, int)) v) inline {
+    var ((v'permissions'canAdd, v'permissions'canRemove, v'permissions'canReplace)) = v;
+    build_0 = store_uint(build_0, 1825938406, 32);
+    build_0 = $Permissions$_store(build_0, (v'permissions'canAdd, v'permissions'canRemove, v'permissions'canReplace));
+    return build_0;
+}
+
+cell $EventPermissionsUpdated$_store_cell(((int, int, int)) v, builder b) inline {
+    return $EventPermissionsUpdated$_store(b, v).end_cell();
+}
+
+(((int, int, int))) $EventPermissionsUpdated$_constructor_permissions((int, int, int) $permissions) inline {
+    return ($permissions);
+}
+
+;;
+;; Type: EventRecordAdded
+;; Header: 0xa61ddcfd
+;; TLB: event_record_added#a61ddcfd domain:^string category:int257 record:^cell = EventRecordAdded
+;;
+
+builder $EventRecordAdded$_store(builder build_0, (slice, int, cell) v) inline {
+    var (v'domain, v'category, v'record) = v;
+    build_0 = store_uint(build_0, 2786974973, 32);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'domain));
+    build_0 = build_0.store_int(v'category, 257);
+    build_0 = build_0.store_ref(v'record);
+    return build_0;
+}
+
+cell $EventRecordAdded$_store_cell((slice, int, cell) v, builder b) inline {
+    return $EventRecordAdded$_store(b, v).end_cell();
+}
+
+((slice, int, cell)) $EventRecordAdded$_constructor_domain_category_record(slice $domain, int $category, cell $record) inline {
+    return ($domain, $category, $record);
+}
+
+;;
+;; Type: EventRecordUpdated
+;; Header: 0xef2db883
+;; TLB: event_record_updated#ef2db883 domain:^string category:int257 oldRecord:^cell newRecord:^cell = EventRecordUpdated
+;;
+
+builder $EventRecordUpdated$_store(builder build_0, (slice, int, cell, cell) v) inline {
+    var (v'domain, v'category, v'oldRecord, v'newRecord) = v;
+    build_0 = store_uint(build_0, 4012750979, 32);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'domain));
+    build_0 = build_0.store_int(v'category, 257);
+    build_0 = build_0.store_ref(v'oldRecord);
+    build_0 = build_0.store_ref(v'newRecord);
+    return build_0;
+}
+
+cell $EventRecordUpdated$_store_cell((slice, int, cell, cell) v, builder b) inline {
+    return $EventRecordUpdated$_store(b, v).end_cell();
+}
+
+((slice, int, cell, cell)) $EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord(slice $domain, int $category, cell $oldRecord, cell $newRecord) inline {
+    return ($domain, $category, $oldRecord, $newRecord);
+}
+
+;;
+;; Type: EventRecordRemoved
+;; Header: 0xff9494f1
+;; TLB: event_record_removed#ff9494f1 domain:^string category:int257 = EventRecordRemoved
+;;
+
+builder $EventRecordRemoved$_store(builder build_0, (slice, int) v) inline {
+    var (v'domain, v'category) = v;
+    build_0 = store_uint(build_0, 4287927537, 32);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'domain));
+    build_0 = build_0.store_int(v'category, 257);
+    return build_0;
+}
+
+cell $EventRecordRemoved$_store_cell((slice, int) v, builder b) inline {
+    return $EventRecordRemoved$_store(b, v).end_cell();
+}
+
+((slice, int)) $EventRecordRemoved$_constructor_domain_category(slice $domain, int $category) inline {
+    return ($domain, $category);
+}
+
+;;
+;; Type: EventSubdomainAdded
+;; Header: 0xff1b3b14
+;; TLB: event_subdomain_added#ff1b3b14 domain:^string address:address = EventSubdomainAdded
+;;
+
+builder $EventSubdomainAdded$_store(builder build_0, (slice, slice) v) inline {
+    var (v'domain, v'address) = v;
+    build_0 = store_uint(build_0, 4279974676, 32);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'domain));
+    build_0 = build_0.store_slice(v'address);
+    return build_0;
+}
+
+cell $EventSubdomainAdded$_store_cell((slice, slice) v, builder b) inline {
+    return $EventSubdomainAdded$_store(b, v).end_cell();
+}
+
+((slice, slice)) $EventSubdomainAdded$_constructor_domain_address(slice $domain, slice $address) inline {
+    return ($domain, $address);
+}
+
+;;
+;; Type: EventSubdomainRemoved
+;; Header: 0xb5f1b4b5
+;; TLB: event_subdomain_removed#b5f1b4b5 domain:^string = EventSubdomainRemoved
+;;
+
+builder $EventSubdomainRemoved$_store(builder build_0, (slice) v) inline {
+    var (v'domain) = v;
+    build_0 = store_uint(build_0, 3052516533, 32);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'domain));
+    return build_0;
+}
+
+cell $EventSubdomainRemoved$_store_cell((slice) v, builder b) inline {
+    return $EventSubdomainRemoved$_store(b, v).end_cell();
+}
+
+((slice)) $EventSubdomainRemoved$_constructor_domain(slice $domain) inline {
+    return ($domain);
+}
+
+;;
+;; Type: EventSubdomainUpdated
+;; Header: 0xab7c80bd
+;; TLB: event_subdomain_updated#ab7c80bd domain:^string oldAddress:address newAddress:address = EventSubdomainUpdated
+;;
+
+builder $EventSubdomainUpdated$_store(builder build_0, (slice, slice, slice) v) inline {
+    var (v'domain, v'oldAddress, v'newAddress) = v;
+    build_0 = store_uint(build_0, 2877063357, 32);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'domain));
+    build_0 = build_0.store_slice(v'oldAddress);
+    build_0 = build_0.store_slice(v'newAddress);
+    return build_0;
+}
+
+cell $EventSubdomainUpdated$_store_cell((slice, slice, slice) v, builder b) inline {
+    return $EventSubdomainUpdated$_store(b, v).end_cell();
+}
+
+((slice, slice, slice)) $EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress(slice $domain, slice $oldAddress, slice $newAddress) inline {
+    return ($domain, $oldAddress, $newAddress);
+}
+
+;;
+;; Type: DNSRecord
+;; TLB: _ name:^string categories:dict<uint256, ^cell> = DNSRecord
+;;
+
+builder $DNSRecord$_store(builder build_0, (slice, cell) v) inline {
+    var (v'name, v'categories) = v;
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'name));
+    build_0 = build_0.store_dict(v'categories);
+    return build_0;
+}
+
+cell $DNSRecord$_store_cell((slice, cell) v, builder b) inline {
+    return $DNSRecord$_store(b, v).end_cell();
+}
+
+(slice, ((slice, cell))) $DNSRecord$_load(slice sc_0) inline {
+    var v'name = sc_0~load_ref().begin_parse();
+    var v'categories = sc_0~load_dict();
+    return (sc_0, (v'name, v'categories));
+}
+
+tuple $DNSRecord$_as_optional((slice, cell) v) inline {
+    var (v'name, v'categories) = v;
+    return __tact_tuple_create_2(v'name, v'categories);
+}
+
+tuple $DNSRecord$_load_opt(cell cl) inline {
+    if (null?(cl)) {
+        return null();
+    }
+    var sc = cl.begin_parse();
+    return $DNSRecord$_as_optional(sc~$DNSRecord$_load());
+}
+
+_ $DNSRecord$_get_categories((slice, cell) v) inline {
+    var (v'name, v'categories) = v;
+    return v'categories;
+}
+
+((slice, cell)) $DNSRecord$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (slice vvv'name, cell vvv'categories) = __tact_tuple_destroy_2(v);
+    return (vvv'name, vvv'categories);
+}
+
+((slice, cell)) $DNSRecord$_constructor_name_categories(slice $name, cell $categories) inline {
+    return ($name, $categories);
+}
+
+;;
+;; Type: Dns
+;; TLB: _ owner:address permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool} records:dict<uint256, ^DNSRecord{name:^string,categories:dict<uint256, ^cell>}> subdomains:dict<uint256, address> = Dns
+;;
+
+builder $Dns$_store(builder build_0, (slice, (int, int, int), cell, cell) v) inline {
+    var (v'owner, (v'permissions'canAdd, v'permissions'canRemove, v'permissions'canReplace), v'records, v'subdomains) = v;
+    build_0 = build_0.store_slice(v'owner);
+    build_0 = $Permissions$_store(build_0, (v'permissions'canAdd, v'permissions'canRemove, v'permissions'canReplace));
+    build_0 = build_0.store_dict(v'records);
+    build_0 = build_0.store_dict(v'subdomains);
+    return build_0;
+}
+
+(slice, ((slice, (int, int, int), cell, cell))) $Dns$_load(slice sc_0) inline {
+    var v'owner = sc_0~load_msg_addr();
+    var v'permissions = sc_0~$Permissions$_load();
+    var v'records = sc_0~load_dict();
+    var v'subdomains = sc_0~load_dict();
+    return (sc_0, (v'owner, v'permissions, v'records, v'subdomains));
+}
+
+(slice, ((slice, int))) $Dns$init$_load(slice sc_0) inline {
+    var v'owner = sc_0~load_msg_addr();
+    var v'seed = sc_0~load_int(257);
+    return (sc_0, (v'owner, v'seed));
+}
+
+(slice, (int, int, int), cell, cell) $Dns$_contract_load() impure inline {
     slice $sc = get_data().begin_parse();
     int $loaded = $sc~load_int(1);
     if ($loaded) {
-        return null();
+        return $sc~$Dns$_load();
     }
     else {
-        return $Dns$_contract_init();
+        (slice $owner, int $seed) = $sc~$Dns$init$_load();
+        $sc.end_parse();
+        return $Dns$_contract_init($owner, $seed);
     }
 }
 
-() $Dns$_contract_store(tuple v) impure inline {
+() $Dns$_contract_store((slice, (int, int, int), cell, cell) v) impure inline {
     builder b = begin_cell();
     b = b.store_int(true, 1);
+    b = $Dns$_store(b, v);
     set_data(b.end_cell());
 }
 
@@ -168,14 +1147,99 @@ tuple $Dns$_contract_load() impure inline {
 ;; Contract Dns functions
 ;;
 
-tuple $Dns$_contract_init() impure inline {
-    tuple $self = null();
-    return $self;
+(slice, (int, int, int), cell, cell) $Dns$_contract_init(slice $owner, int $seed) impure inline {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = (null(), null(), null(), null());
+    $self'owner = $owner;
+    $self'records = null();
+    ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace) = $Permissions$_constructor_canAdd_canRemove_canReplace(true, true, true);
+    return ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains);
+}
+
+((slice, (int, int, int), cell, cell), (int, cell)) $Dns$_fun_resolveByKey((slice, (int, int, int), cell, cell) $self, int $totalBits, int $id, int $category) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    tuple $record = $DNSRecord$_load_opt(__tact_dict_get_uint_cell($self'records, 256, $id));
+    if (null?($record)) {
+        var $fresh$ret_3 = $DNSResolveResult$_constructor_prefix_record($totalBits, null());
+        return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_3);
+    }
+    ifnot ($category) {
+        var $fresh$ret_4 = $DNSResolveResult$_constructor_prefix_record($totalBits, $DNSRecord$_get_categories($DNSRecord$_not_null($record)));
+        return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_4);
+    }
+    cell $cat = __tact_dict_get_uint_cell($DNSRecord$_get_categories($DNSRecord$_not_null($record)), 256, $category);
+    var $fresh$ret_5 = $DNSResolveResult$_constructor_prefix_record($totalBits, $cat);
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_5);
+}
+
+((slice, (int, int, int), cell, cell), (int, cell)) $Dns$_fun_doResolveDNS((slice, (int, int, int), cell, cell) $self, slice $subdomain, int $category) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    ifnot ($Slice$_fun_bits($subdomain)) {
+        var $fresh$ret_0 = ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_resolveByKey($Slice$_fun_bits($subdomain), 0, $category);
+        return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_0);
+    }
+    slice $topLevel = $global_dnsExtractTopDomain($subdomain);
+    slice $next = __tact_dict_get_uint_slice($self'subdomains, 256, $Slice$_fun_hash($topLevel));
+    if ((~ null?($next))) {
+        var $fresh$ret_1 = $DNSResolveResult$_constructor_prefix_record($Slice$_fun_bits($topLevel), $global_dnsResolveNext(__tact_not_null($next)));
+        return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_1);
+    }
+    var $fresh$ret_2 = ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_resolveByKey($Slice$_fun_bits($subdomain), $Slice$_fun_hash($subdomain), $category);
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_2);
+}
+
+((slice, (int, int, int), cell, cell), cell) $Dns$_fun_records((slice, (int, int, int), cell, cell) $self) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    var $fresh$ret_6 = $self'records;
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_6);
+}
+
+((slice, (int, int, int), cell, cell), cell) $Dns$_fun_subdomains((slice, (int, int, int), cell, cell) $self) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    var $fresh$ret_7 = $self'subdomains;
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_7);
+}
+
+((slice, (int, int, int), cell, cell), (int, int, int)) $Dns$_fun_permissions((slice, (int, int, int), cell, cell) $self) impure inline_ref {
+    var (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)) = $self;
+    var $fresh$ret_8 = ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace);
+    return (($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains), $fresh$ret_8);
 }
 
 ;;
 ;; Get methods of a Contract Dns
 ;;
+
+_ %records() method_id(114139) {
+    var self = $Dns$_contract_load();
+    var res = self~$Dns$_fun_records();
+    return res;
+}
+
+_ %subdomains() method_id(76907) {
+    var self = $Dns$_contract_load();
+    var res = self~$Dns$_fun_subdomains();
+    return res;
+}
+
+_ %permissions() method_id(73541) {
+    var self = $Dns$_contract_load();
+    var res = self~$Dns$_fun_permissions();
+    return $Permissions$_to_external(res);
+}
+
+_ %owner() method_id(83229) {
+    var self = $Dns$_contract_load();
+    var res = self~$Dns$_fun_owner();
+    return res;
+}
+
+_ %dnsresolve(slice $subdomain, int $category) method_id(123660) {
+    slice $subdomain = $subdomain;
+    int $category = $category;
+    var self = $Dns$_contract_load();
+    var res = self~$Dns$_fun_dnsresolve($subdomain, $category);
+    return $DNSResolveResult$_to_external(res);
+}
 
 ;;
 ;; Routing of a Contract Dns
@@ -197,19 +1261,178 @@ tuple $Dns$_contract_init() impure inline {
     __tact_context_sender = msg_sender_addr;
     
     ;; Load contract data
-    var $self = $Dns$_contract_load();
+    var ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains) = $Dns$_contract_load();
     
     ;; Handle bounced messages
     if (msg_bounced) { return (); }
-    var op = in_msg~load_opcode_internal();
-    ;; Receive Deploy message
-    if (op == 0x946a98b6) {
-        var $deploy'queryId = in_msg~load_uint(64);
-        $self~$Dns$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId), begin_cell()));
-        $Dns$_contract_store($self);
+    int op = 0;
+    int in_msg_length = slice_bits(in_msg);
+    if (in_msg_length >= 32) {
+        op = in_msg~load_uint(32);
+        ;; Receive UpdateSubdomain message
+        if (op == 3097454096) {
+            var $update'domain = in_msg~load_ref().begin_parse();
+            var $update'address = in_msg~__tact_load_address_opt();
+            ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+            slice $subdomain = dns_string_to_internal($update'domain);
+            throw_unless(22696, (~ null?($subdomain)));
+            int $topLevelBits = $global_dnsExtractTopDomainLength(__tact_not_null($subdomain));
+            throw_unless(22696, ($Slice$_fun_bits(__tact_not_null($subdomain)) == $topLevelBits));
+            int $id = $Slice$_fun_hash(__tact_not_null($subdomain));
+            slice $next = __tact_dict_get_uint_slice($self'subdomains, 256, $id);
+            if (( ((~ null?($next))) ? (null?($update'address)) : (false) )) {
+                throw_unless(21519, $self'permissions'canRemove);
+                $self'subdomains~__tact_dict_set_uint_slice(256, $id, null());
+                $global_emit($EventSubdomainRemoved$_store_cell($EventSubdomainRemoved$_constructor_domain($update'domain), begin_cell()));
+                ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                return ();
+            }
+            if (( (null?($next)) ? ((~ null?($update'address))) : (false) )) {
+                throw_unless(43961, $self'permissions'canAdd);
+                $self'subdomains~__tact_dict_set_uint_slice(256, $id, $update'address);
+                $global_emit($EventSubdomainAdded$_store_cell($EventSubdomainAdded$_constructor_domain_address($update'domain, __tact_not_null($update'address)), begin_cell()));
+                ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                return ();
+            }
+            if (( ((~ null?($next))) ? ((~ null?($update'address))) : (false) )) {
+                throw_unless(43961, $self'permissions'canReplace);
+                $self'subdomains~__tact_dict_set_uint_slice(256, $id, $update'address);
+                $global_emit($EventSubdomainUpdated$_store_cell($EventSubdomainUpdated$_constructor_domain_oldAddress_newAddress($update'domain, __tact_not_null($next), __tact_not_null($update'address)), begin_cell()));
+                ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                return ();
+            }
+            throw(134);
+            $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+            return ();
+        }
+        
+        ;; Receive UpdateRecord message
+        if (op == 3532961574) {
+            var $update'domain = in_msg~load_ref().begin_parse();
+            var $update'category = in_msg~load_int(257);
+            var $update'record = in_msg~load_maybe_ref();
+            ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+            slice $subdomain = dns_string_to_internal($update'domain);
+            throw_unless(22696, (~ null?($subdomain)));
+            int $id = $Slice$_fun_hash(__tact_not_null($subdomain));
+            tuple $c = $DNSRecord$_load_opt(__tact_dict_get_uint_cell($self'records, 256, $id));
+            if ((~ null?($c))) {
+                var ($domain'name, $domain'categories) = $DNSRecord$_not_null($c);
+                cell $cat = __tact_dict_get_uint_cell($domain'categories, 256, $update'category);
+                if (( ((~ null?($cat))) ? (null?($update'record)) : (false) )) {
+                    throw_unless(21519, $self'permissions'canRemove);
+                    $domain'categories~__tact_dict_set_uint_cell(256, $update'category, null());
+                    $self'records~__tact_dict_set_uint_cell(256, $id, $DNSRecord$_store_cell(($domain'name, $domain'categories), begin_cell()));
+                    $global_emit($EventRecordRemoved$_store_cell($EventRecordRemoved$_constructor_domain_category($update'domain, $update'category), begin_cell()));
+                    ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                    $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                    return ();
+                }
+                if (( ((~ null?($cat))) ? ((~ null?($update'record))) : (false) )) {
+                    throw_unless(55590, $self'permissions'canReplace);
+                    $domain'categories~__tact_dict_set_uint_cell(256, $update'category, $update'record);
+                    $self'records~__tact_dict_set_uint_cell(256, $id, $DNSRecord$_store_cell(($domain'name, $domain'categories), begin_cell()));
+                    $global_emit($EventRecordUpdated$_store_cell($EventRecordUpdated$_constructor_domain_category_oldRecord_newRecord($update'domain, $update'category, __tact_not_null($cat), __tact_not_null($update'record)), begin_cell()));
+                    ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                    $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                    return ();
+                }
+                if (( (null?($cat)) ? ((~ null?($update'record))) : (false) )) {
+                    throw_unless(43961, $self'permissions'canAdd);
+                    $domain'categories~__tact_dict_set_uint_cell(256, $update'category, $update'record);
+                    $self'records~__tact_dict_set_uint_cell(256, $id, $DNSRecord$_store_cell(($domain'name, $domain'categories), begin_cell()));
+                    $global_emit($EventRecordAdded$_store_cell($EventRecordAdded$_constructor_domain_category_record($update'domain, $update'category, __tact_not_null($update'record)), begin_cell()));
+                    ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                    $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                    return ();
+                }
+            } elseif ((~ null?($update'record))) {
+                throw_unless(43961, $self'permissions'canAdd);
+                var ($domain'name, $domain'categories) = $DNSRecord$_constructor_name_categories($update'domain, null());
+                $domain'categories~__tact_dict_set_uint_cell(256, $update'category, $update'record);
+                $self'records~__tact_dict_set_uint_cell(256, $id, $DNSRecord$_store_cell(($domain'name, $domain'categories), begin_cell()));
+                $global_emit($EventRecordAdded$_store_cell($EventRecordAdded$_constructor_domain_category_record($update'domain, $update'category, __tact_not_null($update'record)), begin_cell()));
+                ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+                $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+                return ();
+            }
+            throw(134);
+            $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+            return ();
+        }
+        
+        ;; Receive Deploy message
+        if (op == 0x946a98b6) {
+            var $deploy'queryId = in_msg~load_uint(64);
+            ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId), begin_cell()));
+            $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+            return ();
+        }
+        
+        ;; Receive FactoryDeploy message
+        if (op == 0x6d0ff13b) {
+            var $deploy'queryId = in_msg~load_uint(64);
+            var $deploy'cashback = in_msg~load_msg_addr();
+            ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_forward($deploy'cashback, $DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId), begin_cell()), false, null());
+            $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+            return ();
+        }
+        
+        ;; Receive ChangeOwner message
+        if (op == 0x819dbe99) {
+            var $msg'queryId = in_msg~load_uint(64);
+            var $msg'newOwner = in_msg~load_msg_addr();
+            ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+            $self'owner = $msg'newOwner;
+            ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply($ChangeOwnerOk$_store_cell($ChangeOwnerOk$_constructor_queryId_newOwner($msg'queryId, $msg'newOwner), begin_cell()));
+            $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+            return ();
+        }
+        
+    }
+    ;; Empty Receiver and Text Receivers
+    var text_op = slice_hash(in_msg);
+    ;; Receive "Destroy" message
+    if (text_op == 0xbc11327417bcdfc895e7a19b74fe433f6cfb94ccaa3ed4123aee1d790cde56a0) {
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+        throw_unless(25569, $self'permissions'canRemove);
+        $global_send($SendParameters$_constructor_bounce_to_value_mode_body(false, __tact_context_get_sender(), 0, 160, __gen_cell_cell_d0eb08c41bdebaa57d4264bc1d1a8ce09adbf409ec16ee54951457d71e3e04e9()));
+        $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
         return ();
     }
-    
+    ;; Receive "Burn canAdd" message
+    if (text_op == 0xe1eefb71aeeaf14b43a62dac1f6280d8d53b58b7e1c1d34da3edf6be3e54db3a) {
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+        throw_unless(26438, $self'permissions'canAdd);
+        $self'permissions'canAdd = false;
+        $global_emit($EventPermissionsUpdated$_store_cell($EventPermissionsUpdated$_constructor_permissions(($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace)), begin_cell()));
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+        $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+        return ();
+    }
+    ;; Receive "Burn canRemove" message
+    if (text_op == 0x7186c682243006c4affc62e682b3008c35ab2a1628526015a552122a9a2e34ee) {
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+        throw_unless(26438, $self'permissions'canRemove);
+        $self'permissions'canRemove = false;
+        $global_emit($EventPermissionsUpdated$_store_cell($EventPermissionsUpdated$_constructor_permissions(($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace)), begin_cell()));
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+        $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+        return ();
+    }
+    ;; Receive "Burn canReplace" message
+    if (text_op == 0x8921f8407d29655e3eec273042707a113588d4c5f254ccf529408f7637154e49) {
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_requireOwner();
+        throw_unless(26438, $self'permissions'canReplace);
+        $self'permissions'canReplace = false;
+        $global_emit($EventPermissionsUpdated$_store_cell($EventPermissionsUpdated$_constructor_permissions(($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace)), begin_cell()));
+        ($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains)~$Dns$_fun_reply(__gen_cell_cell_dbe1c797d6d2d914c463173b1da531103d2efe747471212d1fad170fcf0c75d2());
+        $Dns$_contract_store(($self'owner, ($self'permissions'canAdd, $self'permissions'canRemove, $self'permissions'canReplace), $self'records, $self'subdomains));
+        return ();
+    }
     ;; Throw if not handled
     throw(130);
 }

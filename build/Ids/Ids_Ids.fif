@@ -1,0 +1,437 @@
+// automatically generated from `@stdlib/std/stdlib.fc` `/home/zeta/connected/ton/fossfiatContract/build/Ids/Ids_Ids.fc` 
+PROGRAM{
+  DECLPROC __tact_not_null
+  DECLPROC __tact_context_get_sender
+  DECLPROC __tact_dict_set_code
+  DECLPROC __tact_dict_get_code
+  DECLPROC __tact_dict_set_slice_int
+  DECLPROC $Ids$_store
+  DECLPROC $Ids$_load
+  DECLPROC $Ids$_to_external
+  DECLPROC $JettonWalletSharded$init$_store
+  DECLPROC $Ids$init$_load
+  DECLPROC $Ids$_contract_init
+  DECLPROC $Ids$_contract_load
+  DECLPROC $Ids$_contract_store
+  DECLPROC $BasechainAddress$_constructor_hash
+  DECLPROC $global_changeShard
+  DECLPROC $Builder$_fun_storeShardedStateInit
+  DECLPROC $Address$_fun_getShard
+  DECLPROC $JettonWalletSharded$_init_child
+  DECLPROC $StateInit$_constructor_code_data
+  DECLPROC $Ids$_fun_idsState
+  DECLPROC $Ids$_fun_getWalletInit
+  DECLPROC $Ids$_fun_getJettonWalletInit
+  DECLPROC $Ids$_fun_getJettonBasechainWalletByOwner
+  DECLPROC $Ids$_fun_correctInternalSender
+  68272 DECLMETHOD %idsState
+  DECLPROC recv_internal
+  65535 DECLMETHOD __tact_selector_hack
+  DECLGLOBVAR __tact_context
+  DECLGLOBVAR __tact_context_sender
+  DECLGLOBVAR __tact_child_contract_codes
+  DECLGLOBVAR __tact_randomized
+  __tact_not_null PROCINLINE:<{
+    DUP
+    ISNULL
+    128 THROWIF
+  }>
+  __tact_context_get_sender PROCINLINE:<{
+    __tact_context_sender GETGLOB
+  }>
+  __tact_dict_set_code PROCINLINE:<{
+    s0 s2 XCHG
+    16 PUSHINT
+    DICTUSETREF
+  }>
+  __tact_dict_get_code PROCINLINE:<{
+    SWAP
+    16 PUSHINT
+    DICTUGETREF
+    NULLSWAPIFNOT
+    135 THROWIFNOT
+  }>
+  __tact_dict_set_slice_int PROCINLINE:<{
+    OVER
+    ISNULL
+    IF:<{
+      2DROP
+      -ROT
+          DICTDEL
+      DROP
+    }>ELSE<{
+      NEWC
+      SWAP
+      STIX
+      s1 s3 s3 XCHG3
+      DICTSETB
+    }>
+  }>
+  $Ids$_store PROCINLINE:<{
+    s4 s5 XCHG2
+    STSLICE
+    s1 s2 XCHG
+    257 PUSHINT
+    STIX
+    257 PUSHINT
+    STIX
+    STDICT
+    STREF
+  }>
+  $Ids$_load PROCINLINE:<{
+    LDMSGADDR
+    257 PUSHINT
+    LDIX
+    257 PUSHINT
+    LDIX
+    LDDICT
+    LDREF
+    5 -ROLL
+  }>
+  $Ids$_to_external PROCINLINE:<{
+  }>
+  $JettonWalletSharded$init$_store PROCINLINE:<{
+    s2 s3 XCHG2
+    STSLICE
+    STSLICE
+    SWAP
+    STVARUINT16
+  }>
+  $Ids$init$_load PROCINLINE:<{
+    LDREF
+    SWAP
+    CTOS
+    SWAP
+    LDREF
+    SWAP
+    CTOS
+    LDREF
+    SWAP
+    CTOS
+    SWAP
+    LDMSGADDR
+    LDREF
+    DROP
+    s3 s4 XCHG
+  }>
+  $Ids$_contract_init PROCINLINE:<{
+    PUSHNULL
+    s0 s4 XCHG
+        ONE HASHEXT_SHA256
+    s0 s3 XCHG
+        ONE HASHEXT_SHA256
+    s0 s4 s4 XCHG3
+  }>
+  $Ids$_contract_load PROCINLINE:<{
+    c4 PUSH
+    CTOS
+    LDREF
+    SWAP
+    __tact_child_contract_codes SETGLOB
+    1 LDI
+    SWAP
+    IF:<{
+      $Ids$_load INLINECALLDICT
+      1 5 BLKDROP2
+    }>ELSE<{
+      $Ids$init$_load INLINECALLDICT
+      s0 s4 XCHG
+      ENDS
+      3 ROLL
+      $Ids$_contract_init INLINECALLDICT
+    }>
+  }>
+  $Ids$_contract_store PROCINLINE:<{
+    NEWC
+    __tact_child_contract_codes GETGLOB
+    SWAP
+    STREF
+    TRUE
+    SWAP
+    1 STI
+    5 -ROLL
+    $Ids$_store INLINECALLDICT
+    ENDC
+    c4 POP
+  }>
+  $BasechainAddress$_constructor_hash PROCINLINE:<{
+  }>
+  $global_changeShard PROCINLINE:<{
+    SWAP
+    248 PUSHINT
+        MODPOW2
+    SWAP
+    248 LSHIFT#
+    OR
+  }>
+  $Builder$_fun_storeShardedStateInit PROCINLINE:<{
+    40 PUSHINT
+    s0 s3 XCHG2
+    6 STU
+    6 PUSHINT
+    SWAP
+    4 STU
+        STREF
+        STREF
+  }>
+  $Address$_fun_getShard PROCINLINE:<{
+    11 PUSHINT
+        SDSKIPFIRST
+    8 LDU
+    DROP
+  }>
+  $JettonWalletSharded$_init_child PROCREF:<{
+    __tact_child_contract_codes GETGLOB
+    CTOS
+    LDDICT
+    DROP
+    27052 PUSHINT
+    __tact_dict_get_code INLINECALLDICT
+    NEWDICT
+    2598 PUSHINT
+    MYCODE
+    __tact_dict_set_code INLINECALLDICT
+    NEWC
+    SWAP
+    NEWC
+    STDICT
+    STBREFR
+    FALSE
+    SWAP
+    1 STI
+    3 2 BLKSWAP
+    $JettonWalletSharded$init$_store INLINECALLDICT
+    ENDC
+  }>
+  $StateInit$_constructor_code_data PROCINLINE:<{
+  }>
+  $Ids$_fun_idsState PROCREF:<{
+    s4 s3 s2 PUSH3
+    s4 s3 PUSH2
+  }>
+  $Ids$_fun_getWalletInit PROCINLINE:<{
+    s5 PUSH
+    0 PUSHINT
+    $JettonWalletSharded$_init_child INLINECALLDICT
+    NIP
+    s1 s(-1) PUXC
+    $StateInit$_constructor_code_data INLINECALLDICT
+  }>
+  $Ids$_fun_getJettonWalletInit PROCINLINE:<{
+    $Ids$_fun_getWalletInit INLINECALLDICT
+        NEWC
+    -ROT
+    $Builder$_fun_storeShardedStateInit INLINECALLDICT
+        ENDC
+  }>
+  $Ids$_fun_getJettonBasechainWalletByOwner PROCINLINE:<{
+    5 -ROLL
+    s5 PUSH
+    $Ids$_fun_getJettonWalletInit INLINECALLDICT
+    s0 s6 XCHG
+    $Address$_fun_getShard INLINECALLDICT
+    s0 s6 XCHG
+        HASHCU
+    s0 s6 XCHG2
+    $global_changeShard INLINECALLDICT
+    $BasechainAddress$_constructor_hash INLINECALLDICT
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s1 s3 s0 XCHG3
+  }>
+  $Ids$_fun_correctInternalSender PROCINLINE:<{
+    __tact_context_get_sender INLINECALLDICT
+        REWRITESTDADDR
+    6 2 BLKSWAP
+    $Ids$_fun_getJettonBasechainWalletByOwner INLINECALLDICT
+    s0 s7 XCHG
+    0 EQINT
+    IF:<{
+      s0 s6 XCHG
+      __tact_not_null INLINECALLDICT
+      s1 s5 XCHG
+      EQUAL
+    }>ELSE<{
+      s6 POP
+      s4 POP
+      FALSE
+    }>
+    700 THROWIFNOT
+    s0 s3 s4 XCHG3
+  }>
+  %idsState PROC:<{
+    $Ids$_contract_load INLINECALLDICT
+    $Ids$_fun_idsState INLINECALLDICT
+    5 5 BLKDROP2
+    $Ids$_to_external INLINECALLDICT
+  }>
+  recv_internal PROC:<{
+    SWAP
+    CTOS
+    2 PUSHINT
+    SDSKIPFIRST
+    1 LDI
+    1 LDI
+    LDMSGADDR
+    OVER
+    s3 s4 XCHG
+    s6 s6 XCHG2
+    4 TUPLE
+    __tact_context SETGLOB
+    s0 s2 XCHG
+    __tact_context_sender SETGLOB
+    $Ids$_contract_load INLINECALLDICT
+    s0 s6 XCHG
+    IFJMP:<{
+      6 BLKDROP
+    }>
+    0 PUSHINT
+    s5 PUSH
+    SBITS
+    DUP
+    31 GTINT
+    IF:<{
+      NIP
+      s0 s5 XCHG
+      32 LDU
+      s0 s6 XCHG
+    }>
+    OVER
+    73 EQINT
+    IFJMP:<{
+      2DROP
+      s0 s4 XCHG
+      LDREF
+      SWAP
+      CTOS
+      SWAP
+      LDREF
+      NIP
+      LDREF
+      NIP
+      LDMSGADDR
+      DROP
+      s5 s6 s6 XC2PU
+      $Ids$_fun_correctInternalSender INLINECALLDICT
+      267 PUSHINT
+      s0 s6 XCHG
+          ONE HASHEXT_SHA256
+      s2 s3 XCHG
+      s6 s7 s0 XCHG3
+      257 PUSHINT
+      __tact_dict_set_slice_int INLINECALLDICT
+      s4 s0 s3 XCHG3
+      s0 s2 XCHG
+      $Ids$_contract_store INLINECALLDICT
+    }>
+    OVER
+    80 EQINT
+    IFJMP:<{
+      2DROP
+      s0 s4 XCHG
+      LDMSGADDR
+      DROP
+      s3 s4 XCHG
+      s1 s3 s5 XCHG3
+      s5 PUSH
+      $Ids$_fun_correctInternalSender INLINECALLDICT
+      s5 s5 XCHG2
+      267 PUSHINT
+          DICTDEL
+      DROP
+      4 ROLL
+      $Ids$_contract_store INLINECALLDICT
+    }>
+    s6 POP
+    0 EQINT
+    s0 s5 XCHG
+    33 LESSINT
+    s1 s5 XCHG
+    AND
+    IFJMP:<{
+      __tact_context_get_sender INLINECALLDICT
+          NEWC
+          x{42_} STSLICECONST // .storeUint(0x10, 6)
+          STSLICE          // .storeAddress(to)
+          0 PUSHINT        // 0
+          111 STUR         // .storeUint(0, 111)
+                           // 4 zeros for coins and 107 zeros for lt, fees, etc.
+          ENDC
+          66 PUSHINT       // SendRemainingValue | SendIgnoreErrors
+          SENDRAWMSG
+      s0 s3 s4 XCHG3
+      $Ids$_contract_store INLINECALLDICT
+    }>
+    5 BLKDROP
+    130 THROW
+  }>
+  __tact_selector_hack PROC:<{
+    @atend @ 1 {
+            execute current@ context@ current!
+            {
+                // The core idea of this function is to save gas by avoiding unnecessary dict jump, when recv_internal/recv_external is called
+                // We want to extract recv_internal/recv_external from the dict and select needed function
+                // not by jumping to the needed function by it's index, but by using usual IF statements.
+                }END> b> // Close previous builder, now we have a cell of previous code on top of the stack
+                <{ // Start of the new code builder
+                    SETCP0
+                    // Swap the new code builder with the previous code, now we have previous code on top of the stack
+                    swap
+                    // Transform cell to slice and load first ref from the previous code, now we have the dict on top of the stack
+                    <s ref@
+                    // Extract the recv_internal from the dict
+                    dup 0 swap @procdictkeylen idict@ { "internal shortcut error" abort } ifnot
+                    swap
+                    // Delete the recv_internal from the dict
+                    0 swap @procdictkeylen idict- drop
+                    // Delete the recv_external from the dict (it's okay if it's not there)
+                    -1 swap @procdictkeylen idict- drop
+                    // Delete the __tact_selector_hack from the dict
+                    65535 swap @procdictkeylen idict- drop
+                    // Bring the code builder from the bottom of the stack
+                    // because if recv_external extraction is optional, and the number of elements on the stack is not fixed
+                    depth 1- roll
+                    // Swap with the dict from which we extracted recv_internal and (maybe) recv_external
+                    swap
+                    // Check if the dict is empty
+                    dup null?
+                    // Store a copy of this flag in the bottom of the stack
+                    dup depth 1- -roll
+                    {
+                        // If the dict is empty, just drop it (it will be null if it's empty)
+                        drop
+                    }
+                    {
+                        // If the dict is not empty, prepare continuation to be stored in c3
+                        <{
+                            // Save this dict as first ref in this continuation, it will be pushed in runtime by DICTPUSHCONST
+                            swap @procdictkeylen DICTPUSHCONST
+                            // Jump to the needed function by it's index
+                            DICTIGETJMPZ
+                            // If such key is not found, throw 11 along with the key as an argument
+                            11 THROWARG
+                        }> PUSHCONT
+                        // Store the continuation in c3
+                        c3 POP
+                    } cond
+                    // Function id is on top of the (runtime) stack
+                    DUP IFNOTJMP:<{
+                        // place recv_internal here
+                        DROP swap @addop
+                    }>
+                    // Bring back the flag, indicating if the dict is empty or not from the bottom of the stack
+                    depth 1- roll
+                    {
+                        // If the dict is empty, throw 11
+                        11 THROWARG
+                    }
+                    {
+                        // If the dict is not empty, jump to continuation from c3
+                        c3 PUSH JMPX
+                    } cond
+                }> b>
+            } : }END>c
+            current@ context! current!
+        } does @atend !
+  }>
+}END>c

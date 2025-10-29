@@ -1,49 +1,59 @@
 {
-    "$schema": "http://raw.githubusercontent.com/tact-lang/tact/main/src/config/configSchema.json",
-    "projects": [
-        {
-            "name": "Root",
-            "path": "./src/contracts/shard/jetton-minter.tact",
-            "output": "./build/root",
-            "mode": "full",
-            "options": {
-                "external": false,
-                "debug": true,
-                "ipfsAbiGetter": false,
-                "interfacesGetter": false,
-                "experimental": {
-                    "inline": true
-                },
-                "optimizations": {
-                    "alwaysSaveContractData": false,
-                    "internalExternalReceiversOutsideMethodsMap": false
-                },
-                "safety": {
-                    "nullChecks": false
-                }
-            }
+  "$schema": "http://raw.githubusercontent.com/tact-lang/tact/main/src/config/configSchema.json",
+  "projects": [
+    {
+      "name": "Root",
+      "path": "./src/contracts/shard/jetton-minter.tact",
+      "output": "./build/root",
+      "options": {
+        "debug": true,
+        "external": false,
+        "ipfsAbiGetter": false,
+        "interfacesGetter": false,
+        "experimental": {
+          "inline": true
         },
-        {
-            "name": "Wallet",
-            "path": "./src/contracts/shard/jetton-wallet.tact",
-            "output": "./build/wallet",
-            "mode": "full",
-            "options": {
-                "external": false,
-                "debug": true,
-                "ipfsAbiGetter": false,
-                "interfacesGetter": false,
-                "experimental": {
-                    "inline": true
-                },
-                "optimizations": {
-                    "alwaysSaveContractData": false,
-                    "internalExternalReceiversOutsideMethodsMap": false
-                },
-                "safety": {
-                    "nullChecks": false
-                }
-            }
+        "safety": {
+          "nullChecks": false
+        },
+        "optimizations": {
+          "alwaysSaveContractData": false,
+          "internalExternalReceiversOutsideMethodsMap": false
         }
-    ]
+      },
+      "mode": "full"
+    },
+    {
+      "name": "Wallet",
+      "path": "./src/contracts/shard/jetton-wallet.tact",
+      "output": "./build/wallet",
+      "options": {
+        "debug": true,
+        "external": false,
+        "ipfsAbiGetter": false,
+        "interfacesGetter": false,
+        "experimental": {
+          "inline": true
+        },
+        "safety": {
+          "nullChecks": false
+        },
+        "optimizations": {
+          "alwaysSaveContractData": false,
+          "internalExternalReceiversOutsideMethodsMap": false
+        }
+      },
+      "mode": "full"
+    },
+    {
+      "name": "Ids",
+      "path": "contracts/ids.tact",
+      "output": "build/Ids",
+      "options": {
+        "debug": false,
+        "external": false
+      },
+      "mode": "full"
+    }
+  ]
 }

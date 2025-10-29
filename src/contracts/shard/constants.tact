@@ -18,7 +18,7 @@ asm fun setCode(newCode: Cell) { SETCODE }
 
 asm fun setData(newData: Cell) {c4 POP} // rarely used for wallet
 
-const ZERO_ADDRESS: Address = address("EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"); // TODO mainnet addr
+// const ZERO_ADDRESS: Address = address("EQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAM9c"); // TODO mainnet addr
 
 // SYMANTIC TXN CODES
 // const FOLLOW_AMOUNT: Int = 100000000000000000; // 1*10**17
@@ -33,7 +33,7 @@ const ACCOUNT_TERMINATED: Int = 701;
 const ACCOUNT_INACTIVE: Int = 702;
 const INSUFFICIENT_GAS_SENT: Int = 703;
 const RESERVED_INTERNAL: Int = 704;
-const UPGRADE_WALLET: Int = 705;
+// const UPGRADE_WALLET: Int = 705;
 const NO_PENDING_REQUEST: Int = 706;
 const CANT_UNFOLLOW_REPORTED: Int = 707;
 
@@ -56,6 +56,7 @@ const WRONG_WORKCHAIN: Int = 734;
 const WAIT_MORE: Int = 735;
 const NOT_CLOSE_FRIEND: Int = 736;
 const ALREADY_VOUCHED: Int = 737;
+// const PROVIDE_COORDINATES: Int = 738;
 
 // CONTRACT_CONSTS
 // Declare a compile-time constant upper-bound for our map

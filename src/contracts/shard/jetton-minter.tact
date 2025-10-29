@@ -77,7 +77,7 @@ contract JettonMinterSharded {
         // require(sender() == expectedAddress, "Access denied");
         // only the real children can get here
 
-        // let wallet: StateInit = self.getInit(sender);
+        // let wallet: StateInit = self.getWalletInit(sender);
         // if (!(wallet.hasSameBasechainAddressWithoutShard(sender()))) {
         //     //TODO: master can't mint so remove and return
         //     throwUnless(INCORRECT_SENDER, self.minter == sender());
@@ -108,7 +108,7 @@ contract JettonMinterSharded {
     // however minting is possible only to basechain addresses
     // it is asserted inside the deploy function
     receive(msg: Mint) {
-        throwUnless(INCORRECT_SENDER, sender() == self.owner || self.mintable); // FIXME v5 testnet workaround
+        throwUnless(INCORRECT_SENDER, sender() == self.owner);
         throwUnless(MINT_CLOSED, self.mintable);
         throwUnless(WRONG_WORKCHAIN, parseStdAddress(msg.receiver.asSlice()).workchain == 0); // Wrong workchain
 
@@ -138,7 +138,7 @@ contract JettonMinterSharded {
             value: 0, // ignore msg.tonAmount and use SendMode 64 instead
             mode: SendRemainingValue | SendBounceIfActionFail,
             body: msg.mintMessage.toCell(),
-            init: self.getInit(msg.receiver),
+            init: self.getWalletInit(msg.receiver),
         }.toShard(msg.receiver.getShard()).send();
     }
 
@@ -279,13 +279,13 @@ contract JettonMinterSharded {
         return self.getJettonWalletByOwner(ownerAddress);
     }
 
-    inline fun getInit(address: Address): StateInit {
+    inline fun getWalletInit(address: Address): StateInit {
         let walletInit: StateInit = initOf JettonWalletSharded(address, myAddress(), 0);
         return StateInit { code: self.jettonWalletInitialCode, data: walletInit.data };
     }
 
     inline fun getJettonWalletInit(address: Address): Cell {
-        let init = self.getInit(address);
+        let init = self.getWalletInit(address);
 
         return beginCell().storeShardedStateInit(init).endCell();
     }

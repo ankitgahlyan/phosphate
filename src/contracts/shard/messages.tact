@@ -1,9 +1,76 @@
 //  SPDX-License-Identifier: MIT
 //  Copyright © 2025 TON Studio
 
+struct IdInfo {
+    username: String;
+    lattitude: String;
+    longitude: String;
+    address: Address;
+}
+
+message(0x49) AddId {
+    username: String;
+    lattitude: String;
+    longitude: String;
+    address: Address;
+}
+
+message(0x50) RemoveId {
+    address: Address;
+}
+
 struct Insurance {
     emi: Int as coins;
     startStop: Int as uint42; // FIXME: enough for time
+}
+
+struct FriendsAndFollowings {
+    friends: Cell?; //map<Address, Int as uint12>;
+    followings: Cell?; //map<Address, Int as uint12>;
+    //TODO: remove maybe
+    followers: Cell?; //map<Address, Int as uint12>;
+    invited: Cell?; //map<Address, Int as uint12>;
+    pendingRequests: Cell?; //map<Address, Int as uint12>;
+    debts: Cell?; //map<Address, Int as uint20>;
+    reports: Cell?; //map<Address, Bool>;
+}
+
+struct OtherStateConsts {
+    reportReason: Bool;
+    reporterCount: Int as uint10;
+    disputerCount: Int as uint10;
+    reportResolutionTime: Int as uint32;
+    connections: Int as uint8;
+    terminated: Bool;
+    mbrpAmount: Int as coins;
+    closureWait: Int as uint32;
+    active: Bool;
+    lastMsgTo: Address;
+    insurance: Cell;
+}
+
+struct InvitorNominee {
+    invitor: Address;
+    nominee: Address;
+}
+
+struct JettonData {
+    totalSupply: Int as coins;
+    mintable: Bool;
+    owner: Address;
+    content: Cell;
+    jettonWalletCode: Cell;
+}
+
+struct JettonWalletData {
+    balance: Int as coins; //TODO: map of different jettons
+    owner: Address;
+    minter: Address; // TODO: array of different minters(maybe wallet gen isInTrouble coz of this)
+    code: Cell;
+}
+
+struct MaybeAddress {
+    address: Address?;
 }
 
 // -----------------------------------------------------------------------------
@@ -121,6 +188,12 @@ message(0x38) RequestUpgradeCode {
     version: Int as uint10;
 }
 
+message(0x47) UpgradeReqFromMainnet {
+    sender: Address;
+    // version: Int as uint10;
+}
+
+// version: Int as uint10;
 message(0x2508d66a) Upgrade {
     rootVersion: Int? as uint10 = null;
     walletVersion: Int? as uint10 = null;
@@ -142,15 +215,22 @@ message(3) ChangeOwner {
     newOwner: Address;
 }
 
+message(0x48) Invite {
+    target: Address;
+    id: IdInfo;
+}
+
 message(1) InviteInternal {
     version: Int as uint10;
-    amount: Int as coins;
+    id: IdInfo;
+    // amount: Int as coins;
     sender: Address;
     invitor: Address;
     currentWalletCode: Cell;
-    forwardPayload: Slice as remaining;
+    // forwardPayload: Slice as remaining;
 }
 
+// forwardPayload: Slice as remaining;
 message(2) Follow {
     target: Address;
     amount: Int as coins;
@@ -226,55 +306,6 @@ message(0x14) AdminAction {
 //     to: Address;
 //     amount: Int as coins;
 // }
-
-struct FriendsAndFollowings {
-    friends: Cell?; //map<Address, Int as uint12>;
-    followings: Cell?; //map<Address, Int as uint12>;
-    //TODO: remove maybe
-    followers: Cell?; //map<Address, Int as uint12>;
-    invited: Cell?; //map<Address, Int as uint12>;
-    pendingRequests: Cell?; //map<Address, Int as uint12>;
-    debts: Cell?; //map<Address, Int as uint20>;
-    reports: Cell?; //map<Address, Bool>;
-}
-
-struct OtherStateConsts {
-    reportReason: Bool;
-    reporterCount: Int as uint10;
-    disputerCount: Int as uint10;
-    reportResolutionTime: Int as uint32;
-    connections: Int as uint8;
-    terminated: Bool;
-    mbrpAmount: Int as coins;
-    closureWait: Int as uint32;
-    active: Bool;
-    lastMsgTo: Address;
-    insurance: Cell;
-}
-
-struct InvitorNominee {
-    invitor: Address;
-    nominee: Address;
-}
-
-struct JettonData {
-    totalSupply: Int as coins;
-    mintable: Bool;
-    owner: Address;
-    content: Cell;
-    jettonWalletCode: Cell;
-}
-
-struct JettonWalletData {
-    balance: Int as coins; //TODO: map of different jettons
-    owner: Address;
-    minter: Address; // TODO: array of different minters(maybe wallet gen isInTrouble coz of this)
-    code: Cell;
-}
-
-struct MaybeAddress {
-    address: Address?;
-}
 
 message(4) JettonUpdateContent {
     queryId: Int as uint64;
@@ -359,3 +390,7 @@ message(0x46) MintNotify {
     amount: Int as coins;
     sender: Address;
 }
+
+// 48 invite
+// 49 idInfo
+// 50 RemoveId

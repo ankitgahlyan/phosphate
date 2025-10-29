@@ -1,0 +1,723 @@
+#pragma version =0.4.6;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+;; tact_SimpleDNSFactory.headers.fc
+;;
+;; Header files for SimpleDNSFactory
+;; NOTE: declarations are sorted for optimal order
+;;
+
+;; __tact_context_get
+(int, slice, int, slice) __tact_context_get() inline;
+
+;; __tact_context_get_sender
+slice __tact_context_get_sender() inline;
+
+;; $DeployOk$_store
+builder $DeployOk$_store(builder build_0, (int) v) inline;
+
+;; $DeployOk$_store_cell
+cell $DeployOk$_store_cell((int) v, builder b) inline;
+
+;; $FactoryDeploy$_store
+builder $FactoryDeploy$_store(builder build_0, (int, slice) v) inline;
+
+;; $FactoryDeploy$_store_cell
+cell $FactoryDeploy$_store_cell((int, slice) v, builder b) inline;
+
+;; $SimpleDNSFactory$_store
+builder $SimpleDNSFactory$_store(builder build_0, (int) v) inline;
+
+;; $SimpleDNSFactory$_load
+(slice, ((int))) $SimpleDNSFactory$_load(slice sc_0) inline;
+
+;; $Context$_get_value
+_ $Context$_get_value((int, slice, int, slice) v) inline;
+
+;; $Dns$init$_store
+builder $Dns$init$_store(builder build_0, (slice, int) v) inline;
+
+;; $SimpleDNSFactory$_contract_init
+(int) $SimpleDNSFactory$_contract_init() impure inline;
+
+;; $SimpleDNSFactory$_contract_load
+(int) $SimpleDNSFactory$_contract_load() impure inline;
+
+;; $SimpleDNSFactory$_contract_store
+() $SimpleDNSFactory$_contract_store((int) v) impure inline;
+
+;; $Cell$_fun_asSlice
+slice $Cell$_fun_asSlice(cell $self) impure inline;
+
+;; $global_newAddress
+slice $global_newAddress(int $chain, int $hash) impure inline;
+
+;; $global_contractAddressExt
+slice $global_contractAddressExt(int $chain, cell $code, cell $data) impure inline;
+
+;; $global_contractAddress
+slice $global_contractAddress((cell, cell) $s) impure inline;
+
+;; $Dns$_init_child
+(cell, cell) $Dns$_init_child(slice $owner, int $seed) inline_ref;
+
+;; $MessageParameters$_constructor_bounce_to_value_mode_body
+((int, cell, int, slice, int)) $MessageParameters$_constructor_bounce_to_value_mode_body(int $bounce, slice $to, int $value, int $mode, cell $body) inline;
+
+;; $SimpleDNSFactory$_fun_notify
+((int), ()) $SimpleDNSFactory$_fun_notify((int) $self, cell $body) impure inline;
+
+;; $DeployOk$_constructor_queryId
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline;
+
+;; $SendParameters$_constructor_bounce_to_value_mode_code_data_body
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_bounce_to_value_mode_code_data_body(int $bounce, slice $to, int $value, int $mode, cell $code, cell $data, cell $body) inline;
+
+;; $FactoryDeploy$_constructor_queryId_cashback
+((int, slice)) $FactoryDeploy$_constructor_queryId_cashback(int $queryId, slice $cashback) inline;
+
+
+;; tact_SimpleDNSFactory.stdlib.fc
+global (int, slice, int, slice) __tact_context;
+global slice __tact_context_sender;
+global cell __tact_child_contract_codes;
+global int __tact_randomized;
+
+(int, slice, int, slice) __tact_context_get() inline {
+    return __tact_context;
+}
+
+slice __tact_context_get_sender() inline {
+    return __tact_context_sender;
+}
+
+builder $global_beginCell() impure asm """
+    NEWC
+""";
+
+int $global_contractHash(cell $code, cell $data) impure asm """
+    s0 PUSH HASHCU // `data` hash
+    s2 PUSH HASHCU // `code` hash
+    SWAP2
+    CDEPTH         // `data` depth
+    SWAP
+    CDEPTH         // `code` depth
+    131380 INT     // (2 << 16) | (1 << 8) | 0x34
+
+    // Group 2: Composition of the Builder
+    NEWC
+    24 STU  // store refs_descriptor | bits_descriptor | data
+    16 STU  // store depth_descriptor for `code`
+    16 STU  // store depth_descriptor for `data`
+    256 STU // store `code` hash
+    256 STU // store `data` hash
+
+    // Group 3: SHA256 hash of the resulting Builder
+    ONE HASHEXT_SHA256
+""";
+
+slice $Slice$_fun_asAddressUnsafe(slice $self) impure asm "NOP";
+
+slice $Cell$_fun_beginParse(cell $self) impure asm """
+    CTOS
+""";
+
+slice $Cell$_fun_asSlice(cell $self) impure inline {
+    var ($self) = $self;
+    return $Cell$_fun_beginParse($self);
+}
+
+cell $Builder$_fun_endCell(builder $self) impure asm """
+    ENDC
+""";
+
+slice $global_newAddress(int $chain, int $hash) impure inline {
+    return $Slice$_fun_asAddressUnsafe($Cell$_fun_asSlice($Builder$_fun_endCell(store_uint(store_int(store_uint($global_beginCell(), 4, 3), $chain, 8), $hash, 256))));
+}
+
+slice $global_contractAddressExt(int $chain, cell $code, cell $data) impure inline {
+    int $hash = $global_contractHash($code, $data);
+    return $global_newAddress($chain, $hash);
+}
+
+slice $global_contractAddress((cell, cell) $s) impure inline {
+    var (($s'code, $s'data)) = $s;
+    return $global_contractAddressExt(0, $s'code, $s'data);
+}
+
+int $global_myBalance() impure asm """
+    BALANCE FIRST
+""";
+
+() $global_nativeReserve(int $amount, int $mode) impure asm """
+    RAWRESERVE
+""";
+
+() $global_message((int, cell, int, slice, int) $params) impure asm """
+    NEWC
+    b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+    1 STI               // store `bounce`
+    b{000} STSLICECONST // store bounced = false and src = addr_none
+    STSLICE             // store `to`
+    SWAP
+    STGRAMS             // store `value`
+    106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+    STZEROES
+    // → Stack state
+    // s0: Builder
+    // s1: `body`
+    // s2: `mode`
+    STDICT
+    ENDC
+    SWAP
+    SENDRAWMSG
+""";
+
+() $global_send((int, cell, cell, cell, int, slice, int) $params) impure asm """
+    NEWC
+    b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+    1 STI               // store `bounce`
+    b{000} STSLICECONST // store bounced = false and src = addr_none
+    STSLICE             // store `to`
+    SWAP
+    STGRAMS             // store `value`
+    105 PUSHINT         // 1 + 4 + 4 + 64 + 32
+    STZEROES            // store currency_collection, ihr_fee, fwd_fee, created_lt and created_at
+    // → Stack state
+    // s0: Builder
+    // s1: `data`
+    // s2: `code`
+    // s3: `body`
+    // s4: `mode`
+
+    // Group 2: Placing the Builder after code and data, then checking those for nullability
+    s2 XCHG0
+    DUP2
+    ISNULL
+    SWAP
+    ISNULL
+    AND
+    // → Stack state
+    // s0: -1 (true) if `data` and `code` are both null, 0 (false) otherwise
+    // s1: `code`
+    // s2: `data`
+    // s3: Builder
+    // s4: `body`
+    // s5: `mode`
+
+    // Group 3: Left branch of the IFELSE, executed if s0 is -1 (true)
+    <{
+        DROP2 // drop `data` and `code`, since either of those is null
+        b{0} STSLICECONST
+    }> PUSHCONT
+
+    // Group 3: Right branch of the IFELSE, executed if s0 is 0 (false)
+    <{
+        // _ split_depth:(Maybe (## 5))
+        //   special:(Maybe TickTock)
+        //   code:(Maybe ^Cell)
+        //   data:(Maybe ^Cell)
+        //   library:(Maybe ^Cell)
+        // = StateInit;
+        ROT                // place message Builder on top
+        b{10} STSLICECONST // store Maybe = true, Either = false
+        // Start composing inlined StateInit
+        b{00} STSLICECONST // store split_depth and special first
+        STDICT             // store code
+        STDICT             // store data
+        b{0} STSLICECONST  // store library
+    }> PUSHCONT
+
+    // Group 3: IFELSE that does the branching shown above
+    IFELSE
+    // → Stack state
+    // s0: Builder
+    // s1: null or StateInit
+    // s2: `body`
+    // s3: `mode`
+
+    // Group 4: Finalizing the message
+    STDICT // store `body` as ref with an extra Maybe bit, since `body` might be null
+    ENDC
+    // → Stack state
+    // s0: Cell
+    // s1: `mode`
+
+    // Group 5: Sending the message, with `mode` on top
+    SWAP
+    SENDRAWMSG // https://github.com/tact-lang/tact/issues/1558
+""";
+
+((int), ()) $SimpleDNSFactory$_fun_notify((int) $self, cell $body) impure inline {
+    var (($self'counter)) = $self;
+    slice $to = __tact_context_get_sender();
+    int $bounce = false;
+    if (true) {
+        int $balance = $global_myBalance();
+        int $balanceBeforeMessage = ($balance - $Context$_get_value(__tact_context_get()));
+        if (($balanceBeforeMessage < 100000000)) {
+            $global_nativeReserve(100000000, 0);
+            $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 130, $body));
+            return (($self'counter), ());
+        }
+    }
+    $global_message($MessageParameters$_constructor_bounce_to_value_mode_body($bounce, $to, 0, 66, $body));
+    return (($self'counter), ());
+}
+
+;; tact_SimpleDNSFactory.native.fc
+slice dns_string_to_internal(slice domain) inline_ref {
+
+    ;; Special case for root domain
+    if ((domain.slice_bits() == 8) & (domain.slice_refs() == 0)) {
+        if (domain.preload_uint(8) == 46) {
+            return begin_cell().store_uint(0, 8).end_cell().begin_parse();
+        }
+    }
+
+    ;; Split domain into segments
+    tuple segments = null();
+    builder current = begin_cell();
+    int isCurrentEmpty = true;
+    int isFirst = true;
+    int isHyphen = false;
+    slice cs = domain;
+    int continue = true;
+    do {
+
+        ;; Prepare for loading next character
+        if (cs.slice_bits() == 0) {
+            int refs = cs.slice_refs();
+            if (refs == 1) {
+                cs = cs~load_ref().begin_parse();
+            } elseif (refs > 1) {
+                return null();
+            } else {
+                continue = false;
+            }
+            continue = false;
+        }
+
+        ;; Continue loading next character
+        if (continue) {
+            int char = cs~load_uint(8);
+            ;; we can do it because additional UTF-8 character's octets >= 128 -- https://www.ietf.org/rfc/rfc3629.txt
+            int is_hyphen = (char == 45);
+            int is_dot  = (char == 46);
+            int valid_char = is_hyphen | is_dot | ((char >= 48) & (char <= 57)) | ((char >= 97) & (char <= 122)); ;; '-' or 0-9 or a-z
+            if (~ valid_char | (isFirst & is_hyphen)) {
+                return null();
+            }
+            isHyphen = is_hyphen;
+            if (is_dot) {
+                if (isFirst | isHyphen) { ;; Empty or ends with hyphen
+                    return null();
+                }
+                segments = cons(current, segments);
+                current = begin_cell();
+                isHyphen = false;
+                isFirst = true;
+                isCurrentEmpty = true;
+            } else {
+                isFirst = false;
+                isCurrentEmpty = false;
+                current~store_uint(char, 8);
+            }
+        }
+
+    } until (~ continue);
+    if (isHyphen) { ;; ends with hyphen
+        return null();
+    }
+    if (~ isCurrentEmpty) {
+        segments = cons(current, segments);
+    }
+
+    ;; Concatenate segments
+    builder res = begin_cell();
+    (builder b, tuple tail) = uncons(segments);
+    res = res.store_builder(b);
+    while(~ null?(tail)) {
+        (b, tail) = uncons(tail);
+        res = res.store_uint(0, 8); ;; Add \0 separator
+        res = res.store_builder(b);
+    }
+    res = res.store_uint(0, 8); ;; Add \0 separator
+    return res.end_cell().begin_parse();
+}
+
+int dns_internal_verify(slice sc) inline_ref {
+    if (sc.slice_refs() != 0) {
+        return false;
+    }
+    int bits = sc.slice_bits();
+    if (bits % 8 != 0) {
+        return false;
+    }
+    if (bits == 0) { ;; Case for root domain
+        return true;
+    }
+    int len = bits / 8;
+    int counter = 0;
+    int isFirst = true;
+    int isHyphen = false;
+    repeat(len) {
+        int char = sc~load_uint(8);
+        if (char == 0) {
+            if (counter == 0) {
+                return false;
+            }
+            if (isHyphen) {
+                return false;
+            }
+            counter = 0;
+            isHyphen = false;
+            isFirst = true;
+        } else {
+            int charIsHyphen = (char == 45);
+            int isValid = charIsHyphen | ((char >= 48) & (char <= 57)) | ((char >= 97) & (char <= 122));
+            if (~ isValid) {
+                return false;
+            }
+            if (charIsHyphen & isFirst)  {
+                return false;
+            }
+            isHyphen = charIsHyphen;
+            isFirst = false;
+            counter = counter + 1;
+        }
+    }
+    return counter == 0 & ~ isHyphen;
+}
+
+slice dns_internal_normalize(slice src) impure inline_ref {
+    throw_unless(134, src.slice_refs() == 0); ;; Invalid argument error
+    builder target = begin_cell();
+    repeat(src.slice_bits() / 8) {
+        int char = src~load_uint(8);
+
+        ;; b => 6
+        if (char == 98) {
+            char = 54;
+        }
+
+        ;; g, q => 9
+        if ((char == 103) | (char == 113)) {
+            char = 57;    
+        }
+
+        ;; l => 1
+        if (char == 108) {
+            char = 49;
+        }
+
+        ;; o => 0
+        if (char == 111) {
+            char = 48;
+        }
+
+        ;; s => 5
+        if (char == 115) {
+            char = 53;
+        }
+
+        ;; u => v
+        if (char == 117) {
+            char = 118;
+        }
+
+        ;; z => 2
+        if (char == 122) {
+            char = 50;
+        }
+
+        target = target.store_uint(char, 8);
+    }
+    return target.end_cell().begin_parse();
+}
+
+;; tact_SimpleDNSFactory.storage.fc
+;;
+;; Type: Context
+;; TLB: _ bounceable:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounceable, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell value:int257 to:address bounce:bool = SendParameters
+;;
+
+((int, cell, cell, cell, int, slice, int)) $SendParameters$_constructor_bounce_to_value_mode_code_data_body(int $bounce, slice $to, int $value, int $mode, cell $code, cell $data, cell $body) inline {
+    return ($mode, $body, $code, $data, $value, $to, $bounce);
+}
+
+;;
+;; Type: MessageParameters
+;; TLB: _ mode:int257 body:Maybe ^cell value:int257 to:address bounce:bool = MessageParameters
+;;
+
+((int, cell, int, slice, int)) $MessageParameters$_constructor_bounce_to_value_mode_body(int $bounce, slice $to, int $value, int $mode, cell $body) inline {
+    return ($mode, $body, $value, $to, $bounce);
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v, builder b) inline {
+    return $DeployOk$_store(b, v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: FactoryDeploy
+;; Header: 0x6d0ff13b
+;; TLB: factory_deploy#6d0ff13b queryId:uint64 cashback:address = FactoryDeploy
+;;
+
+builder $FactoryDeploy$_store(builder build_0, (int, slice) v) inline {
+    var (v'queryId, v'cashback) = v;
+    build_0 = store_uint(build_0, 1829761339, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    build_0 = build_0.store_slice(v'cashback);
+    return build_0;
+}
+
+cell $FactoryDeploy$_store_cell((int, slice) v, builder b) inline {
+    return $FactoryDeploy$_store(b, v).end_cell();
+}
+
+((int, slice)) $FactoryDeploy$_constructor_queryId_cashback(int $queryId, slice $cashback) inline {
+    return ($queryId, $cashback);
+}
+
+;;
+;; Type: Dns
+;; TLB: _ owner:address permissions:Permissions{canAdd:bool,canRemove:bool,canReplace:bool} records:dict<uint256, ^DNSRecord{name:^string,categories:dict<uint256, ^cell>}> subdomains:dict<uint256, address> = Dns
+;;
+
+builder $Dns$init$_store(builder build_0, (slice, int) v) inline {
+    var (v'owner, v'seed) = v;
+    build_0 = build_0.store_slice(v'owner);
+    build_0 = build_0.store_int(v'seed, 257);
+    return build_0;
+}
+
+cell $Dns$_child_get_code() impure asm """
+    B{b5ee9c7201023a01000e2c0003e6ff008e88f4a413f4bcf2c80bed53208f5e30eda2edfb01d072d721d200d200fa4021103450666f04f86102f862ed44d0d200018e14fa40d200d200d200552003f404f4040645556c168e13fa40810101d7005902d101306d6d7f7f7f4034e207925f07e025d749c21fe30005f90120e1ed43d90102030201620b0c045205d31f218210b89f6610bae302218210d294b726bae302218210946a98b6bae3022182106d0ff13bba2122232404e282f0bc11327417bcdfc895e7a19b74fe433f6cfb94ccaa3ed4123aee1d790cde56a0bae3022082f0e1eefb71aeeaf14b43a62dac1f6280d8d53b58b7e1c1d34da3edf6be3e54db3abae3022082f07186c682243006c4affc62e682b3008c35ab2a1628526015a552122a9a2e34eebae3020405060702ce3010355512db3c8163e124f2f470f842708100a088146d50436d5023c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00c87f01ca0055505056ce55205023ca00ca00ca00f400f400c9ed54350803863010355512db3c8167465005f2f470547032c8552082106cd59be65004cb1f035023ca00ca00ca00c9c88258c000000000000000000000000101cb67ccc970fb00881535320903863010355512db3c8167465004f2f470547402c8552082106cd59be65004cb1f035023ca00ca00ca00c9c88258c000000000000000000000000101cb67ccc970fb00881435320903da82f08921f8407d29655e3eec273042707a113588d4c5f254ccf529408f7637154e49ba8fc210355512db3c8167465003f2f470547430c8552082106cd59be65004cb1f035023ca00ca00ca00c9c88258c000000000000000000000000101cb67ccc970fb008813e05f06f2c082353209002c00000000436f6e74726163742064657374726f79656401caf8427ff8276f10f8416f24135f03a1821005f5e100b98e2a821005f5e10070fb0270500381008201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb008e20705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00e20a0036c87f01ca0055505056ce55205023ca00ca00ca00f400f400c9ed540105a0009d0d0201200f1001f6eda2edfb20d74ac300923070e020d74920a93802c300925b70e020c000925b7fe0ab02707f70038e4e03d30721c0008e133133c000945b70db31e0943070db31e070707f8e2f3320c02d21c22f22c13ab05210b122c26003c17b13b012b1b3955f0470db31e05204b0955f0370db31e07001a44033e212e43032700e000801b3b0ba0201201112020120181902012013140171b851ded44d0d200018e14fa40d200d200d200552003f404f4040645556c168e13fa40810101d7005902d101306d6d7f7f7f4034e2db3c6c618170171b7e8bda89a1a400031c29f481a401a401a400aa4007e809e8080c8aaad82d1c27f481020203ae00b205a20260dadafefefe8069c5b678d8c70150171b58d7da89a1a400031c29f481a401a401a400aa4007e809e8080c8aaad82d1c27f481020203ae00b205a20260dadafefefe8069c5b678d8c301600065474320002200002250171bbddbed44d0d200018e14fa40d200d200d200552003f404f4040645556c168e13fa40810101d7005902d101306d6d7f7f7f4034e2db3c6c6181a0175ba30ced44d0d200018e14fa40d200d200d200552003f404f4040645556c168e13fa40810101d7005902d101306d6d7f7f7f4034e25515db3c6c6281b00022101507022d70b07973001d307310178df815e6123f04ef2f45570db3c08a05007106710561045103410231c047421d7498e8701d7497058db3ce121db3c830721f901255959f40e6fa192306ddf206eb38e8c3331d74901206ef2d080db3ce05b21d74902f90101201d1e1f010c20db3cd71830250018c88200ba9301cb0f01cf16c90104db3c20008e830754451359f40f6fa192306ddf206e92306d9cd0d401d001f404596c126f02e2206e925b6de0219931206ef2d0806f2231e1206ef2d0806f223183075859f40f6fa192306ddf04a631d401d001d72c01916d93fa4001e2315067db3c26db3c8158a8216eb3f2f420206ef2d080db3c8158a822206ef2d080d74958baf2f4206ef2d080f9012183072259f40e6fa192306ddf206eb392296e9170e235292526039831d401d001810101d700f404301056104610364678db3c26db3c8158a8216eb3f2f4206ef2d080f9012283072259f40f6fa192306ddf206e92306d9cd0d401d001f404596c126f02e2206eb335292a01fc31d33f30c8018210aff90f5758cb1fcb3fc910461035443012f84270f8276f10f8416f24135f03a1821005f5e100b98e2a821005f5e10070fb0270500381008201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb008e20705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00e23903e08ec031d33ffa403001c8018210aff90f5758cb1fcb3fc910571046103510241023706ddb3cc87f01ca0055505056ce55205023ca00ca00ca00f400f400c9ed54db31e0018210819dbe99ba8f21d33ffa40305067db3c355156c8598210327b2b4a5003cb1fcb3fcec91035443012e0053435360034709e01d30701c000209402a60802df12e631815e6121c300f2f404c68f4b303881540f24f2f4830758086d206e953059f45b30944133f416e205c8018210b5f1b4b558cb1f01c8cecdc9c88258c000000000000000000000000101cb67ccc970fb0088104610354430e0206e93296eb39170e2e302206eb393296eb39170e23236272802a6308200abb926f2f483075119206e953059f45b30944133f416e207206ef2d08016c8598210ff1b3b145003cb1f01c8cecdcec9c88258c000000000000000000000000101cb67ccc970fb008810461035443012323603d28f5e8200abb925f2f412830754103a206e953059f45b30944133f416e201206ef2d08008206ef2d0804780c855208210ab7c80bd5004cb1f02c8ce12cdcecec9c88258c000000000000000000000000101cb67ccc970fb008810461035443012e05b3636f2c086551332363901b6eda2edfb20d749c00821d74ac000b08e1220d70b07c02e9a30c87001cb07c9d0db31e0de6dc87f7f707f8ae630313403935f036de002b3926f029131e2c8016f2259cf1793216eb39b016f22705003cb0701cf17e87032cb07c9d02b0248e30ff2c0865522c87f01ca0055505056ce55205023ca00ca00ca00f400f400c9ed54db312c2d00f026d749c0008e1b3025d74a20c001953005d430d09ac201955f066ddb31e005e20570de208e4f313204d30721c02d22c02e5cb124c22f25c13ab0b124c26025c17bb0b1b35382b0b1955f086ddb31e08e12325055b1955f046ddb31e0026f02c8707f7f9b3670027005cb0703054664e21045035024de20b30374206ef2d0806f222083072c59f40f6fa192306ddf206eb3922c6e9170e2e302206eb3932c6eb39170e2e3026e932b6eb39170e2e3025f033636362e2f3003fe30296eb38f798200abb926f2f4276d830753bc206e953059f45b30944133f417e2830759c85901c8ce12cdf400c9103412206e953059f45b30944133f417e208206ef2d0804670c855208210a61ddcfd5004cb1f02c8ce12cd810101cf00ccc9c88258c000000000000000000000000101cb67ccc970fb008810364540433032363302de303b81540f26f2f40a83072a6d206e953059f45b30944133f417e2830750bbc85901c8ce12cdf400c9102a206e953059f45b30944133f417e25056c8598210ff9494f15003cb1f01c8cecd810101cf00c9c88258c000000000000000000000000101cb67ccc970fb00881036454013323602fe8200d92627f2f401830753cd206e953059f45b30944133f417e283075033c85901c8ce12cdf400c91513206e953059f45b30944133f417e202206ef2d08009206ef2d08010374890c855308210ef2db8835005cb1f03c8ce13cd810101cf00ccccc9c88258c000000000000000000000000101cb67ccc970fb008810364540323102ee8200abb928f2f4830753bc206e953059f45b30944133f417e2830759c85901c8ce12cdf400c9103412206e953059f45b30944133f417e208206ef2d0804670c855208210a61ddcfd5004cb1f02c8ce12cd810101cf00ccc9c88258c000000000000000000000000101cb67ccc970fb0088103645404330323601cc13f8427ff8276f10f8416f24135f03a1821005f5e100b98e2a821005f5e10070fb0270500381008201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb008e20705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00e239000c000000004f4b000ae03036363601f6206e8e6230f8416f24135f03f8276f1001a1821005f5e100b98e2a821005f5e10070fb0202705881008201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00e0027058804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00e0f8416f24135f03f8276f1001a1821005f5e100b9370010f84226c705f2e08401caf8427ff8276f10f8416f24135f03a1821005f5e100b98e2a821005f5e10070fb0270500381008201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb008e20705003804201503304c8cf8580ca00cf8440ce01fa02806acf40f400c901fb00e23901fe8e58821005f5e10070fb028100827022206ef2d0806f223003206ef2d0806f2231102544301056434315c8cf8580ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00e070804222206ef2d0806f223003206ef2d0806f22311046104544301036552212c8cf8580380058ca00cf8440ce01fa028069cf40025c6e016eb0935bcf819d58cf8680cf8480f400f400cf81e2f400c901fb00003ac87f01ca0055505056ce55205023ca00ca00ca00f400f400c9ed54db31} B>boc PUSHREF
+""";
+
+(cell, cell) $Dns$_init_child(slice $owner, int $seed) inline_ref {
+    ;; Build init code cell
+
+    ;; Contract Code: Dns
+    cell init_code = $Dns$_child_get_code();
+
+
+    builder b = begin_cell();
+    b = b.store_int(false, 1);
+    b = $Dns$init$_store(b, ($owner, $seed));
+    return (init_code, b.end_cell());
+}
+
+;;
+;; Type: SimpleDNSFactory
+;; TLB: _ counter:uint64 = SimpleDNSFactory
+;;
+
+builder $SimpleDNSFactory$_store(builder build_0, (int) v) inline {
+    var (v'counter) = v;
+    build_0 = build_0.store_uint(v'counter, 64);
+    return build_0;
+}
+
+(slice, ((int))) $SimpleDNSFactory$_load(slice sc_0) inline {
+    var v'counter = sc_0~load_uint(64);
+    return (sc_0, (v'counter));
+}
+
+(int) $SimpleDNSFactory$_contract_load() impure inline {
+    slice $sc = get_data().begin_parse();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$SimpleDNSFactory$_load();
+    }
+    else {
+        return $SimpleDNSFactory$_contract_init();
+    }
+}
+
+() $SimpleDNSFactory$_contract_store((int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_int(true, 1);
+    b = $SimpleDNSFactory$_store(b, v);
+    set_data(b.end_cell());
+}
+
+;;
+;; Contract SimpleDNSFactory functions
+;;
+
+(int) $SimpleDNSFactory$_contract_init() impure inline {
+    var (($self'counter)) = (null());
+    $self'counter = 0;
+    return ($self'counter);
+}
+
+;;
+;; Get methods of a Contract SimpleDNSFactory
+;;
+
+;;
+;; Routing of a Contract SimpleDNSFactory
+;;
+
+;; message opcode reader utility: only binary receivers
+;; Returns 32 bit message opcode, otherwise throws the "Invalid incoming message" exit code
+(slice, int) ~load_opcode_internal(slice s) asm( -> 1 0) "32 LDUQ 130 THROWIFNOT";
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    cs~skip_bits(2);
+    var msg_bounceable = cs~load_int(1);
+    var msg_bounced = cs~load_int(1);
+    slice msg_sender_addr = cs~load_msg_addr();
+    __tact_context = (msg_bounceable, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var ($self'counter) = $SimpleDNSFactory$_contract_load();
+    
+    ;; Handle bounced messages
+    if (msg_bounced) { return (); }
+    int op = 0;
+    int in_msg_length = slice_bits(in_msg);
+    if (in_msg_length >= 32) {
+        op = in_msg~load_uint(32);
+        ;; Receive Deploy message
+        if (op == 0x946a98b6) {
+            var $deploy'queryId = in_msg~load_uint(64);
+            ($self'counter)~$SimpleDNSFactory$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId), begin_cell()));
+            $SimpleDNSFactory$_contract_store(($self'counter));
+            return ();
+        }
+        
+    }
+    ;; Empty Receiver and Text Receivers
+    var text_op = slice_hash(in_msg);
+    ;; Receive "Deploy" message
+    if (text_op == 0xc1c8ebe8e42f1458f2693e8bef345c9c08db8c56d2ca637be9b436ea1f68976f) {
+        $self'counter = ($self'counter + 1);
+        var ($init'code, $init'data) = $Dns$_init_child(__tact_context_get_sender(), $self'counter);
+        slice $address = $global_contractAddress(($init'code, $init'data));
+        $global_nativeReserve(100000000, 0);
+        $global_send($SendParameters$_constructor_bounce_to_value_mode_code_data_body(false, $address, 0, 130, $init'code, $init'data, $FactoryDeploy$_store_cell($FactoryDeploy$_constructor_queryId_cashback($self'counter, __tact_context_get_sender()), begin_cell())));
+        $SimpleDNSFactory$_contract_store(($self'counter));
+        return ();
+    }
+    ;; Throw if not handled
+    throw(130);
+}
+
+
+() __tact_selector_hack_asm() impure asm """
+@atend @ 1 {
+        execute current@ context@ current!
+        {
+            // The core idea of this function is to save gas by avoiding unnecessary dict jump, when recv_internal/recv_external is called
+            // We want to extract recv_internal/recv_external from the dict and select needed function
+            // not by jumping to the needed function by it's index, but by using usual IF statements.
+
+            }END> b> // Close previous builder, now we have a cell of previous code on top of the stack
+
+            <{ // Start of the new code builder
+                SETCP0
+                // Swap the new code builder with the previous code, now we have previous code on top of the stack
+                swap
+                // Transform cell to slice and load first ref from the previous code, now we have the dict on top of the stack
+                <s ref@
+
+                // Extract the recv_internal from the dict
+                dup 0 swap @procdictkeylen idict@ { "internal shortcut error" abort } ifnot
+                swap
+
+                // Delete the recv_internal from the dict
+                0 swap @procdictkeylen idict- drop
+                // Delete the recv_external from the dict (it's okay if it's not there)
+                -1 swap @procdictkeylen idict- drop
+                // Delete the __tact_selector_hack from the dict
+                65535 swap @procdictkeylen idict- drop
+
+                // Bring the code builder from the bottom of the stack
+                // because if recv_external extraction is optional, and the number of elements on the stack is not fixed
+                depth 1- roll
+                // Swap with the dict from which we extracted recv_internal and (maybe) recv_external
+                swap
+
+                // Check if the dict is empty
+                dup null?
+                // Store a copy of this flag in the bottom of the stack
+                dup depth 1- -roll
+                {
+                    // If the dict is empty, just drop it (it will be null if it's empty)
+                    drop
+                }
+                {
+                    // If the dict is not empty, prepare continuation to be stored in c3
+                    <{
+                        // Save this dict as first ref in this continuation, it will be pushed in runtime by DICTPUSHCONST
+                        swap @procdictkeylen DICTPUSHCONST
+                        // Jump to the needed function by it's index
+                        DICTIGETJMPZ
+                        // If such key is not found, throw 11 along with the key as an argument
+                        11 THROWARG
+                    }> PUSHCONT
+                    // Store the continuation in c3
+                    c3 POP
+                } cond
+
+                // Function id is on top of the (runtime) stack
+                DUP IFNOTJMP:<{
+                    // place recv_internal here
+                    DROP swap @addop
+                }>
+
+                // Bring back the flag, indicating if the dict is empty or not from the bottom of the stack
+                depth 1- roll
+                {
+                    // If the dict is empty, throw 11
+                    11 THROWARG
+                }
+                {
+                    // If the dict is not empty, jump to continuation from c3
+                    c3 PUSH JMPX
+                } cond
+            }> b>
+        } : }END>c
+        current@ context! current!
+    } does @atend !
+""";
+
+() __tact_selector_hack() method_id(65535) {
+    return __tact_selector_hack_asm();
+}

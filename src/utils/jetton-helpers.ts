@@ -3,7 +3,7 @@ import { Dictionary, beginCell, Cell, Address } from "@ton/core"
 import { TonClient } from "@ton/ton"
 import chalk from "chalk"
 import { JettonMinterSharded } from '../../build/root/Root_JettonMinterSharded';
-import { JettonWalletSharded as JettonWalletOnly} from "../../build/wallet/Wallet_JettonWalletSharded"
+import { JettonWalletSharded as JettonWalletOnly } from "../../build/wallet/Wallet_JettonWalletSharded"
 import { JettonWalletSharded } from "../../build/root/Root_JettonWalletSharded";
 
 const ONCHAIN_CONTENT_PREFIX = 0x00
@@ -123,22 +123,22 @@ export async function validateJettonParams(
     expect(realMetadata.image).toBe(metadata.image)
 }
 
+const jettonParams = {
+    name: process.env.JETTON_NAME ?? "TactJetton",
+    description:
+        process.env.JETTON_DESCRIPTION ?? "This is description of Jetton, written in Tact-lang",
+    symbol: process.env.JETTON_SYMBOL ?? "TACT",
+    image:
+        process.env.JETTON_IMAGE ??
+        "https://raw.githubusercontent.com/tact-lang/tact/refs/heads/main/docs/public/logomark-light.svg",
+}
+// Create content Cell
+export const content = buildOnchainMetadata(jettonParams)
+
 export async function buildJettonMinterFromEnv(
     deployerAddress: Address,
     // type: "base" | "governance" | "feature-rich" | "shard",
 ) {
-    const jettonParams = {
-        name: process.env.JETTON_NAME ?? "TactJetton",
-        description:
-            process.env.JETTON_DESCRIPTION ?? "This is description of Jetton, written in Tact-lang",
-        symbol: process.env.JETTON_SYMBOL ?? "TACT",
-        image:
-            process.env.JETTON_IMAGE ??
-            "https://raw.githubusercontent.com/tact-lang/tact/refs/heads/main/docs/public/logomark-light.svg",
-    }
-    // Create content Cell
-    const content = buildOnchainMetadata(jettonParams)
-
     // switch (type) {
     // case "base":
     //     return await JettonMinter.fromInit(0n, deployerAddress, content, true)
