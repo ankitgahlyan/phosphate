@@ -20,18 +20,6 @@ forall X -> X __tact_not_null(X x) impure inline;
 ;; __tact_context_get_sender
 slice __tact_context_get_sender() inline;
 
-;; __tact_slice_eq
-int __tact_slice_eq(slice a, slice b) inline;
-
-;; __tact_slice_neq
-int __tact_slice_neq(slice a, slice b) inline;
-
-;; __tact_dict_set_code
-cell __tact_dict_set_code(cell dict, int id, cell code) inline;
-
-;; __tact_dict_get_code
-cell __tact_dict_get_code(cell dict, int id) inline;
-
 ;; __tact_dict_get_slice_int
 int __tact_dict_get_slice_int(cell d, int kl, slice k, int vl) inline;
 
@@ -64,12 +52,6 @@ builder $IdInfo$_store(builder build_0, (slice, slice, slice, slice) v) inline;
 
 ;; $IdInfo$_load
 (slice, ((slice, slice, slice, slice))) $IdInfo$_load(slice sc_0) inline;
-
-;; $AddId$_store
-builder $AddId$_store(builder build_0, (slice, slice, slice, slice) v) inline;
-
-;; $AddId$_store_cell
-cell $AddId$_store_cell((slice, slice, slice, slice) v, builder b) inline;
 
 ;; $Insurance$_store
 builder $Insurance$_store(builder build_0, (int, int) v) inline;
@@ -263,15 +245,6 @@ _ $StdAddress$_get_address((int, int) v) inline;
 ;; $JettonWalletSharded$_to_external
 (slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $JettonWalletSharded$_to_external(((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell)) v) inline;
 
-;; $IdInfo$_get_username
-_ $IdInfo$_get_username((slice, slice, slice, slice) v) inline;
-
-;; $IdInfo$_get_lattitude
-_ $IdInfo$_get_lattitude((slice, slice, slice, slice) v) inline;
-
-;; $IdInfo$_get_longitude
-_ $IdInfo$_get_longitude((slice, slice, slice, slice) v) inline;
-
 ;; $IdInfo$_as_optional
 tuple $IdInfo$_as_optional((slice, slice, slice, slice) v) inline;
 
@@ -295,9 +268,6 @@ builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v)
 
 ;; $JettonWalletSharded$init$_load
 (slice, ((slice, slice, int))) $JettonWalletSharded$init$_load(slice sc_0) inline;
-
-;; $Ids$init$_store
-builder $Ids$init$_store(builder build_0, (slice, slice, slice, cell) v) inline;
 
 ;; $IdInfo$_constructor_username_lattitude_longitude_address
 ((slice, slice, slice, slice)) $IdInfo$_constructor_username_lattitude_longitude_address(slice $username, slice $lattitude, slice $longitude, slice $address) inline;
@@ -323,24 +293,6 @@ builder $Ids$init$_store(builder build_0, (slice, slice, slice, cell) v) inline;
 ;; $global_newBasechainAddress
 (int) $global_newBasechainAddress(int $hash) impure inline;
 
-;; $ParsedString$_constructor_username_lattitude_longitude
-((slice, slice, slice)) $ParsedString$_constructor_username_lattitude_longitude(slice $username, slice $lattitude, slice $longitude) inline;
-
-;; $Builder$_fun_asSlice
-slice $Builder$_fun_asSlice(builder $self) impure inline;
-
-;; $global_length
-int $global_length(slice $s) impure inline;
-
-;; $global_substring
-slice $global_substring(slice $s, int $start, int $end) impure inline;
-
-;; $global_findChar
-int $global_findChar(slice $str, slice $char) impure inline;
-
-;; $global_parseComment
-(slice, slice, slice) $global_parseComment(slice $comment) impure inline;
-
 ;; $global_changeShard
 int $global_changeShard(int $hash, int $shard) impure inline;
 
@@ -349,6 +301,9 @@ builder $Builder$_fun_storeShardedStateInit(builder $self, (cell, cell) $init) i
 
 ;; $global_contractShardBasechainAddress
 (int) $global_contractShardBasechainAddress((cell, cell) $s) impure inline;
+
+;; $Builder$_fun_asSlice
+slice $Builder$_fun_asSlice(builder $self) impure inline;
 
 ;; $Cell$_fun_asSlice
 slice $Cell$_fun_asSlice(cell $self) impure inline;
@@ -368,9 +323,6 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ;; $DeployParameters$_fun_toShard
 ((int, cell, int, int, (cell, cell)), int) $DeployParameters$_fun_toShard((int, cell, int, int, (cell, cell)) $self, int $shard) impure inline;
 
-;; $DeployParameters$_fun_send
-() $DeployParameters$_fun_send((int, cell, int, int, (cell, cell)) $self) impure inline;
-
 ;; $ShardDeployParameters$_fun_send
 () $ShardDeployParameters$_fun_send(((int, cell, int, int, (cell, cell)), int) $self) impure inline;
 
@@ -380,8 +332,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ;; $DeployParameters$_constructor_value_mode_body_init
 ((int, cell, int, int, (cell, cell))) $DeployParameters$_constructor_value_mode_body_init(int $value, int $mode, cell $body, (cell, cell) $init) inline;
 
-;; $InviteInternal$_constructor_version_id_sender_invitor_currentWalletCode_forwardPayload
-((int, tuple, slice, slice, cell, slice)) $InviteInternal$_constructor_version_id_sender_invitor_currentWalletCode_forwardPayload(int $version, tuple $id, slice $sender, slice $invitor, cell $currentWalletCode, slice $forwardPayload) inline;
+;; $InviteInternal$_constructor_version_sender_invitor_currentWalletCode_forwardPayload
+((int, tuple, slice, slice, cell, slice)) $InviteInternal$_constructor_version_sender_invitor_currentWalletCode_forwardPayload(int $version, slice $sender, slice $invitor, cell $currentWalletCode, slice $forwardPayload) inline;
 
 ;; $JettonWalletSharded$_fun_connected
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), int) $JettonWalletSharded$_fun_connected((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver) impure inline;
@@ -393,7 +345,7 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (cell, cell)) $JettonWalletSharded$_fun_getWalletInit((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $address) impure inline;
 
 ;; $JettonWalletSharded$_fun_invite
-((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_invite((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver, tuple $id, slice $forwardPayload) impure inline;
+((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_invite((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver, slice $forwardPayload) impure inline;
 
 ;; $MessageParameters$_constructor_value_mode_to_body
 ((int, cell, int, slice, int)) $MessageParameters$_constructor_value_mode_to_body(int $value, int $mode, slice $to, cell $body) inline;
@@ -611,14 +563,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ;; $JettonWalletSharded$_fun_otherConsts
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (int, int, int, int, int, int, int, int, int, slice, cell)) $JettonWalletSharded$_fun_otherConsts((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline;
 
-;; $Ids$_init_child
-(cell, cell) $Ids$_init_child(slice $lat, slice $long, slice $root, cell $jettonWalletInitialCode) inline;
-
 ;; $JettonTransferInternal$_constructor_queryId_walletVersion_amount_sender_responseDestination_forwardTonAmount_forwardPayload
 ((int, int, int, slice, slice, int, slice)) $JettonTransferInternal$_constructor_queryId_walletVersion_amount_sender_responseDestination_forwardTonAmount_forwardPayload(int $queryId, int $walletVersion, int $amount, slice $sender, slice $responseDestination, int $forwardTonAmount, slice $forwardPayload) inline;
-
-;; $AddId$_constructor_username_lattitude_longitude_address
-((slice, slice, slice, slice)) $AddId$_constructor_username_lattitude_longitude_address(slice $username, slice $lattitude, slice $longitude, slice $address) inline;
 
 ;; $MessageParameters$_constructor_to_value_body
 ((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value_body(slice $to, int $value, cell $body) inline;
@@ -690,24 +636,6 @@ forall X -> X __tact_not_null(X x) impure inline {
 
 slice __tact_context_get_sender() inline {
     return __tact_context_sender;
-}
-
-int __tact_slice_eq(slice a, slice b) inline {
-    return (a.slice_hash() ==  b.slice_hash());
-}
-
-int __tact_slice_neq(slice a, slice b) inline {
-    return (a.slice_hash() !=  b.slice_hash());
-}
-
-cell __tact_dict_set_code(cell dict, int id, cell code) inline {
-    return udict_set_ref(dict, 16, id, code);
-}
-
-cell __tact_dict_get_code(cell dict, int id) inline {
-    var (data, ok) = udict_get_ref?(dict, 16, id);
-    throw_unless(135, ok);
-    return data;
 }
 
 forall X0, X1, X2 -> tuple __tact_tuple_create_3((X0, X1, X2) v) asm """
@@ -815,10 +743,6 @@ builder $global_beginCell() impure asm """
     NEWC
 """;
 
-slice $global_emptySlice() impure asm """
-    b{} PUSHSLICE
-""";
-
 int $global_divc(int $x, int $y) impure asm """
     DIVC
 """;
@@ -851,78 +775,6 @@ int $global_getComputeFee(int $gasUsed, int $isMasterchain) impure asm """
     // s2: `mode`
     STDICT
     ENDC
-    SWAP
-    SENDRAWMSG
-""";
-
-() $global_deploy((int, cell, int, int, (cell, cell)) $params) impure asm """
-    4 1 BLKPUSH // pushes 2 copies of `init.code` and `init.data`
-    HASHCU // `init.data` hash
-    SWAP
-    HASHCU // `init.code` hash
-    SWAP2
-    CDEPTH // `init.data` depth
-    SWAP
-    CDEPTH // `init.code` depth
-
-    // Group 2: Calculating destination address
-    // For almost identical logic and instructions,
-    // see comments inside `contractHash()` function in contract.tact
-    131380 INT // (2 << 16) | (1 << 8) | 0x34
-    NEWC
-    24 STU
-    16 STU
-    16 STU
-    256 STU
-    256 STU
-    ONE HASHEXT_SHA256 // obtains hash part (account id) of the address
-    // → Stack state
-    // s0: destAddr(hash part)
-    // s1: `init.data`
-    // s2: `init.code`
-    // s3 and below: `bounce`, `value`, `body`, `mode`
-
-    // Group 3: Building a message (CommonMsgInfoRelaxed)
-    s3 XCHG0           // swaps `bounce` with destAddr(hash part)
-    NEWC
-    b{01} STSLICECONST // store tag = $0 and ihr_disabled = true
-    1 STI              // store `bounce`
-    s1 s2 XCHG         // swap `init.data` with `init.code`, placing code on s1
-    STREF              // store `init.code`
-    STREF              // store `init.data`
-    // Inline StateInit:
-    b{00010000000000} STSLICECONST
-    // 0 + 00 + 10 + 0 + 00000000
-    // 1) 0 - bounced = false
-    // 2) 00 - src = addr_none
-    // 3) 10 - tag of addr_std (part of dest)
-    // 4) 0 - Maybe Anycast = false
-    // 5) 00000000 - workchain_id (part of dest)
-    //
-    256 STU     // store destAddr(hash part)
-    SWAP        // Builder on top, `value` below
-    STGRAMS     // store `value`
-    105 PUSHINT // 1 + 4 + 4 + 64 + 32
-    STZEROES    // store currency_collection, ihr_fee, fwd_fee, created_lt and created_at
-
-    // Group 4: Continue building a message (CommonMsgInfoRelaxed into MessageRelaxed)
-    // Remaining bits of MessageRelaxed:
-    b{1000110} STSLICECONST
-    // 10 + 0 + 0 + 1 + 1 + 0
-    // 10 - Maybe (Either StateInit ^StateInit) = true false
-    // 0 - split_depth:(Maybe (## 5)) = false
-    // 0 = special:(Maybe TickTock) = false
-    // 1 = code:(Maybe ^Cell) = true
-    // 1 = data:(Maybe ^Cell) = true
-    // 0 = library:(Maybe ^Cell) = false
-    //
-    STDICT // store `body` as ref with an extra Maybe bit, since `body` might be null
-    ENDC   // finalize the message
-    // → Stack state
-    // s0: Cell
-    // s1: params.`mode`
-
-    // Group 5: Sending the message, with `mode` on top
     SWAP
     SENDRAWMSG
 """;
@@ -968,27 +820,6 @@ builder $Builder$_fun_storeRef(cell $cell, builder $self) impure asm """
     REWRITESTDADDR DROP 138 THROWIF
 """;
 
-builder $Builder$_fun_storeSlice(builder $self, slice $slice) impure asm """
-    STSLICER
-""";
-
-slice $String$_fun_asSlice(slice $self) impure asm "NOP";
-
-slice $Cell$_fun_beginParse(cell $self) impure asm """
-    CTOS
-""";
-
-slice $Builder$_fun_asSlice(builder $self) impure inline {
-    var ($self) = $self;
-    return $Cell$_fun_beginParse($Builder$_fun_endCell($self));
-}
-
-int $Slice$_fun_bits(slice $self) impure asm """
-    SBITS
-""";
-
-slice $Slice$_fun_asString(slice $self) impure asm "NOP";
-
 int $Cell$_fun_hash(cell $self) impure asm """
     HASHCU
 """;
@@ -1005,8 +836,21 @@ builder $Builder$_fun_storeMaybeRef(cell $cell, builder $self) impure asm """
     STOPTREF
 """;
 
+slice $Cell$_fun_beginParse(cell $self) impure asm """
+    CTOS
+""";
+
+slice $Builder$_fun_asSlice(builder $self) impure inline {
+    var ($self) = $self;
+    return $Cell$_fun_beginParse($Builder$_fun_endCell($self));
+}
+
 (slice, ()) $Slice$_fun_skipBits(slice $self, int $l) impure asm """
     SDSKIPFIRST
+""";
+
+int $Slice$_fun_bits(slice $self) impure asm """
+    SBITS
 """;
 
 (slice, slice) $Slice$_fun_loadAddress(slice $self) impure asm( -> 1 0) """
@@ -1050,16 +894,6 @@ slice __gen_slice_address_61ab4641fa30d9310391025086eec65d200d79268e1b7cd402565e
 ;; String ""
 slice __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7() asm """
     B{b5ee9c724101010100020000004cacb9cd} B>boc <s PUSHSLICE
-""";
-
-;; String "@"
-slice __gen_slice_string_aa1b042e5f745193f5dc7329243367502aab4d9aecb50881101d87de32b1d7e8() asm """
-    B{b5ee9c72410101010003000002406f7aa700} B>boc <s PUSHSLICE
-""";
-
-;; String ","
-slice __gen_slice_string_4ee8888d01627a5b474e9faffd54b20b84dcc566933880a09b1be21640019c02() asm """
-    B{b5ee9c724101010100030000022cdd26222c} B>boc <s PUSHSLICE
 """;
 
 ;; Cell FXhlnOnULe0bQVSrPfmfPIgETJZFdH6Rv6gTXEOS+rI=
@@ -1157,15 +991,6 @@ _ $StdAddress$_get_address((int, int) v) inline {
 }
 
 ;;
-;; Type: ParsedString
-;; TLB: _ username:^string lattitude:^string longitude:^string = ParsedString
-;;
-
-((slice, slice, slice)) $ParsedString$_constructor_username_lattitude_longitude(slice $username, slice $lattitude, slice $longitude) inline {
-    return ($username, $lattitude, $longitude);
-}
-
-;;
 ;; Type: IdInfo
 ;; TLB: _ username:^string lattitude:^string longitude:^string address:address = IdInfo
 ;;
@@ -1193,51 +1018,12 @@ builder $IdInfo$_store(builder build_0, (slice, slice, slice, slice) v) inline {
     return (vvv'username, vvv'lattitude, vvv'longitude, vvv'address);
 }
 
-_ $IdInfo$_get_username((slice, slice, slice, slice) v) inline {
-    var (v'username, v'lattitude, v'longitude, v'address) = v;
-    return v'username;
-}
-
-_ $IdInfo$_get_lattitude((slice, slice, slice, slice) v) inline {
-    var (v'username, v'lattitude, v'longitude, v'address) = v;
-    return v'lattitude;
-}
-
-_ $IdInfo$_get_longitude((slice, slice, slice, slice) v) inline {
-    var (v'username, v'lattitude, v'longitude, v'address) = v;
-    return v'longitude;
-}
-
 tuple $IdInfo$_as_optional((slice, slice, slice, slice) v) inline {
     var (v'username, v'lattitude, v'longitude, v'address) = v;
     return __tact_tuple_create_4(v'username, v'lattitude, v'longitude, v'address);
 }
 
 ((slice, slice, slice, slice)) $IdInfo$_constructor_username_lattitude_longitude_address(slice $username, slice $lattitude, slice $longitude, slice $address) inline {
-    return ($username, $lattitude, $longitude, $address);
-}
-
-;;
-;; Type: AddId
-;; Header: 0x00000049
-;; TLB: add_id#00000049 username:^string lattitude:^string longitude:^string address:address = AddId
-;;
-
-builder $AddId$_store(builder build_0, (slice, slice, slice, slice) v) inline {
-    var (v'username, v'lattitude, v'longitude, v'address) = v;
-    build_0 = store_uint(build_0, 73, 32);
-    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'username));
-    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'lattitude));
-    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'longitude));
-    build_0 = build_0.store_slice(v'address);
-    return build_0;
-}
-
-cell $AddId$_store_cell((slice, slice, slice, slice) v, builder b) inline {
-    return $AddId$_store(b, v).end_cell();
-}
-
-((slice, slice, slice, slice)) $AddId$_constructor_username_lattitude_longitude_address(slice $username, slice $lattitude, slice $longitude, slice $address) inline {
     return ($username, $lattitude, $longitude, $address);
 }
 
@@ -1543,8 +1329,8 @@ cell $InviteInternal$_store_cell((int, tuple, slice, slice, cell, slice) v, buil
     return $InviteInternal$_store(b, v).end_cell();
 }
 
-((int, tuple, slice, slice, cell, slice)) $InviteInternal$_constructor_version_id_sender_invitor_currentWalletCode_forwardPayload(int $version, tuple $id, slice $sender, slice $invitor, cell $currentWalletCode, slice $forwardPayload) inline {
-    return ($version, $id, $sender, $invitor, $currentWalletCode, $forwardPayload);
+((int, tuple, slice, slice, cell, slice)) $InviteInternal$_constructor_version_sender_invitor_currentWalletCode_forwardPayload(int $version, slice $sender, slice $invitor, cell $currentWalletCode, slice $forwardPayload) inline {
+    return ($version, null(), $sender, $invitor, $currentWalletCode, $forwardPayload);
 }
 
 ;;
@@ -2053,7 +1839,6 @@ builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v)
 
 (slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $JettonWalletSharded$_contract_load() impure inline {
     slice $sc = get_data().begin_parse();
-    __tact_child_contract_codes = $sc~load_ref();
     int $loaded = $sc~load_int(1);
     if ($loaded) {
         return $sc~$JettonWalletSharded$_load();
@@ -2067,7 +1852,6 @@ builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v)
 
 () $JettonWalletSharded$_contract_store((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) v) impure inline {
     builder b = begin_cell();
-    b = b.store_ref(__tact_child_contract_codes);
     b = b.store_int(true, 1);
     b = $JettonWalletSharded$_store(b, v);
     set_data(b.end_cell());
@@ -2082,46 +1866,8 @@ builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v)
     ;; Build init data cell
 
     builder b = begin_cell();
-    b = b.store_ref(__tact_child_contract_codes);
     b = b.store_int(false, 1);
     b = $JettonWalletSharded$init$_store(b, ($owner, $minter, $balance));
-    return (init_code, b.end_cell());
-}
-
-;;
-;; Type: Ids
-;; TLB: _ root:address lat:^string long:^string users:dict<address, ^cell> jettonWalletInitialCode:^cell = Ids
-;;
-
-builder $Ids$init$_store(builder build_0, (slice, slice, slice, cell) v) inline {
-    var (v'lat, v'long, v'root, v'jettonWalletInitialCode) = v;
-    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'lat));
-    var build_1 = begin_cell();
-    build_1 = build_1.store_builder_ref(begin_cell().store_slice(v'long));
-    build_1 = build_1.store_slice(v'root);
-    build_1 = build_1.store_ref(v'jettonWalletInitialCode);
-    build_0 = store_builder_ref(build_0, build_1);
-    return build_0;
-}
-
-(cell, cell) $Ids$_init_child(slice $lat, slice $long, slice $root, cell $jettonWalletInitialCode) inline {
-    ;; Build init code cell
-
-    slice sc' = __tact_child_contract_codes.begin_parse();
-    cell source = sc'~load_dict();
-    ;; Contract Code: Ids
-    cell init_code = __tact_dict_get_code(source, 2598);
-
-    ;; Build init data cell
-    cell contracts = new_dict();
-
-    ;; Contract Code: JettonWalletSharded
-    contracts = __tact_dict_set_code(contracts, 27052, my_code());
-
-    builder b = begin_cell();
-    b = b.store_builder_ref(begin_cell().store_dict(contracts));
-    b = b.store_int(false, 1);
-    b = $Ids$init$_store(b, ($lat, $long, $root, $jettonWalletInitialCode));
     return (init_code, b.end_cell());
 }
 
@@ -2140,77 +1886,8 @@ builder $Ids$init$_store(builder build_0, (slice, slice, slice, cell) v) inline 
     return ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode);
 }
 
-int $global_length(slice $s) impure inline {
-    builder $builder = $global_beginCell();
-    $Builder$_fun_storeSlice($builder, $String$_fun_asSlice($s));
-    slice $slice = $Builder$_fun_asSlice($builder);
-    return ($Slice$_fun_bits($slice) / 8);
-}
-
-slice $global_substring(slice $s, int $start, int $end) impure inline {
-    int $len = $global_length($s);
-    int $st = (($start < 0) ? 0 : $start);
-    int $ed = (($end > $len) ? $len : $end);
-    if (($st >= $ed)) {
-        return __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-    }
-    slice $slice = $String$_fun_asSlice($s);
-    if (($st > 0)) {
-        $slice~load_bits(($st * 8));
-    }
-    int $bytesToLoad = ($ed - $st);
-    if (($bytesToLoad > 0)) {
-        builder $resultBuilder = $global_beginCell();
-        $Builder$_fun_storeSlice($resultBuilder, $slice~load_bits(($bytesToLoad * 8)));
-        return $Slice$_fun_asString($Builder$_fun_asSlice($resultBuilder));
-    }
-    return __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-}
-
-int $global_findChar(slice $str, slice $char) impure inline {
-    int $i = 0;
-    int $len = $global_length($str);
-    while (($i < $len)) {
-        if (__tact_slice_eq($global_substring($str, $i, ($i + 1)), $char)) {
-            return $i;
-        }
-        $i = $i + 1;
-    }
-    return -1;
-}
-
-(slice, slice, slice) $global_parseComment(slice $comment) impure inline {
-    slice $username = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-    slice $latitude = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-    slice $longitude = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-    int $atIndex = $global_findChar($comment, __gen_slice_string_aa1b042e5f745193f5dc7329243367502aab4d9aecb50881101d87de32b1d7e8());
-    if (($atIndex > 0)) {
-        $username = $global_substring($comment, 0, $atIndex);
-        slice $coords = $global_substring($comment, ($atIndex + 1), $global_length($comment));
-        int $commaIndex = $global_findChar($coords, __gen_slice_string_4ee8888d01627a5b474e9faffd54b20b84dcc566933880a09b1be21640019c02());
-        if (($commaIndex > 0)) {
-            $latitude = $global_substring($coords, 0, $commaIndex);
-            $longitude = $global_substring($coords, ($commaIndex + 1), $global_length($coords));
-        }
-    }
-    return $ParsedString$_constructor_username_lattitude_longitude($username, $latitude, $longitude);
-}
-
 () $global_setCode(cell $newCode) impure asm """
     SETCODE
-""";
-
-() $global_checkEitherForwardPayload(slice $forwardPayload) impure asm """
-    LDDICT // Throws 9 if Either bit = 1 and ref is not present
-    SWAP
-    ISNULL
-    <{
-        DROP
-    }> PUSHCONT
-    <{
-        ENDS // Also throws 9 if slice is not empty
-    }> PUSHCONT
-    IFELSE
 """;
 
 slice $global_emptyAddress() impure asm """
@@ -2264,12 +1941,6 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
     return $ShardDeployParameters$_constructor_shard_deployParameters($shard, ($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data)));
 }
 
-() $DeployParameters$_fun_send((int, cell, int, int, (cell, cell)) $self) impure inline {
-    var (($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data))) = $self;
-    var (($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data))) = $self;
-    $global_deploy(($self'mode, $self'body, $self'value, $self'bounce, ($self'init'code, $self'init'data)));
-}
-
 () $ShardDeployParameters$_fun_send(((int, cell, int, int, (cell, cell)), int) $self) impure inline {
     var ((($self'deployParameters'mode, $self'deployParameters'body, $self'deployParameters'value, $self'deployParameters'bounce, ($self'deployParameters'init'code, $self'deployParameters'init'data)), $self'shard)) = $self;
     var ((($self'deployParameters'mode, $self'deployParameters'body, $self'deployParameters'value, $self'deployParameters'bounce, ($self'deployParameters'init'code, $self'deployParameters'init'data)), $self'shard)) = $self;
@@ -2280,23 +1951,22 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), int) $JettonWalletSharded$_fun_connected((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var $fresh$ret_29 = (( (( (( (( (( equal_slices_bits($self'invitor, $receiver) )) ? (true) : (__tact_dict_exists_slice($self'friends, 267, $receiver)) )) ? (true) : (__tact_dict_exists_slice($self'followings, 267, $receiver)) )) ? (true) : (__tact_dict_exists_slice($self'invited, 267, $receiver)) )) ? (true) : (__tact_dict_exists_slice($self'followers, 267, $receiver)) ) ? true : false);
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_29);
+    var $fresh$ret_7 = (( (( (( (( (( equal_slices_bits($self'invitor, $receiver) )) ? (true) : (__tact_dict_exists_slice($self'friends, 267, $receiver)) )) ? (true) : (__tact_dict_exists_slice($self'followings, 267, $receiver)) )) ? (true) : (__tact_dict_exists_slice($self'invited, 267, $receiver)) )) ? (true) : (__tact_dict_exists_slice($self'followers, 267, $receiver)) ) ? true : false);
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_7);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (cell, cell)) $JettonWalletSharded$_fun_getWalletInit((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $address) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
     var ($walletInit'code, $walletInit'data) = $JettonWalletSharded$_init_child($address, $self'minter, 0);
-    var $fresh$ret_41 = $StateInit$_constructor_code_data($self'baseWalletCode, $walletInit'data);
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_41);
+    var $fresh$ret_19 = $StateInit$_constructor_code_data($self'baseWalletCode, $walletInit'data);
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_19);
 }
 
-((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_invite((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver, tuple $id, slice $forwardPayload) impure inline {
+((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_invite((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver, slice $forwardPayload) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var ($id) = $id;
     throw_unless(250, ($self'connections < 250));
     throw_unless(719, (~ ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_connected($receiver)));
-    $ShardDeployParameters$_fun_send($DeployParameters$_fun_toShard($DeployParameters$_constructor_value_mode_body_init(0, 80, $InviteInternal$_store_cell($InviteInternal$_constructor_version_id_sender_invitor_currentWalletCode_forwardPayload($self'version, $id, $self'owner, $self'invitor, $global_myCode(), $forwardPayload), begin_cell()), ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getWalletInit($receiver)), $Address$_fun_getShard($receiver)));
+    $ShardDeployParameters$_fun_send($DeployParameters$_fun_toShard($DeployParameters$_constructor_value_mode_body_init(0, 80, $InviteInternal$_store_cell($InviteInternal$_constructor_version_sender_invitor_currentWalletCode_forwardPayload($self'version, $self'owner, $self'invitor, $global_myCode(), $forwardPayload), begin_cell()), ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getWalletInit($receiver)), $Address$_fun_getShard($receiver)));
     return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), ());
 }
 
@@ -2306,8 +1976,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
     int $unAccountedDebt = $self'debt;
     int $noDebts = null?($self'debts);
     if (( (($remaining <= 0)) ? (true) : (( (($unAccountedDebt == 0)) ? ($noDebts) : (false) )) )) {
-        var $fresh$ret_30 = $remaining;
-        return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_30);
+        var $fresh$ret_8 = $remaining;
+        return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_8);
     }
     if (($unAccountedDebt > 0)) {
         if (($remaining >= $unAccountedDebt)) {
@@ -2316,16 +1986,16 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
         } else {
             $self'debt = ($unAccountedDebt - $remaining);
             $remaining = 0;
-            var $fresh$ret_31 = $remaining;
-            return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_31);
+            var $fresh$ret_9 = $remaining;
+            return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_9);
         }
     }
     ifnot ($noDebts) {
-        var ($from, $debtVal, $fresh$flag_32) = __tact_dict_min_slice_coins($self'debts, 267);
-        while ($fresh$flag_32) {
+        var ($from, $debtVal, $fresh$flag_10) = __tact_dict_min_slice_coins($self'debts, 267);
+        while ($fresh$flag_10) {
             if (($remaining <= 0)) {
-                var $fresh$ret_33 = $remaining;
-                return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_33);
+                var $fresh$ret_11 = $remaining;
+                return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_11);
             }
             int $debt = $debtVal;
             int $pay = 0;
@@ -2341,11 +2011,11 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
             } else {
                 $self'debts~__tact_dict_set_slice_coins(267, $from, $debt);
             }
-            ($from, $debtVal, $fresh$flag_32) = __tact_dict_next_slice_coins($self'debts, 267, $from);
+            ($from, $debtVal, $fresh$flag_10) = __tact_dict_next_slice_coins($self'debts, 267, $from);
         }
     }
-    var $fresh$ret_34 = $remaining;
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_34);
+    var $fresh$ret_12 = $remaining;
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_12);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_mintInternal((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, int $amount) impure inline {
@@ -2378,8 +2048,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), cell) $JettonWalletSharded$_fun_getJettonWalletInit((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $address) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
     var ($init'code, $init'data) = ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getWalletInit($address);
-    var $fresh$ret_42 = $Builder$_fun_endCell($Builder$_fun_storeShardedStateInit($global_beginCell(), ($init'code, $init'data)));
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_42);
+    var $fresh$ret_20 = $Builder$_fun_endCell($Builder$_fun_storeShardedStateInit($global_beginCell(), ($init'code, $init'data)));
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_20);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), slice) $JettonWalletSharded$_fun_getJettonWalletByOwner((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $jettonWalletOwner) impure inline {
@@ -2387,8 +2057,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
     cell $init = ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletInit($jettonWalletOwner);
     int $ownerShard = $Address$_fun_getShard($jettonWalletOwner);
     slice $expectedAddr = $Builder$_fun_asSlice(store_uint(store_uint(store_uint($global_beginCell(), 4, 3), 0, 8), $global_changeShard($Cell$_fun_hash($init), $ownerShard), 256));
-    var $fresh$ret_43 = $expectedAddr~$Slice$_fun_loadAddress();
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_43);
+    var $fresh$ret_21 = $expectedAddr~$Slice$_fun_loadAddress();
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_21);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_internalDeActivate((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $sender, int $approved) impure inline {
@@ -2558,8 +2228,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
         $losersCount = $reporters;
     }
     int $rewarded = 0;
-    var ($addr, $reporter, $fresh$flag_22) = __tact_dict_min_slice_int($self'reports, 267, 1);
-    while ($fresh$flag_22) {
+    var ($addr, $reporter, $fresh$flag_0) = __tact_dict_min_slice_int($self'reports, 267, 1);
+    while ($fresh$flag_0) {
         if (( (( ($reporter) ? ($reportWinCloseAcc) : (false) )) ? (true) : (( ((~ $reporter)) ? ((~ $reportWinCloseAcc)) : (false) )) )) {
             int $reward = 0;
             if (($rewarded < $losersCount)) {
@@ -2570,28 +2240,28 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
             }
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($addr), 0, 1, $JettonTransferInternal$_store_cell($JettonTransferInternal$_constructor_queryId_amount_walletVersion_sender_responseDestination_forwardTonAmount_forwardPayload(0, $reward, $self'version, $self'owner, $self'owner, 0, $msg'forwardPayload), begin_cell())));
         }
-        ($addr, $reporter, $fresh$flag_22) = __tact_dict_next_slice_int($self'reports, 267, $addr, 1);
+        ($addr, $reporter, $fresh$flag_0) = __tact_dict_next_slice_int($self'reports, 267, $addr, 1);
     }
     if ($reportWinCloseAcc) {
-        var ($addr, $amount, $fresh$flag_23) = __tact_dict_min_slice_coins($self'followings, 267);
-        while ($fresh$flag_23) {
+        var ($addr, $amount, $fresh$flag_1) = __tact_dict_min_slice_coins($self'followings, 267);
+        while ($fresh$flag_1) {
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($addr), 0, 1, $AccCloseBurnInternal$_store_cell($AccCloseBurnInternal$_constructor_amount_sender_forwardPayload($amount, $self'owner, $msg'forwardPayload), begin_cell())));
-            ($addr, $amount, $fresh$flag_23) = __tact_dict_next_slice_coins($self'followings, 267, $addr);
+            ($addr, $amount, $fresh$flag_1) = __tact_dict_next_slice_coins($self'followings, 267, $addr);
         }
-        var ($addr, $amount, $fresh$flag_24) = __tact_dict_min_slice_coins($self'followers, 267);
-        while ($fresh$flag_24) {
+        var ($addr, $amount, $fresh$flag_2) = __tact_dict_min_slice_coins($self'followers, 267);
+        while ($fresh$flag_2) {
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($addr), 0, 1, $AccCloseBurnInternal$_store_cell($AccCloseBurnInternal$_constructor_amount_sender_forwardPayload($amount, $self'owner, $msg'forwardPayload), begin_cell())));
-            ($addr, $amount, $fresh$flag_24) = __tact_dict_next_slice_coins($self'followers, 267, $addr);
+            ($addr, $amount, $fresh$flag_2) = __tact_dict_next_slice_coins($self'followers, 267, $addr);
         }
-        var ($addr, $amount, $fresh$flag_25) = __tact_dict_min_slice_coins($self'friends, 267);
-        while ($fresh$flag_25) {
+        var ($addr, $amount, $fresh$flag_3) = __tact_dict_min_slice_coins($self'friends, 267);
+        while ($fresh$flag_3) {
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($addr), 0, 1, $AccCloseBurnInternal$_store_cell($AccCloseBurnInternal$_constructor_amount_sender_forwardPayload(($amount * 2), $self'owner, $msg'forwardPayload), begin_cell())));
-            ($addr, $amount, $fresh$flag_25) = __tact_dict_next_slice_coins($self'friends, 267, $addr);
+            ($addr, $amount, $fresh$flag_3) = __tact_dict_next_slice_coins($self'friends, 267, $addr);
         }
-        var ($addr, $amount, $fresh$flag_26) = __tact_dict_min_slice_coins($self'invited, 267);
-        while ($fresh$flag_26) {
+        var ($addr, $amount, $fresh$flag_4) = __tact_dict_min_slice_coins($self'invited, 267);
+        while ($fresh$flag_4) {
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($addr), 0, 1, $AccCloseBurnInternal$_store_cell($AccCloseBurnInternal$_constructor_amount_sender_forwardPayload((3 * $amount), $self'owner, $msg'forwardPayload), begin_cell())));
-            ($addr, $amount, $fresh$flag_26) = __tact_dict_next_slice_coins($self'invited, 267, $addr);
+            ($addr, $amount, $fresh$flag_4) = __tact_dict_next_slice_coins($self'invited, 267, $addr);
         }
         $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($self'invitor), 0, 1, $AccCloseBurnInternal$_store_cell($AccCloseBurnInternal$_constructor_amount_sender_forwardPayload(3000000000000, $self'owner, $msg'forwardPayload), begin_cell())));
         ifnot ($self'reportReason) {
@@ -2603,10 +2273,10 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($self'nominee), 0, 1, $JettonTransferInternal$_store_cell($JettonTransferInternal$_constructor_queryId_amount_walletVersion_sender_responseDestination_forwardTonAmount_forwardPayload(0, ($self'balance + $payback), $self'version, $self'owner, $msg'sender, 0, $msg'forwardPayload), begin_cell())));
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_bounce_body($self'minter, 0, 3, false, $JettonBurnNotification$_store_cell($JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination(0, $payback, $global_emptyAddress(), $msg'sender), begin_cell())));
         }
-        var ($addr, $amount, $fresh$flag_27) = __tact_dict_min_slice_coins($self'debts, 267);
-        while ($fresh$flag_27) {
+        var ($addr, $amount, $fresh$flag_5) = __tact_dict_min_slice_coins($self'debts, 267);
+        while ($fresh$flag_5) {
             $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_body(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($addr), 0, 1, $AccCloseBurnInternal$_store_cell($AccCloseBurnInternal$_constructor_amount_sender_forwardPayload($amount, $self'owner, $msg'forwardPayload), begin_cell())));
-            ($addr, $amount, $fresh$flag_27) = __tact_dict_next_slice_coins($self'debts, 267, $addr);
+            ($addr, $amount, $fresh$flag_5) = __tact_dict_next_slice_coins($self'debts, 267, $addr);
         }
         $self'terminated = true;
     } else {
@@ -2645,12 +2315,12 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
     if (( (($self'recoveryVouchersCount >= $global_divc($self'closeFriendsCount, 2))) ? ((($global_now() - $self'lastTxnTime) > 86400)) : (false) )) {
         $self'owner = $self'ownerAfterRecovery;
         $self'recoveryVouchersCount = 0;
-        var ($friend, $vouched, $fresh$flag_28) = __tact_dict_min_slice_int($self'closeFriendsAndVouched, 267, 1);
-        while ($fresh$flag_28) {
+        var ($friend, $vouched, $fresh$flag_6) = __tact_dict_min_slice_int($self'closeFriendsAndVouched, 267, 1);
+        while ($fresh$flag_6) {
             if ($vouched) {
                 $self'closeFriendsAndVouched~__tact_dict_set_slice_int(267, $friend, false, 1);
             }
-            ($friend, $vouched, $fresh$flag_28) = __tact_dict_next_slice_int($self'closeFriendsAndVouched, 267, $friend, 1);
+            ($friend, $vouched, $fresh$flag_6) = __tact_dict_next_slice_int($self'closeFriendsAndVouched, 267, $friend, 1);
         }
     } else {
         $self'closeFriendsAndVouched~__tact_dict_set_slice_int(267, $sender, true, 1);
@@ -2768,39 +2438,39 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (int, slice, slice, cell)) $JettonWalletSharded$_fun_get_wallet_data((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var $fresh$ret_35 = $JettonWalletData$_constructor_balance_owner_minter_code($self'balance, $self'owner, $self'minter, $global_myCode());
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_35);
+    var $fresh$ret_13 = $JettonWalletData$_constructor_balance_owner_minter_code($self'balance, $self'owner, $self'minter, $global_myCode());
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_13);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell)) $JettonWalletSharded$_fun_state((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var $fresh$ret_36 = ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode);
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_36);
+    var $fresh$ret_14 = ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode);
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_14);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), int) $JettonWalletSharded$_fun_reportResolutionTime((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var $fresh$ret_37 = $self'reportResolutionTime;
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_37);
+    var $fresh$ret_15 = $self'reportResolutionTime;
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_15);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (slice, slice)) $JettonWalletSharded$_fun_getInvitorNominee((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var $fresh$ret_38 = $InvitorNominee$_constructor_invitor_nominee($self'invitor, $self'nominee);
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_38);
+    var $fresh$ret_16 = $InvitorNominee$_constructor_invitor_nominee($self'invitor, $self'nominee);
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_16);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (cell, cell, cell, cell, cell, cell, cell)) $JettonWalletSharded$_fun_getFriendsAndFollowings((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
     throw_unless(701, (~ $self'terminated));
-    var $fresh$ret_39 = $FriendsAndFollowings$_constructor_friends_followings_followers_invited_pendingRequests_debts_reports($self'friends, $self'followings, $self'followers, $self'invited, $self'pendingRequests, $self'debts, $self'reports);
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_39);
+    var $fresh$ret_17 = $FriendsAndFollowings$_constructor_friends_followings_followers_invited_pendingRequests_debts_reports($self'friends, $self'followings, $self'followers, $self'invited, $self'pendingRequests, $self'debts, $self'reports);
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_17);
 }
 
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), (int, int, int, int, int, int, int, int, int, slice, cell)) $JettonWalletSharded$_fun_otherConsts((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
-    var $fresh$ret_40 = $OtherStateConsts$_constructor_reportReason_reporterCount_disputerCount_reportResolutionTime_connections_terminated_mbrpAmount_closureWait_active_lastMsgTo_insurance($self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, 1000000000000, 86400, $self'active, $self'lastMsgTo, $Insurance$_store_cell(($self'insurance'emi, $self'insurance'startStop), begin_cell()));
-    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_40);
+    var $fresh$ret_18 = $OtherStateConsts$_constructor_reportReason_reporterCount_disputerCount_reportResolutionTime_connections_terminated_mbrpAmount_closureWait_active_lastMsgTo_insurance($self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, 1000000000000, 86400, $self'active, $self'lastMsgTo, $Insurance$_store_cell(($self'insurance'emi, $self'insurance'startStop), begin_cell()));
+    return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), $fresh$ret_18);
 }
 
 ;;
@@ -3002,7 +2672,7 @@ _ %otherConsts() method_id(118554) {
             throw_unless(700, ( equal_slices_bits($sender, $self'owner) ));
             throw_unless(702, ( ($self'active) ? (true) : (($msg'amount < 1000000000)) ));
             $global_forceBasechain($msg'destination);
-            $global_checkEitherForwardPayload($msg'forwardPayload);
+            throw_unless(739, ($Slice$_fun_bits($msg'forwardPayload) >= 1));
             if (($msg'amount >= 1000000000)) {
                 $self'lastTxnTime = $global_now();
                 if (( ~ equal_slices_bits($msg'destination, $self'minter) )) {
@@ -3013,7 +2683,7 @@ _ %otherConsts() method_id(118554) {
                     return ();
                 }
             } elseif (($msg'amount == 100000000)) {
-                ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_invite($msg'destination, null(), $msg'forwardPayload);
+                ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_invite($msg'destination, $msg'forwardPayload);
                 $JettonWalletSharded$_contract_store(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode));
                 return ();
             } elseif (($msg'amount == 200000000)) {
@@ -3153,19 +2823,6 @@ _ %otherConsts() method_id(118554) {
             return ();
         }
         
-        ;; Receive Invite message
-        if (op == 0x48) {
-            in_msg~skip_bits(32);
-            var $msg'target = in_msg~load_msg_addr();
-            var ($msg'id'username, $msg'id'lattitude, $msg'id'longitude, $msg'id'address) = in_msg~$IdInfo$_load();
-            throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
-            throw_unless(702, $self'active);
-            $global_forceBasechain($msg'target);
-            ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_invite($msg'target, $IdInfo$_as_optional(($msg'id'username, $msg'id'lattitude, $msg'id'longitude, $msg'id'address)), $global_emptySlice());
-            $JettonWalletSharded$_contract_store(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode));
-            return ();
-        }
-        
         ;; Receive InviteInternal message
         if (op == 1) {
             in_msg~skip_bits(32);
@@ -3178,7 +2835,6 @@ _ %otherConsts() method_id(118554) {
             var $msg'forwardPayload = sc_1;
             ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_correctInternalSender($msg'sender);
             throw_unless(723, (~ $self'active));
-            throw_unless(738, ( (__tact_slice_neq($msg'forwardPayload, $global_emptySlice())) ? (true) : ((~ null?($msg'id))) ));
             $self'invitor = $msg'sender;
             $self'nominee = $msg'sender;
             $self'invitor0 = $msg'invitor;
@@ -3188,31 +2844,7 @@ _ %otherConsts() method_id(118554) {
             } elseif (($msg'version < $self'version)) {
                 ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_sendUpgrade(__tact_context_get_sender());
             }
-            slice $username = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-            slice $lattitude = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-            slice $longitude = __gen_slice_string_96a296d224f285c67bee93c30f8a309157f0daa35dc5b87e410b78630a09cfc7();
-            if ((~ null?($msg'id))) {
-                ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address) = $IdInfo$_not_null($msg'id);
-                $username = $IdInfo$_get_username($IdInfo$_not_null($msg'id));
-                $lattitude = $IdInfo$_get_lattitude($IdInfo$_not_null($msg'id));
-                $longitude = $IdInfo$_get_longitude($IdInfo$_not_null($msg'id));
-            }
-            slice $payload = $msg'forwardPayload;
-            slice $owner = $self'owner;
-            if (__tact_slice_neq($payload, $global_emptySlice())) {
-                if (($Slice$_fun_bits($payload) > 0)) {
-                    int $op = $payload~load_uint(32);
-                    ifnot ($op) {
-                        slice $comment = $Slice$_fun_asString($payload);
-                        var ($parsed'username, $parsed'lattitude, $parsed'longitude) = $global_parseComment($comment);
-                        $username = $parsed'username;
-                        $lattitude = $parsed'lattitude;
-                        $longitude = $parsed'longitude;
-                        ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address) = $IdInfo$_constructor_username_lattitude_longitude_address($username, $lattitude, $longitude, $owner);
-                    }
-                }
-            }
-            $DeployParameters$_fun_send($DeployParameters$_constructor_value_mode_body_init(200000000, 17, $AddId$_store_cell($AddId$_constructor_username_lattitude_longitude_address($username, $lattitude, $longitude, $owner), begin_cell()), $Ids$_init_child($lattitude, $longitude, $self'minter, $self'baseWalletCode)));
+            ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_notifyOwner($msg'invitor, 1000000000000, $msg'forwardPayload);
             $JettonWalletSharded$_contract_store(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode));
             return ();
         }
@@ -3472,10 +3104,10 @@ _ %otherConsts() method_id(118554) {
             if (($self'version < __tact_not_null($msg'walletVersion))) {
                 $self'version = __tact_not_null($msg'walletVersion);
                 $global_setCode(__tact_not_null($msg'newWalletCode));
-                var ($invited, $fresh$underscore_58, $fresh$flag_57) = __tact_dict_min_slice_coins($self'invited, 267);
-                while ($fresh$flag_57) {
+                var ($invited, $fresh$underscore_36, $fresh$flag_35) = __tact_dict_min_slice_coins($self'invited, 267);
+                while ($fresh$flag_35) {
                     ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_sendUpgrade(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_getJettonWalletByOwner($invited));
-                    ($invited, $fresh$underscore_58, $fresh$flag_57) = __tact_dict_next_slice_coins($self'invited, 267, $invited);
+                    ($invited, $fresh$underscore_36, $fresh$flag_35) = __tact_dict_next_slice_coins($self'invited, 267, $invited);
                 }
             }
             $JettonWalletSharded$_contract_store(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode));
