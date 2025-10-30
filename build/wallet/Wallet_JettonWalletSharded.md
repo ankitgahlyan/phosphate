@@ -1,6 +1,6 @@
 # Tact compilation report
 Contract: JettonWalletSharded
-BoC Size: 40125 bytes
+BoC Size: 38889 bytes
 
 ## Structures (Structs and Messages)
 Total structures: 75
@@ -377,6 +377,4 @@ JettonWalletSharded --> BaseTrait
 ```mermaid
 graph TD
 JettonWalletSharded
-JettonWalletSharded --> Ids
-Ids --> JettonWalletSharded
 ```

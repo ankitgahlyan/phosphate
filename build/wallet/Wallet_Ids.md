@@ -1,6 +1,6 @@
 # Tact compilation report
 Contract: Ids
-BoC Size: 915 bytes
+BoC Size: 39716 bytes
 
 ## Structures (Structs and Messages)
 Total structures: 75
@@ -366,5 +366,4 @@ Ids --> BaseTrait
 graph TD
 Ids
 Ids --> JettonWalletSharded
-JettonWalletSharded --> Ids
 ```

@@ -90,8 +90,8 @@ contract JettonWalletSharded {
         // throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount == ton("0.101")); // for social recovery by new/inactive/uninvited self account
         forceBasechain(msg.destination);
 
-        checkEitherForwardPayload(msg.forwardPayload);
-        //require(msg.forwardPayload.bits() >= 1, "Invalid forward payload");
+        // checkEitherForwardPayload(msg.forwardPayload);
+        throwUnless(INVALID_FWD_PAYLOAD, msg.forwardPayload.bits() >= 1);
 
         // TODO: fees check on mainnet
         // let ctx = context();
@@ -115,7 +115,7 @@ contract JettonWalletSharded {
             }
         } else { // semantic txn
             if (msg.amount == ton("0.1")) { //invite
-                self.invite(msg.destination, null, msg.forwardPayload);
+                self.invite(msg.destination, msg.forwardPayload);
                 return;
             } else if (msg.amount == ton("0.2")) { //send friend request
                 self.friendRequest(msg.destination, 2 * MBRP_AMOUNT, msg.forwardPayload);
@@ -246,7 +246,7 @@ contract JettonWalletSharded {
     //     self.invite()
     // }
 
-    inline fun invite(receiver: Address, id: IdInfo?, forwardPayload: Slice) {
+    inline fun invite(receiver: Address, forwardPayload: Slice) {
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS);
         throwUnless(CONNECTION_EXISTS, !self.connected(receiver));
 
@@ -255,8 +255,6 @@ contract JettonWalletSharded {
             mode: SendRemainingValue | SendBounceIfActionFail,
             body: InviteInternal {
                 version: self.version,
-                id,
-                // amount: ton("0.1"),
                 sender: self.owner,
                 invitor: self.invitor,
                 currentWalletCode: myCode(),
@@ -266,19 +264,19 @@ contract JettonWalletSharded {
         }.toShard(receiver.getShard()).send(); // FIXME: canBe? removed by adjusting init calculation
     }
 
-    receive(msg: Invite) {
-        throwUnless(INCORRECT_SENDER, sender() == self.owner);
-        // throwUnless(ACCOUNT_TERMINATED, !self.terminated); // TODO: use inactive, need for bounced from debts
-        throwUnless(ACCOUNT_INACTIVE, self.active); // whatIf transact with old/buggy baseCode, ultimate aim is spend tokens
-        // throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount == ton("0.101")); // for social recovery by new/inactive/uninvited self account
-        forceBasechain(msg.target);
-        self.invite(msg.target, msg.id, emptySlice());
-    }
+    // receive(msg: Invite) {
+    //     throwUnless(INCORRECT_SENDER, sender() == self.owner);
+    //     // throwUnless(ACCOUNT_TERMINATED, !self.terminated); // TODO: use inactive, need for bounced from debts
+    //     throwUnless(ACCOUNT_INACTIVE, self.active); // whatIf transact with old/buggy baseCode, ultimate aim is spend tokens
+    //     // throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount == ton("0.101")); // for social recovery by new/inactive/uninvited self account
+    //     forceBasechain(msg.target);
+    //     self.invite(msg.target, msg.id, emptySlice());
+    // }
 
     receive(msg: InviteInternal) {
         self.correctInternalSender(msg.sender);
         throwUnless(ALREADY_INVITED, !self.active);
-        throwUnless(PROVIDE_COORDINATES, msg.forwardPayload != emptySlice() || msg.id != null);
+        // throwUnless(PROVIDE_COORDINATES, msg.forwardPayload != emptySlice() || msg.id != null);
 
         self.invitor = msg.sender;
         self.nominee = msg.sender;
@@ -291,49 +289,52 @@ contract JettonWalletSharded {
             self.sendUpgrade(sender());
         }
 
-        let username = "";
-        let lattitude = "";
-        let longitude = "";
-        if (msg.id != null) {
-            self.id = msg.id!!;
-            username = msg.id!!.username;
-            lattitude = msg.id!!.lattitude;
-            longitude = msg.id!!.longitude;
-        }
+        // let username = "";
+        // let lattitude = "";
+        // let longitude = "";
+        // if (msg.id != null) {
+        //     self.id = msg.id!!;
+        //     username = msg.id!!.username;
+        //     lattitude = msg.id!!.lattitude;
+        //     longitude = msg.id!!.longitude;
+        // }
 
-        let payload = msg.forwardPayload;
-        let owner = self.owner;
+        // let payload = msg.forwardPayload;
+        // let owner = self.owner;
 
-        if (payload != emptySlice()) {
-            if (payload.bits() > 0) {
-                let op: Int = payload.loadUint(32);
+        // if (payload != emptySlice()) {
+        //     if (payload.bits() > 0) {
+        //         let op: Int = payload.loadUint(32);
 
-                if (op == 0) {
-                    let comment: String = payload.asString();
+        //         if (op == 0) {
+        //             let comment: String = payload.asString();
 
-                    // Parse comment format: "username@lat,long"
-                    let parsed: ParsedString = parseComment(comment);
-                    username = parsed.username;
-                    lattitude = parsed.lattitude;
-                    longitude = parsed.longitude;
+        //             // Parse comment format: "username@lat,long"
+        //             let parsed: ParsedString = parseComment(comment);
+        //             username = parsed.username;
+        //             lattitude = parsed.lattitude;
+        //             longitude = parsed.longitude;
 
-                    self.id = IdInfo { username, lattitude, longitude, address: owner };
-                }
-            }
-        }
+        //             self.id = IdInfo { username, lattitude, longitude, address: owner };
+        //         }
+        //     }
+        // }
 
-        // FIXME: validate coordinates, -ve values max size
-        DeployParameters {
-            value: ton("0.2"),
-            mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
-            body: AddId {
-                username,
-                lattitude,
-                longitude,
-                address: owner,
-            }.toCell(),
-            init: initOf Ids(lattitude, longitude, self.minter, self.baseWalletCode), // FIXME
-        }.send();
+        // // FIXME: validate coordinates, -ve values max size
+        // DeployParameters {
+        //     value: ton("0.2"),
+        //     mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
+        //     body: AddId {
+        //         username,
+        //         lattitude,
+        //         longitude,
+        //         address: owner,
+        //     }.toCell(),
+        //     init: initOf Ids(lattitude, longitude, self.minter, self.baseWalletCode), // FIXME
+        // }.send();
+
+        // notify invitor0
+        self.notifyOwner(msg.invitor, MBRP_AMOUNT, msg.forwardPayload);
     }
 
     inline fun internalDeActivate(sender: Address, approved: Bool) { // activates or deacactivates acc by invitor0
@@ -1550,83 +1551,83 @@ contract JettonWalletSharded {
 }
 
 // Parse comment string - format: "username@lat,long"
-inline fun parseComment(comment: String): ParsedString {
-    let username: String = "";
-    let latitude: String = "";
-    let longitude: String = "";
+// inline fun parseComment(comment: String): ParsedString {
+//     let username: String = "";
+//     let latitude: String = "";
+//     let longitude: String = "";
 
-    let atIndex: Int = findChar(comment, "@");
+//     let atIndex: Int = findChar(comment, "@");
 
-    if (atIndex > 0) {
-        username = substring(comment, 0, atIndex);
-        let coords: String = substring(comment, atIndex + 1, length(comment));
-        let commaIndex: Int = findChar(coords, ",");
+//     if (atIndex > 0) {
+//         username = substring(comment, 0, atIndex);
+//         let coords: String = substring(comment, atIndex + 1, length(comment));
+//         let commaIndex: Int = findChar(coords, ",");
 
-        if (commaIndex > 0) {
-            lattitude = substring(coords, 0, commaIndex);
-            longitude = substring(coords, commaIndex + 1, length(coords));
-        }
-    }
+//         if (commaIndex > 0) {
+//             lattitude = substring(coords, 0, commaIndex);
+//             longitude = substring(coords, commaIndex + 1, length(coords));
+//         }
+//     }
 
-    return ParsedString {
-        username,
-        lattitude,
-        longitude,
-    };
-}
+//     return ParsedString {
+//         username,
+//         lattitude,
+//         longitude,
+//     };
+// }
 
-// Find character position in string
-fun findChar(str: String, char: String): Int {
-    let i: Int = 0;
-    let len: Int = length(str);
-    while (i < len) {
-        if (substring(str, i, i + 1) == char) {
-            return i;
-        }
-        i += 1;
-    }
-    return -1;
-}
+// // Find character position in string
+// fun findChar(str: String, char: String): Int {
+//     let i: Int = 0;
+//     let len: Int = length(str);
+//     while (i < len) {
+//         if (substring(str, i, i + 1) == char) {
+//             return i;
+//         }
+//         i += 1;
+//     }
+//     return -1;
+// }
 
-// Get string length by converting to slice
-fun length(s: String): Int {
-    // Convert string to slice and count bits, then divide by 8 for byte length
-    let builder: Builder = beginCell();
-    builder.storeSlice(s.asSlice());
-    let slice: Slice = builder.asSlice();
+// // Get string length by converting to slice
+// fun length(s: String): Int {
+//     // Convert string to slice and count bits, then divide by 8 for byte length
+//     let builder: Builder = beginCell();
+//     builder.storeSlice(s.asSlice());
+//     let slice: Slice = builder.asSlice();
 
-    // For ASCII strings, bits / 8 gives approximate length
-    // This is a workaround since Tact doesn't have native string length
-    return slice.bits() / 8;
-}
+//     // For ASCII strings, bits / 8 gives approximate length
+//     // This is a workaround since Tact doesn't have native string length
+//     return slice.bits() / 8;
+// }
 
-// Extract substring using slice operations
-fun substring(s: String, start: Int, end: Int): String {
-    // Normalize bounds
-    let len: Int = length(s);
-    let st: Int = start < 0 ? 0 : start;
-    let ed: Int = end > len ? len : end;
+// // Extract substring using slice operations
+// fun substring(s: String, start: Int, end: Int): String {
+//     // Normalize bounds
+//     let len: Int = length(s);
+//     let st: Int = start < 0 ? 0 : start;
+//     let ed: Int = end > len ? len : end;
 
-    if (st >= ed) {
-        return "";
-    }
+//     if (st >= ed) {
+//         return "";
+//     }
 
-    // Convert string to slice
-    let slice: Slice = s.asSlice();
+//     // Convert string to slice
+//     let slice: Slice = s.asSlice();
 
-    // Skip 'start' bytes
-    if (st > 0) {
-        let _ = slice.loadBits(st * 8);
-    }
+//     // Skip 'start' bytes
+//     if (st > 0) {
+//         let _ = slice.loadBits(st * 8);
+//     }
 
-    // Load 'end - start' bytes
-    let bytesToLoad: Int = ed - st;
-    if (bytesToLoad > 0) {
-        let resultBuilder: Builder = beginCell();
-        resultBuilder.storeSlice(slice.loadBits(bytesToLoad * 8));
-        // resultBuilder.storeBits(slice.loadBits(bytesToLoad * 8));
-        return resultBuilder.asSlice().asString();
-    }
+//     // Load 'end - start' bytes
+//     let bytesToLoad: Int = ed - st;
+//     if (bytesToLoad > 0) {
+//         let resultBuilder: Builder = beginCell();
+//         resultBuilder.storeSlice(slice.loadBits(bytesToLoad * 8));
+//         // resultBuilder.storeBits(slice.loadBits(bytesToLoad * 8));
+//         return resultBuilder.asSlice().asString();
+//     }
 
-    return "";
-}
+//     return "";
+// }
