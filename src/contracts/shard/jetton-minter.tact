@@ -132,7 +132,7 @@ contract JettonMinterSharded {
 
         self.totalSupply += msg.mintMessage.amount; // + ton("1000"); // invitation by minter
         self.totalAccounts += 1; // only mints to owner just once
-        self.mintable = false;
+        // self.mintable = false; // FIXME: uncomment on mainnet
         // basechain destination is calculated inside deploy function
         DeployParameters {
             value: 0, // ignore msg.tonAmount and use SendMode 64 instead

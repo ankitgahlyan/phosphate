@@ -1007,14 +1007,14 @@ PROGRAM{
       18 s() PUSH
       SDEQ
       700 THROWIFNOT
-      s0 s13 XCHG
+      s13 PUSH
       730 THROWIFNOT
-      s6 PUSH
+      s7 PUSH
           REWRITESTDADDR
       $StdAddress$_get_workchain INLINECALLDICT
       0 EQINT
       734 THROWIFNOT
-      s5 PUSH
+      s6 PUSH
           LDDICT // Throws 9 if Either bit = 1 and ref is not present
           SWAP
           ISNULL
@@ -1027,7 +1027,7 @@ PROGRAM{
           IFELSE
       __tact_context_get INLINECALLDICT
       10000000 PUSHINT
-      17 s() PUSH
+      s5 PUSH
       ADD
       s4 s3 s0 XCHG3
       s4 s3 PUXC
@@ -1060,19 +1060,19 @@ PROGRAM{
       ADD
       GREATER
       703 THROWIFNOT
-      s0 20 s() XCHG
-      s2 PUSH
+      s0 21 s() XCHG
+      s3 PUSH
       ADD
-      s0 19 s() XCHG
+      s0 20 s() XCHG
       INC
+      s0 s5 XCHG
       s0 s4 XCHG
       s3 s1 s3 XCHG3
-      FALSE
-      s0 21 s() XCHG
-      s1 s2 XCHG
       0 PUSHINT
+      s0 22 s() XCHG
+      s1 s2 XCHG
       80 PUSHINT
-      s15 s8 XCHG2
+      s0 s8 XCHG
       NEWC
       $JettonTransferInternal$_store_cell INLINECALLDICT
       s15 16 s() XCHG
@@ -1083,27 +1083,27 @@ PROGRAM{
       s1 s10 XCHG
       s9 16 s() XCHG
       s1 s8 XCHG
-      s7 17 s() XCHG
+      s7 16 s() XCHG
       s1 s6 XCHG
-      s5 17 s() XCHG
+      s5 16 s() XCHG
       s1 s4 XCHG
-      s3 17 s() XCHG
+      s3 16 s() XCHG
       s1 s2 XCHG
       s1 18 s() XCHG
       s0 19 s() XCHG
-      17 s() PUSH
+      16 s() PUSH
       $JettonMinterSharded$_fun_getWalletInit INLINECALLDICT
-      s4 18 s() XCHG
+      s4 19 s() XCHG
       s3 20 s() XCHG
       s2 21 s() XCHG
       $DeployParameters$_constructor_value_mode_body_init INLINECALLDICT
-      s0 20 s() XCHG
+      s0 19 s() XCHG
       $Address$_fun_getShard INLINECALLDICT
       s5 s6 XCHG
       s4 s5 XCHG
       s3 s4 XCHG
       s1 s3 s0 XCHG3
-      s1 20 s() XCHG
+      s1 19 s() XCHG
       $DeployParameters$_fun_toShard INLINECALLDICT
       $ShardDeployParameters$_fun_send INLINECALLDICT
       s11 s15 XCHG
@@ -1116,8 +1116,7 @@ PROGRAM{
       s4 s8 XCHG
       s3 s7 XCHG
       s6 s1 s4 XCHG3
-      s0 s0 s5 XCHG3
-      s0 s3 XCHG
+      s5 s5 s3 XCHG3
       $JettonMinterSharded$_contract_store INLINECALLDICT
     }>
     OVER

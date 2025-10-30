@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: Ids
-BoC Size: 677 bytes
+BoC Size: 857 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 74
+Total structures: 75
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -44,6 +44,10 @@ Signature: `VarAddress{workchain:int32,address:^slice}`
 ### BasechainAddress
 TL-B: `_ hash:Maybe int257 = BasechainAddress`
 Signature: `BasechainAddress{hash:Maybe int257}`
+
+### ParsedString
+TL-B: `_ username:^string lattitude:^string longitude:^string = ParsedString`
+Signature: `ParsedString{username:^string,lattitude:^string,longitude:^string}`
 
 ### IdInfo
 TL-B: `_ username:^string lattitude:^string longitude:^string address:address = IdInfo`
@@ -158,8 +162,8 @@ TL-B: `invite#00000048 target:address id:IdInfo{username:^string,lattitude:^stri
 Signature: `Invite{target:address,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address}}`
 
 ### InviteInternal
-TL-B: `invite_internal#00000001 version:uint10 id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} sender:address invitor:address currentWalletCode:^cell = InviteInternal`
-Signature: `InviteInternal{version:uint10,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},sender:address,invitor:address,currentWalletCode:^cell}`
+TL-B: `invite_internal#00000001 version:uint10 id:Maybe IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} sender:address invitor:address currentWalletCode:^cell forwardPayload:remainder<slice> = InviteInternal`
+Signature: `InviteInternal{version:uint10,id:Maybe IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},sender:address,invitor:address,currentWalletCode:^cell,forwardPayload:remainder<slice>}`
 
 ### Follow
 TL-B: `follow#00000002 target:address amount:coins = Follow`
@@ -298,14 +302,17 @@ TL-B: `_ bits:int257 refs:int257 = SliceBitsAndRefs`
 Signature: `SliceBitsAndRefs{bits:int257,refs:int257}`
 
 ### Ids$Data
-TL-B: `_ root:address lat:int257 long:int257 users:dict<address, int> jettonWalletInitialCode:^cell = Ids`
-Signature: `Ids{root:address,lat:int257,long:int257,users:dict<address, int>,jettonWalletInitialCode:^cell}`
+TL-B: `_ root:address lat:^string long:^string users:dict<address, ^cell> jettonWalletInitialCode:^cell = Ids`
+Signature: `Ids{root:address,lat:^string,long:^string,users:dict<address, ^cell>,jettonWalletInitialCode:^cell}`
 
 ## Get methods
-Total get methods: 1
+Total get methods: 2
 
 ## idsState
 No arguments
+
+## idsUserInfo
+Argument: address
 
 ## Exit codes
 * 2: Stack underflow

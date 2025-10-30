@@ -4,7 +4,12 @@ PROGRAM{
   DECLPROC __tact_context_get_sender
   DECLPROC __tact_dict_set_code
   DECLPROC __tact_dict_get_code
-  DECLPROC __tact_dict_set_slice_int
+  DECLPROC __tact_string_builder_start
+  DECLPROC __tact_string_builder_start_comment
+  DECLPROC __tact_string_builder_end
+  DECLPROC __tact_string_builder_append
+  DECLPROC __tact_dict_get_slice_cell
+  DECLPROC __tact_dict_set_slice_cell
   DECLPROC $Ids$_store
   DECLPROC $Ids$_load
   DECLPROC $Ids$_to_external
@@ -17,14 +22,17 @@ PROGRAM{
   DECLPROC $global_changeShard
   DECLPROC $Builder$_fun_storeShardedStateInit
   DECLPROC $Address$_fun_getShard
+  DECLPROC $String$_fun_asComment
   DECLPROC $JettonWalletSharded$_init_child
   DECLPROC $StateInit$_constructor_code_data
   DECLPROC $Ids$_fun_idsState
+  DECLPROC $Ids$_fun_idsUserInfo
   DECLPROC $Ids$_fun_getWalletInit
   DECLPROC $Ids$_fun_getJettonWalletInit
   DECLPROC $Ids$_fun_getJettonBasechainWalletByOwner
   DECLPROC $Ids$_fun_correctInternalSender
   68272 DECLMETHOD %idsState
+  85940 DECLMETHOD %idsUserInfo
   DECLPROC recv_internal
   65535 DECLMETHOD __tact_selector_hack
   DECLGLOBVAR __tact_context
@@ -51,42 +59,163 @@ PROGRAM{
     NULLSWAPIFNOT
     135 THROWIFNOT
   }>
-  __tact_dict_set_slice_int PROCINLINE:<{
+  __tact_string_builder_start PROCINLINE:<{
+    NIL
+    SWAP
+    TPUSH
+    PUSHNULL
+    TPUSH
+  }>
+  __tact_string_builder_start_comment PROCINLINE:<{
+    NEWC
+    0 PUSHINT
+    SWAP
+    32 STU
+    __tact_string_builder_start INLINECALLDICT
+  }>
+  __tact_string_builder_end PROCINLINE:<{
+    UNCONS
+    SWAP
+    ENDC
+    WHILE:<{
+      OVER
+      ISNULL
+      NOT
+    }>DO<{
+      SWAP
+      UNCONS
+      -ROT
+      STREF
+      ENDC
+    }>
+    NIP
+  }>
+  __tact_string_builder_append PROCREF:<{
+    DUP
+    SREFS
     OVER
+    SBITS
+    WHILE:<{
+      DUP
+      0 GTINT
+      s2 PUSH
+      0 GTINT
+      OR
+    }>DO<{
+      s0 s3 XCHG
+      UNCONS
+      127 PUSHINT
+      s2 PUSH
+      BBITS
+      3 RSHIFT#
+      SUB
+      s0 s5 XCHG
+      3 RSHIFT#
+      s5 s5 XCPU
+      MIN
+      DUP
+      0 GTINT
+      IF:<{
+        DUP
+        3 LSHIFT#
+        s1 s5 XCHG
+        LDSLICEX
+        s0 s3 XCHG
+        STSLICE
+        s0 s1 s4 XCHG3
+      }>
+      -ROT
+      CONS
+      s4 s1 PUSH2
+      SUB
+      0 GTINT
+      IF:<{
+        NEWC
+        SWAP
+        CONS
+        s4 s4 XCHG2
+        SUB
+        3 LSHIFT#
+      }>ELSE<{
+        NIP
+        s3 POP
+        0 GTINT
+        IF:<{
+          LDREF
+          DROP
+          CTOS
+          DUP
+          SREFS
+          OVER
+          SBITS
+        }>ELSE<{
+          0 PUSHINT
+          DUP
+        }>
+      }>
+    }>
+    3 BLKDROP
+  }>
+  __tact_dict_get_slice_cell PROCINLINE:<{
+    -ROT
+        DICTGETREF NULLSWAPIFNOT
+    IF:<{
+    }>ELSE<{
+      DROP
+      PUSHNULL
+    }>
+  }>
+  __tact_dict_set_slice_cell PROCINLINE:<{
+    DUP
     ISNULL
     IF:<{
-      2DROP
+      DROP
       -ROT
           DICTDEL
       DROP
     }>ELSE<{
-      NEWC
-      SWAP
-      STIX
       s1 s3 s3 XCHG3
-      DICTSETB
+          DICTSETREF
     }>
   }>
   $Ids$_store PROCINLINE:<{
     s4 s5 XCHG2
     STSLICE
+    s0 s2 XCHG
+    NEWC
+    STSLICE
     s1 s2 XCHG
-    257 PUSHINT
-    STIX
-    257 PUSHINT
-    STIX
+    STBREFR
+    NEWC
+    s0 s2 XCHG
+    NEWC
+    STSLICE
+    s1 s2 XCHG
+    STBREFR
+    s1 s2 XCHG
     STDICT
+    s1 s2 XCHG
     STREF
+    STBREFR
   }>
   $Ids$_load PROCINLINE:<{
     LDMSGADDR
-    257 PUSHINT
-    LDIX
-    257 PUSHINT
-    LDIX
+    LDREF
+    SWAP
+    CTOS
+    SWAP
+    LDREF
+    SWAP
+    CTOS
+    LDREF
+    SWAP
+    CTOS
+    SWAP
     LDDICT
     LDREF
-    5 -ROLL
+    DROP
+    s3 s5 XCHG
+    s3 s4 XCHG
   }>
   $Ids$_to_external PROCINLINE:<{
   }>
@@ -115,12 +244,9 @@ PROGRAM{
     s3 s4 XCHG
   }>
   $Ids$_contract_init PROCINLINE:<{
+    s3 s3 s0 XCHG3
     PUSHNULL
-    s0 s4 XCHG
-        ONE HASHEXT_SHA256
-    s0 s3 XCHG
-        ONE HASHEXT_SHA256
-    s0 s4 s4 XCHG3
+    SWAP
   }>
   $Ids$_contract_load PROCINLINE:<{
     c4 PUSH
@@ -180,6 +306,12 @@ PROGRAM{
     8 LDU
     DROP
   }>
+  $String$_fun_asComment PROCREF:<{
+    __tact_string_builder_start_comment INLINECALLDICT
+    SWAP
+    __tact_string_builder_append INLINECALLDICT
+    __tact_string_builder_end INLINECALLDICT
+  }>
   $JettonWalletSharded$_init_child PROCREF:<{
     __tact_child_contract_codes GETGLOB
     CTOS
@@ -208,6 +340,12 @@ PROGRAM{
   $Ids$_fun_idsState PROCREF:<{
     s4 s3 s2 PUSH3
     s4 s3 PUSH2
+  }>
+  $Ids$_fun_idsUserInfo PROCREF:<{
+    267 PUSHINT
+    s3 PUSH
+    s0 s2 XCHG
+    __tact_dict_get_slice_cell INLINECALLDICT
   }>
   $Ids$_fun_getWalletInit PROCINLINE:<{
     s5 PUSH
@@ -265,6 +403,12 @@ PROGRAM{
     5 5 BLKDROP2
     $Ids$_to_external INLINECALLDICT
   }>
+  %idsUserInfo PROC:<{
+    $Ids$_contract_load INLINECALLDICT
+    5 ROLL
+    $Ids$_fun_idsUserInfo INLINECALLDICT
+    5 1 BLKDROP2
+  }>
   recv_internal PROC:<{
     SWAP
     CTOS
@@ -315,11 +459,10 @@ PROGRAM{
       $Ids$_fun_correctInternalSender INLINECALLDICT
       267 PUSHINT
       s0 s6 XCHG
-          ONE HASHEXT_SHA256
+      $String$_fun_asComment INLINECALLDICT
       s2 s3 XCHG
       s6 s7 s0 XCHG3
-      257 PUSHINT
-      __tact_dict_set_slice_int INLINECALLDICT
+      __tact_dict_set_slice_cell INLINECALLDICT
       s4 s0 s3 XCHG3
       s0 s2 XCHG
       $Ids$_contract_store INLINECALLDICT

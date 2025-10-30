@@ -56,7 +56,7 @@ const WRONG_WORKCHAIN: Int = 734;
 const WAIT_MORE: Int = 735;
 const NOT_CLOSE_FRIEND: Int = 736;
 const ALREADY_VOUCHED: Int = 737;
-// const PROVIDE_COORDINATES: Int = 738;
+const PROVIDE_COORDINATES: Int = 738;
 
 // CONTRACT_CONSTS
 // Declare a compile-time constant upper-bound for our map

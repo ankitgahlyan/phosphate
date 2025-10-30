@@ -1,5 +1,8 @@
-//  SPDX-License-Identifier: MIT
-//  Copyright © 2025 TON Studio
+struct ParsedString {
+    username: String;
+    lattitude: String;
+    longitude: String;
+}
 
 struct IdInfo {
     username: String;
@@ -190,10 +193,8 @@ message(0x38) RequestUpgradeCode {
 
 message(0x47) UpgradeReqFromMainnet {
     sender: Address;
-    // version: Int as uint10;
 }
 
-// version: Int as uint10;
 message(0x2508d66a) Upgrade {
     rootVersion: Int? as uint10 = null;
     walletVersion: Int? as uint10 = null;
@@ -222,15 +223,13 @@ message(0x48) Invite {
 
 message(1) InviteInternal {
     version: Int as uint10;
-    id: IdInfo;
-    // amount: Int as coins;
+    id: IdInfo?;
     sender: Address;
     invitor: Address;
     currentWalletCode: Cell;
-    // forwardPayload: Slice as remaining;
+    forwardPayload: Slice as remaining;
 }
 
-// forwardPayload: Slice as remaining;
 message(2) Follow {
     target: Address;
     amount: Int as coins;

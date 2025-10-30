@@ -16,17 +16,16 @@ import "../src/contracts/shard/shard-utils";
 
 contract Ids {
     root: Address;
-    lat: Int;
-    long: Int;
-    users: map<Address, Int>;
+    lat: String; // remove?. need just for init
+    long: String;
+    users: map<Address, Cell>;
     jettonWalletInitialCode: Cell;
     
     init(lat: String, long: String, root: Address, jettonWalletInitialCode: Cell) {
-        self.lat = lat.hashData();
-        self.long = long.hashData();
+        self.lat = lat;
+        self.long = long;
         self.root = root;
         self.jettonWalletInitialCode = jettonWalletInitialCode;
-        // self.users.set(address, name.hashData());
     }
     
     // Empty receiver for the deployment,
@@ -40,7 +39,7 @@ contract Ids {
     receive(msg: AddId) {
         self.correctInternalSender(msg.address);
 
-        self.users.set(msg.address, msg.username.hashData());
+        self.users.set(msg.address, msg.username.asComment());
     }
 
     receive(msg: RemoveId) {
@@ -51,7 +50,7 @@ contract Ids {
 
     get fun idsState(): Ids {return self;}
 
-    // get fun idsUserInfo(address: Address):  {}
+    get fun idsUserInfo(address: Address): Cell? {return self.users.get(address)}
 
     inline fun correctInternalSender(address: Address) {
         let sender = parseStdAddress(sender().asSlice());

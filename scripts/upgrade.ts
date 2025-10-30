@@ -1,7 +1,3 @@
-//  SPDX-License-Identifier: MIT
-//  Copyright © 2025 TON Studio
-
-// import { Address, toNano, fromNano } from "@ton/core"
 import { Address, toNano, Cell } from "@ton/ton"
 import { JettonMinterSharded, Upgrade } from "../build/root/Root_JettonMinterSharded"
 
@@ -28,7 +24,6 @@ export async function run(provider: NetworkProvider) {
     const jettonWalletNew = await buildJettonWalletFromEnv(deployerAddress, minterAddress)
     const jettonWalletOnlyNew = await buildJettonWalletOnlyFromEnv(deployerAddress, minterAddress)
 
-    // const wallet = client.open(JettonWalletSharded.fromAddress(walletAddress))
     const deployAmount = toNano("2")
 
     // Ask user which contract(s) to upgrade

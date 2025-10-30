@@ -20,17 +20,32 @@ cell __tact_dict_set_code(cell dict, int id, cell code) inline;
 ;; __tact_dict_get_code
 cell __tact_dict_get_code(cell dict, int id) inline;
 
-;; __tact_dict_set_slice_int
-(cell, ()) __tact_dict_set_slice_int(cell d, int kl, slice k, int v, int vl) inline;
+;; __tact_string_builder_start
+tuple __tact_string_builder_start(builder b) inline;
+
+;; __tact_string_builder_start_comment
+tuple __tact_string_builder_start_comment() inline;
+
+;; __tact_string_builder_end
+cell __tact_string_builder_end(tuple builders) inline;
+
+;; __tact_string_builder_append
+((tuple), ()) __tact_string_builder_append(tuple builders, slice sc) inline_ref;
+
+;; __tact_dict_get_slice_cell
+cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline;
+
+;; __tact_dict_set_slice_cell
+(cell, ()) __tact_dict_set_slice_cell(cell d, int kl, slice k, cell v) inline;
 
 ;; $Ids$_store
-builder $Ids$_store(builder build_0, (slice, int, int, cell, cell) v) inline;
+builder $Ids$_store(builder build_0, (slice, slice, slice, cell, cell) v) inline;
 
 ;; $Ids$_load
-(slice, ((slice, int, int, cell, cell))) $Ids$_load(slice sc_0) inline;
+(slice, ((slice, slice, slice, cell, cell))) $Ids$_load(slice sc_0) inline;
 
 ;; $Ids$_to_external
-(slice, int, int, cell, cell) $Ids$_to_external(((slice, int, int, cell, cell)) v) inline;
+(slice, slice, slice, cell, cell) $Ids$_to_external(((slice, slice, slice, cell, cell)) v) inline;
 
 ;; $Ids$init$_load
 (slice, ((slice, slice, slice, cell))) $Ids$init$_load(slice sc_0) inline;
@@ -39,13 +54,13 @@ builder $Ids$_store(builder build_0, (slice, int, int, cell, cell) v) inline;
 builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v) inline;
 
 ;; $Ids$_contract_init
-(slice, int, int, cell, cell) $Ids$_contract_init(slice $lat, slice $long, slice $root, cell $jettonWalletInitialCode) impure inline;
+(slice, slice, slice, cell, cell) $Ids$_contract_init(slice $lat, slice $long, slice $root, cell $jettonWalletInitialCode) impure inline;
 
 ;; $Ids$_contract_load
-(slice, int, int, cell, cell) $Ids$_contract_load() impure inline;
+(slice, slice, slice, cell, cell) $Ids$_contract_load() impure inline;
 
 ;; $Ids$_contract_store
-() $Ids$_contract_store((slice, int, int, cell, cell) v) impure inline;
+() $Ids$_contract_store((slice, slice, slice, cell, cell) v) impure inline;
 
 ;; $BasechainAddress$_constructor_hash
 ((int)) $BasechainAddress$_constructor_hash(int $hash) inline;
@@ -59,8 +74,14 @@ builder $Builder$_fun_storeShardedStateInit(builder $self, (cell, cell) $init) i
 ;; $Address$_fun_getShard
 int $Address$_fun_getShard(slice $self) impure inline;
 
+;; $String$_fun_asComment
+cell $String$_fun_asComment(slice $self) impure inline;
+
 ;; $Ids$_fun_idsState
-((slice, int, int, cell, cell), (slice, int, int, cell, cell)) $Ids$_fun_idsState((slice, int, int, cell, cell) $self) impure inline;
+((slice, slice, slice, cell, cell), (slice, slice, slice, cell, cell)) $Ids$_fun_idsState((slice, slice, slice, cell, cell) $self) impure inline;
+
+;; $Ids$_fun_idsUserInfo
+((slice, slice, slice, cell, cell), cell) $Ids$_fun_idsUserInfo((slice, slice, slice, cell, cell) $self, slice $address) impure inline;
 
 ;; $JettonWalletSharded$_init_child
 (cell, cell) $JettonWalletSharded$_init_child(slice $owner, slice $minter, int $balance) inline;
@@ -69,16 +90,16 @@ int $Address$_fun_getShard(slice $self) impure inline;
 ((cell, cell)) $StateInit$_constructor_code_data(cell $code, cell $data) inline;
 
 ;; $Ids$_fun_getWalletInit
-((slice, int, int, cell, cell), (cell, cell)) $Ids$_fun_getWalletInit((slice, int, int, cell, cell) $self, slice $address) impure inline;
+((slice, slice, slice, cell, cell), (cell, cell)) $Ids$_fun_getWalletInit((slice, slice, slice, cell, cell) $self, slice $address) impure inline;
 
 ;; $Ids$_fun_getJettonWalletInit
-((slice, int, int, cell, cell), cell) $Ids$_fun_getJettonWalletInit((slice, int, int, cell, cell) $self, slice $address) impure inline;
+((slice, slice, slice, cell, cell), cell) $Ids$_fun_getJettonWalletInit((slice, slice, slice, cell, cell) $self, slice $address) impure inline;
 
 ;; $Ids$_fun_getJettonBasechainWalletByOwner
-((slice, int, int, cell, cell), (int)) $Ids$_fun_getJettonBasechainWalletByOwner((slice, int, int, cell, cell) $self, slice $jettonWalletOwner) impure inline;
+((slice, slice, slice, cell, cell), (int)) $Ids$_fun_getJettonBasechainWalletByOwner((slice, slice, slice, cell, cell) $self, slice $jettonWalletOwner) impure inline;
 
 ;; $Ids$_fun_correctInternalSender
-((slice, int, int, cell, cell), ()) $Ids$_fun_correctInternalSender((slice, int, int, cell, cell) $self, slice $address) impure inline;
+((slice, slice, slice, cell, cell), ()) $Ids$_fun_correctInternalSender((slice, slice, slice, cell, cell) $self, slice $address) impure inline;
 
 
 ;; Wallet_Ids.stdlib.fc
@@ -95,6 +116,14 @@ forall X -> X __tact_not_null(X x) impure inline {
     DICTDEL
 """;
 
+((cell), ()) __tact_dict_set_ref(cell dict, int key_len, slice index, cell value) asm(value index dict key_len) """
+    DICTSETREF
+""";
+
+(cell, int) __tact_dict_get_ref(cell dict, int key_len, slice index) asm(index dict key_len) """
+    DICTGETREF NULLSWAPIFNOT
+""";
+
 slice __tact_context_get_sender() inline {
     return __tact_context_sender;
 }
@@ -109,18 +138,80 @@ cell __tact_dict_get_code(cell dict, int id) inline {
     return data;
 }
 
-(cell, ()) __tact_dict_set_slice_int(cell d, int kl, slice k, int v, int vl) inline {
+tuple __tact_string_builder_start(builder b) inline {
+    return tpush(tpush(empty_tuple(), b), null());
+}
+
+tuple __tact_string_builder_start_comment() inline {
+    return __tact_string_builder_start(begin_cell().store_uint(0, 32));
+}
+
+cell __tact_string_builder_end(tuple builders) inline {
+    (builder b, tuple tail) = uncons(builders);
+    cell c = b.end_cell();
+    while(~ null?(tail)) {
+        (b, tail) = uncons(tail);
+        c = b.store_ref(c).end_cell();
+    }
+    return c;
+}
+
+((tuple), ()) __tact_string_builder_append(tuple builders, slice sc) inline_ref {
+    int sliceRefs = slice_refs(sc);
+    int sliceBits = slice_bits(sc);
+
+    while((sliceBits > 0) | (sliceRefs > 0)) {
+
+        ;; Load the current builder
+        (builder b, tuple tail) = uncons(builders);
+        int remBytes = 127 - (builder_bits(b) / 8);
+        int exBytes = sliceBits / 8;
+
+        ;; Append bits
+        int amount = min(remBytes, exBytes);
+        if (amount > 0) {
+            slice read = sc~load_bits(amount * 8);
+            b = b.store_slice(read);
+        }
+
+        ;; Update builders
+        builders = cons(b, tail);
+
+        ;; Check if we need to add a new cell and continue
+        if (exBytes - amount > 0) {
+            var bb = begin_cell();
+            builders = cons(bb, builders);
+            sliceBits = (exBytes - amount) * 8;
+        } elseif (sliceRefs > 0) {
+            sc = sc~load_ref().begin_parse();
+            sliceRefs = slice_refs(sc);
+            sliceBits = slice_bits(sc);
+        } else {
+            sliceBits = 0;
+            sliceRefs = 0;
+        }
+    }
+
+    return ((builders), ());
+}
+
+cell __tact_dict_get_slice_cell(cell d, int kl, slice k) inline {
+    var (r, ok) = __tact_dict_get_ref(d, kl, k);
+    if (ok) {
+        return r;
+    } else {
+        return null();
+    }
+}
+
+(cell, ()) __tact_dict_set_slice_cell(cell d, int kl, slice k, cell v) inline {
     if (null?(v)) {
         var (r, ok) = __tact_dict_delete(d, kl, k);
         return (r, ());
     } else {
-        return (dict_set_builder(d, kl, k, begin_cell().store_int(v, vl)), ());
+        return __tact_dict_set_ref(d, kl, k, v);
     }
 }
-
-int $String$_fun_hashData(slice $self) impure asm """
-    ONE HASHEXT_SHA256
-""";
 
 builder $global_beginCell() impure asm """
     NEWC
@@ -160,6 +251,13 @@ int $Cell$_fun_hash(cell $self) impure asm """
 
 slice $Address$_fun_asSlice(slice $self) impure asm "NOP";
 
+cell $String$_fun_asComment(slice $self) impure inline {
+    var ($self) = $self;
+    tuple $b = __tact_string_builder_start_comment();
+    $b~__tact_string_builder_append($self);
+    return __tact_string_builder_end($b);
+}
+
 ;; Wallet_Ids.storage.fc
 ;;
 ;; Type: StateInit
@@ -181,29 +279,32 @@ slice $Address$_fun_asSlice(slice $self) impure asm "NOP";
 
 ;;
 ;; Type: Ids
-;; TLB: _ root:address lat:int257 long:int257 users:dict<address, int> jettonWalletInitialCode:^cell = Ids
+;; TLB: _ root:address lat:^string long:^string users:dict<address, ^cell> jettonWalletInitialCode:^cell = Ids
 ;;
 
-builder $Ids$_store(builder build_0, (slice, int, int, cell, cell) v) inline {
+builder $Ids$_store(builder build_0, (slice, slice, slice, cell, cell) v) inline {
     var (v'root, v'lat, v'long, v'users, v'jettonWalletInitialCode) = v;
     build_0 = build_0.store_slice(v'root);
-    build_0 = build_0.store_int(v'lat, 257);
-    build_0 = build_0.store_int(v'long, 257);
-    build_0 = build_0.store_dict(v'users);
-    build_0 = build_0.store_ref(v'jettonWalletInitialCode);
+    build_0 = build_0.store_builder_ref(begin_cell().store_slice(v'lat));
+    var build_1 = begin_cell();
+    build_1 = build_1.store_builder_ref(begin_cell().store_slice(v'long));
+    build_1 = build_1.store_dict(v'users);
+    build_1 = build_1.store_ref(v'jettonWalletInitialCode);
+    build_0 = store_builder_ref(build_0, build_1);
     return build_0;
 }
 
-(slice, ((slice, int, int, cell, cell))) $Ids$_load(slice sc_0) inline {
+(slice, ((slice, slice, slice, cell, cell))) $Ids$_load(slice sc_0) inline {
     var v'root = sc_0~load_msg_addr();
-    var v'lat = sc_0~load_int(257);
-    var v'long = sc_0~load_int(257);
-    var v'users = sc_0~load_dict();
-    var v'jettonWalletInitialCode = sc_0~load_ref();
+    var v'lat = sc_0~load_ref().begin_parse();
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'long = sc_1~load_ref().begin_parse();
+    var v'users = sc_1~load_dict();
+    var v'jettonWalletInitialCode = sc_1~load_ref();
     return (sc_0, (v'root, v'lat, v'long, v'users, v'jettonWalletInitialCode));
 }
 
-(slice, int, int, cell, cell) $Ids$_to_external(((slice, int, int, cell, cell)) v) inline {
+(slice, slice, slice, cell, cell) $Ids$_to_external(((slice, slice, slice, cell, cell)) v) inline {
     var (v'root, v'lat, v'long, v'users, v'jettonWalletInitialCode) = v; 
     return (v'root, v'lat, v'long, v'users, v'jettonWalletInitialCode);
 }
@@ -217,7 +318,7 @@ builder $Ids$_store(builder build_0, (slice, int, int, cell, cell) v) inline {
     return (sc_0, (v'lat, v'long, v'root, v'jettonWalletInitialCode));
 }
 
-(slice, int, int, cell, cell) $Ids$_contract_load() impure inline {
+(slice, slice, slice, cell, cell) $Ids$_contract_load() impure inline {
     slice $sc = get_data().begin_parse();
     __tact_child_contract_codes = $sc~load_ref();
     int $loaded = $sc~load_int(1);
@@ -231,7 +332,7 @@ builder $Ids$_store(builder build_0, (slice, int, int, cell, cell) v) inline {
     }
 }
 
-() $Ids$_contract_store((slice, int, int, cell, cell) v) impure inline {
+() $Ids$_contract_store((slice, slice, slice, cell, cell) v) impure inline {
     builder b = begin_cell();
     b = b.store_ref(__tact_child_contract_codes);
     b = b.store_int(true, 1);
@@ -277,10 +378,10 @@ builder $JettonWalletSharded$init$_store(builder build_0, (slice, slice, int) v)
 ;; Contract Ids functions
 ;;
 
-(slice, int, int, cell, cell) $Ids$_contract_init(slice $lat, slice $long, slice $root, cell $jettonWalletInitialCode) impure inline {
+(slice, slice, slice, cell, cell) $Ids$_contract_init(slice $lat, slice $long, slice $root, cell $jettonWalletInitialCode) impure inline {
     var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = (null(), null(), null(), null(), null());
-    $self'lat = $String$_fun_hashData($lat);
-    $self'long = $String$_fun_hashData($long);
+    $self'lat = $lat;
+    $self'long = $long;
     $self'root = $root;
     $self'jettonWalletInitialCode = $jettonWalletInitialCode;
     return ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode);
@@ -307,35 +408,41 @@ int $Address$_fun_getShard(slice $self) impure inline {
     return $sl~load_uint(8);
 }
 
-((slice, int, int, cell, cell), (slice, int, int, cell, cell)) $Ids$_fun_idsState((slice, int, int, cell, cell) $self) impure inline {
+((slice, slice, slice, cell, cell), (slice, slice, slice, cell, cell)) $Ids$_fun_idsState((slice, slice, slice, cell, cell) $self) impure inline {
     var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
-    var $fresh$ret_126 = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode);
-    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_126);
+    var $fresh$ret_129 = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode);
+    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_129);
 }
 
-((slice, int, int, cell, cell), (cell, cell)) $Ids$_fun_getWalletInit((slice, int, int, cell, cell) $self, slice $address) impure inline {
+((slice, slice, slice, cell, cell), cell) $Ids$_fun_idsUserInfo((slice, slice, slice, cell, cell) $self, slice $address) impure inline {
     var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
-    var ($walletInit'code, $walletInit'data) = $JettonWalletSharded$_init_child($address, $self'root, 0);
-    var $fresh$ret_127 = $StateInit$_constructor_code_data($self'jettonWalletInitialCode, $walletInit'data);
-    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_127);
-}
-
-((slice, int, int, cell, cell), cell) $Ids$_fun_getJettonWalletInit((slice, int, int, cell, cell) $self, slice $address) impure inline {
-    var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
-    var ($init'code, $init'data) = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)~$Ids$_fun_getWalletInit($address);
-    var $fresh$ret_128 = $Builder$_fun_endCell($Builder$_fun_storeShardedStateInit($global_beginCell(), ($init'code, $init'data)));
-    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_128);
-}
-
-((slice, int, int, cell, cell), (int)) $Ids$_fun_getJettonBasechainWalletByOwner((slice, int, int, cell, cell) $self, slice $jettonWalletOwner) impure inline {
-    var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
-    cell $init = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)~$Ids$_fun_getJettonWalletInit($jettonWalletOwner);
-    int $ownerShard = $Address$_fun_getShard($jettonWalletOwner);
-    var $fresh$ret_130 = $BasechainAddress$_constructor_hash($global_changeShard($Cell$_fun_hash($init), $ownerShard));
+    var $fresh$ret_130 = __tact_dict_get_slice_cell($self'users, 267, $address);
     return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_130);
 }
 
-((slice, int, int, cell, cell), ()) $Ids$_fun_correctInternalSender((slice, int, int, cell, cell) $self, slice $address) impure inline {
+((slice, slice, slice, cell, cell), (cell, cell)) $Ids$_fun_getWalletInit((slice, slice, slice, cell, cell) $self, slice $address) impure inline {
+    var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
+    var ($walletInit'code, $walletInit'data) = $JettonWalletSharded$_init_child($address, $self'root, 0);
+    var $fresh$ret_131 = $StateInit$_constructor_code_data($self'jettonWalletInitialCode, $walletInit'data);
+    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_131);
+}
+
+((slice, slice, slice, cell, cell), cell) $Ids$_fun_getJettonWalletInit((slice, slice, slice, cell, cell) $self, slice $address) impure inline {
+    var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
+    var ($init'code, $init'data) = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)~$Ids$_fun_getWalletInit($address);
+    var $fresh$ret_132 = $Builder$_fun_endCell($Builder$_fun_storeShardedStateInit($global_beginCell(), ($init'code, $init'data)));
+    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_132);
+}
+
+((slice, slice, slice, cell, cell), (int)) $Ids$_fun_getJettonBasechainWalletByOwner((slice, slice, slice, cell, cell) $self, slice $jettonWalletOwner) impure inline {
+    var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
+    cell $init = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)~$Ids$_fun_getJettonWalletInit($jettonWalletOwner);
+    int $ownerShard = $Address$_fun_getShard($jettonWalletOwner);
+    var $fresh$ret_134 = $BasechainAddress$_constructor_hash($global_changeShard($Cell$_fun_hash($init), $ownerShard));
+    return (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode), $fresh$ret_134);
+}
+
+((slice, slice, slice, cell, cell), ()) $Ids$_fun_correctInternalSender((slice, slice, slice, cell, cell) $self, slice $address) impure inline {
     var (($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)) = $self;
     var ($sender'workchain, $sender'address) = $global_parseStdAddress($Address$_fun_asSlice(__tact_context_get_sender()));
     var ($wallet'hash) = ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)~$Ids$_fun_getJettonBasechainWalletByOwner($address);
@@ -351,6 +458,13 @@ _ %idsState() method_id(68272) {
     var self = $Ids$_contract_load();
     var res = self~$Ids$_fun_idsState();
     return $Ids$_to_external(res);
+}
+
+_ %idsUserInfo(slice $address) method_id(85940) {
+    slice $address = $address;
+    var self = $Ids$_contract_load();
+    var res = self~$Ids$_fun_idsUserInfo($address);
+    return res;
 }
 
 ;;
@@ -389,7 +503,7 @@ _ %idsState() method_id(68272) {
         var $msg'longitude = in_msg~load_ref().begin_parse();
         var $msg'address = in_msg~load_msg_addr();
         ($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode)~$Ids$_fun_correctInternalSender($msg'address);
-        $self'users~__tact_dict_set_slice_int(267, $msg'address, $String$_fun_hashData($msg'username), 257);
+        $self'users~__tact_dict_set_slice_cell(267, $msg'address, $String$_fun_asComment($msg'username));
         $Ids$_contract_store(($self'root, $self'lat, $self'long, $self'users, $self'jettonWalletInitialCode));
         return ();
     }

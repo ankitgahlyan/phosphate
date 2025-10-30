@@ -114,11 +114,10 @@ contract JettonWalletSharded {
                 return;
             }
         } else { // semantic txn
-            // if (msg.amount == ton("0.1")) { //invite
-            //     self.invite(msg.destination, msg.forwardPayload);
-            //     return;
-            // } else
-            if (msg.amount == ton("0.2")) { //send friend request
+            if (msg.amount == ton("0.1")) { //invite
+                self.invite(msg.destination, null, msg.forwardPayload);
+                return;
+            } else if (msg.amount == ton("0.2")) { //send friend request
                 self.friendRequest(msg.destination, 2 * MBRP_AMOUNT, msg.forwardPayload);
                 return;
             } else if (msg.amount == ton("0.3")) { // confirm friend request
@@ -163,7 +162,7 @@ contract JettonWalletSharded {
             } else if (msg.amount == ton("0.02")) { // forbidden. burn from reported's invitor in both cases (tosViolate or dead)
                 throwUnless(RESERVED_INTERNAL, false);
             } else if (msg.amount == ton("0.98") || msg.amount == ton("0.101")) { // kind of burn
-                self.burn(ton("100")); //// social recovery FIXME not here maybe// refunded later if genuine recovery/noWorries going to your account
+                self.burn(ton("100")); // social recovery FIXME not here maybe refunded later if genuine recovery/noWorries going to your account
             } else if (msg.amount == ton("0.99")) {
                 self.closeFriendsAndVouched.set(msg.destination, false);
                 self.closeFriendsCount += 1; // noNeed to increase connections as that is for msg sending constrains rather than storage & we don't send msg to closeFriends
@@ -223,7 +222,7 @@ contract JettonWalletSharded {
                 self.mintInternal(ton("100"));
             } else if (msg.amount == ton("0.103")) { // validateRecovery
                 self.validateRecovery(msg.sender);
-            } else if (msg.sender == self.invitor0!!) { // de+/activate accounts// for conflict of interest free invites need approvals
+            } else if (self.invitor0 != null && msg.sender == self.invitor0!!) { // de+/activate accounts// for conflict of interest free invites need approvals
                 // let approved = (msg.amount == ton("0.23")) ? true : false; // check true/activate
                 // let approved = (msg.amount == ton("0.23")) ? true : (msg.amount == ton("0.24")) ? false;// check both
                 let approved = true;
@@ -234,7 +233,9 @@ contract JettonWalletSharded {
                 }
                 self.internalDeActivate(msg.sender, approved); // redundant? use reports instead
                 return;
-            }
+            } else {
+                return;
+            } // invalid symantic op
         }
 
         self.notifyOwner(msg.sender, msg.amount, msg.forwardPayload);
@@ -245,7 +246,7 @@ contract JettonWalletSharded {
     //     self.invite()
     // }
 
-    inline fun invite(receiver: Address, id: IdInfo) {
+    inline fun invite(receiver: Address, id: IdInfo?, forwardPayload: Slice) {
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS);
         throwUnless(CONNECTION_EXISTS, !self.connected(receiver));
 
@@ -259,6 +260,7 @@ contract JettonWalletSharded {
                 sender: self.owner,
                 invitor: self.invitor,
                 currentWalletCode: myCode(),
+                forwardPayload,
             }.toCell(),
             init: self.getWalletInit(receiver),
         }.toShard(receiver.getShard()).send(); // FIXME: canBe? removed by adjusting init calculation
@@ -270,17 +272,17 @@ contract JettonWalletSharded {
         throwUnless(ACCOUNT_INACTIVE, self.active); // whatIf transact with old/buggy baseCode, ultimate aim is spend tokens
         // throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount == ton("0.101")); // for social recovery by new/inactive/uninvited self account
         forceBasechain(msg.target);
-        self.invite(msg.target, msg.id);
+        self.invite(msg.target, msg.id, emptySlice());
     }
 
     receive(msg: InviteInternal) {
         self.correctInternalSender(msg.sender);
         throwUnless(ALREADY_INVITED, !self.active);
+        throwUnless(PROVIDE_COORDINATES, msg.forwardPayload != emptySlice() || msg.id != null);
 
         self.invitor = msg.sender;
         self.nominee = msg.sender;
         self.invitor0 = msg.invitor;
-        self.id = msg.id;
 
         if (msg.version > self.version) { // fresh invite
             self.version = msg.version;
@@ -289,19 +291,49 @@ contract JettonWalletSharded {
             self.sendUpgrade(sender());
         }
 
+        let username = "";
+        let lattitude = "";
+        let longitude = "";
+        if (msg.id != null) {
+            self.id = msg.id!!;
+            username = msg.id!!.username;
+            lattitude = msg.id!!.lattitude;
+            longitude = msg.id!!.longitude;
+        }
+
+        let payload = msg.forwardPayload;
+        let owner = self.owner;
+
+        if (payload != emptySlice()) {
+            if (payload.bits() > 0) {
+                let op: Int = payload.loadUint(32);
+
+                if (op == 0) {
+                    let comment: String = payload.asString();
+
+                    // Parse comment format: "username@lat,long"
+                    let parsed: ParsedString = parseComment(comment);
+                    username = parsed.username;
+                    lattitude = parsed.lattitude;
+                    longitude = parsed.longitude;
+
+                    self.id = IdInfo { username, lattitude, longitude, address: owner };
+                }
+            }
+        }
+
+        // FIXME: validate coordinates, -ve values max size
         DeployParameters {
             value: ton("0.2"),
             mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
             body: AddId {
-                username: msg.id.username,
-                lattitude: msg.id.lattitude,
-                longitude: msg.id.longitude,
-                address: self.owner,
+                username,
+                lattitude,
+                longitude,
+                address: owner,
             }.toCell(),
-            init: initOf Ids(msg.id.lattitude, msg.id.longitude, self.minter, self.baseWalletCode), // FIXME
+            init: initOf Ids(lattitude, longitude, self.minter, self.baseWalletCode), // FIXME
         }.send();
-        // let forwardPayload = msg.forwardPayload;
-        // self.notifyOwner(msg.sender, msg.amount, 0, forwardPayload);
     }
 
     inline fun internalDeActivate(sender: Address, approved: Bool) { // activates or deacactivates acc by invitor0
@@ -1517,88 +1549,84 @@ contract JettonWalletSharded {
     // }
 }
 
-//     inline fun parseComment(comment: String): IdInfo {
-//         let parts: StringBuilder = beginString();
-//         let username: String = "";
-//         let coords: String = "";
-//         let latitude: String = "";
-//         let longitude: String = "";
+// Parse comment string - format: "username@lat,long"
+inline fun parseComment(comment: String): ParsedString {
+    let username: String = "";
+    let latitude: String = "";
+    let longitude: String = "";
 
-//         let atIndex: Int = findChar(comment, "@");
+    let atIndex: Int = findChar(comment, "@");
 
-//         if (atIndex > 0) {
-//             username = comment.substring(0, atIndex);
-//             coords = comment.substring(atIndex + 1, comment.length());
-//             let commaIndex: Int = findChar(coords, ",");
+    if (atIndex > 0) {
+        username = substring(comment, 0, atIndex);
+        let coords: String = substring(comment, atIndex + 1, length(comment));
+        let commaIndex: Int = findChar(coords, ",");
 
-//             if (commaIndex > 0) {
-//                 latitude = coords.substring(0, commaIndex);
-//                 longitude = coords.substring(commaIndex + 1, coords.length());
-//             }
-//         }
+        if (commaIndex > 0) {
+            lattitude = substring(coords, 0, commaIndex);
+            longitude = substring(coords, commaIndex + 1, length(coords));
+        }
+    }
 
-//         return IdInfo{
-//             username: username,
-//             lattitude: latitude,
-//             longitude: longitude
-//         };
-//     }
+    return ParsedString {
+        username,
+        lattitude,
+        longitude,
+    };
+}
 
-//     fun findChar(str: String, char: String): Int {
-//         let i: Int = 0;
-//         while (i < str.length()) {
-//             if (str.substring(i, i + 1) == char) {
-//                 return i;
-//             }
-//             i += 1;
-//         }
-//         return -1;
-//     }
+// Find character position in string
+fun findChar(str: String, char: String): Int {
+    let i: Int = 0;
+    let len: Int = length(str);
+    while (i < len) {
+        if (substring(str, i, i + 1) == char) {
+            return i;
+        }
+        i += 1;
+    }
+    return -1;
+}
 
-// inline fun substring(s: String, start: Int, end: Int): String {
-//     // normalize bounds
-//     // let len = s.length();
-//     // let st = start < 0 ? 0 : start;
-//     // let ed = end > len ? len : end;
-//     // if (st >= ed) {
-//     //     return "".asComment().asSlice().loadStringTail(); // return empty string
-//     // }
+// Get string length by converting to slice
+fun length(s: String): Int {
+    // Convert string to slice and count bits, then divide by 8 for byte length
+    let builder: Builder = beginCell();
+    builder.storeSlice(s.asSlice());
+    let slice: Slice = builder.asSlice();
 
-//     // build result by appending characters one by one
-//     let sb: StringBuilder = beginString();
-//     let i: Int = start;
-//     while (i < end) {
-//         // charAt is used as a common name for single-char access; if your toolchain exposes different API,
-//         // replace `s.charAt(i)` with the proper one (e.g. s.getChar(i) or similar).
-//         sb.append(s.charAt(i));
-//         i += 1;
-//     }
-//     return sb.toString();
-// }
+    // For ASCII strings, bits / 8 gives approximate length
+    // This is a workaround since Tact doesn't have native string length
+    return slice.bits() / 8;
+}
 
-// extends fun substring(self: String, start: Int, end: Int): String {
-//     return substring(self, start, end);
-// }
+// Extract substring using slice operations
+fun substring(s: String, start: Int, end: Int): String {
+    // Normalize bounds
+    let len: Int = length(s);
+    let st: Int = start < 0 ? 0 : start;
+    let ed: Int = end > len ? len : end;
 
-// extends fun length(self: String): Int {
-//     // Count characters by probing charAt until it throws (out-of-range).
-//     let i: Int = 0;
-//     while (true) {
-//         // try to read character at index i; if out-of-range this should throw
-//         let _ = self.charAt(i);
-//         i += 1;
-//     }
-//     return i;
-// }
+    if (st >= ed) {
+        return "";
+    }
 
-// extends fun charAt(self: String, index: Int): String {
-//     // Return one-character string at `index`. Rely on built-in substring-like API.
-//     // If the environment provides a native `substr`/`slice` method, this will use it.
-//     // If not, the user can replace the single line below with the appropriate low-level implementation.
-//     return self.substr(index, 1);
-// }
+    // Convert string to slice
+    let slice: Slice = s.asSlice();
 
-// inline extends fun substr(self: String, start: Int, len: Int): String {
-//     let end = start + len;
-//     return substring(self, start, end);
-// }
+    // Skip 'start' bytes
+    if (st > 0) {
+        let _ = slice.loadBits(st * 8);
+    }
+
+    // Load 'end - start' bytes
+    let bytesToLoad: Int = ed - st;
+    if (bytesToLoad > 0) {
+        let resultBuilder: Builder = beginCell();
+        resultBuilder.storeSlice(slice.loadBits(bytesToLoad * 8));
+        // resultBuilder.storeBits(slice.loadBits(bytesToLoad * 8));
+        return resultBuilder.asSlice().asString();
+    }
+
+    return "";
+}
