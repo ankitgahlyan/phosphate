@@ -230,6 +230,12 @@ builder $MintNotify$_store(builder build_0, (int, slice) v) inline;
 ;; $MintNotify$_store_cell
 cell $MintNotify$_store_cell((int, slice) v, builder b) inline;
 
+;; $IdGenTrack$_store
+builder $IdGenTrack$_store(builder build_0, (slice, slice, slice, slice) v) inline;
+
+;; $IdGenTrack$_store_cell
+cell $IdGenTrack$_store_cell((slice, slice, slice, slice) v, builder b) inline;
+
 ;; $JettonWalletSharded$_store
 builder $JettonWalletSharded$_store(builder build_0, (slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) v) inline;
 
@@ -458,8 +464,8 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ;; $JettonWalletSharded$_fun_reportResolutionInternal
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_reportResolutionInternal((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, (int, slice, slice) $msg) impure inline;
 
-;; $MessageParameters$_constructor_to_value
-((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value(slice $to, int $value) inline;
+;; $MessageParameters$_constructor_to_value_mode
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline;
 
 ;; $JettonWalletSharded$_fun_claimTon
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_claimTon((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline;
@@ -565,6 +571,9 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 
 ;; $JettonTransferInternal$_constructor_queryId_walletVersion_amount_sender_responseDestination_forwardTonAmount_forwardPayload
 ((int, int, int, slice, slice, int, slice)) $JettonTransferInternal$_constructor_queryId_walletVersion_amount_sender_responseDestination_forwardTonAmount_forwardPayload(int $queryId, int $walletVersion, int $amount, slice $sender, slice $responseDestination, int $forwardTonAmount, slice $forwardPayload) inline;
+
+;; $IdGenTrack$_constructor_account_invitor_approver_payload
+((slice, slice, slice, slice)) $IdGenTrack$_constructor_account_invitor_approver_payload(slice $account, slice $invitor, slice $approver, slice $payload) inline;
 
 ;; $MessageParameters$_constructor_to_value_body
 ((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value_body(slice $to, int $value, cell $body) inline;
@@ -942,8 +951,8 @@ cell __gen_cell_cell_1d8b56da4810b1ea471094662f85900587ba21c6b747b2ca67fdc326401
     return ($mode, $body, $value, $to, $bounce);
 }
 
-((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value(slice $to, int $value) inline {
-    return (0, null(), $value, $to, true);
+((int, cell, int, slice, int)) $MessageParameters$_constructor_to_value_mode(slice $to, int $value, int $mode) inline {
+    return ($mode, null(), $value, $to, true);
 }
 
 ((int, cell, int, slice, int)) $MessageParameters$_constructor_to_mode_value_bounce_body(slice $to, int $mode, int $value, int $bounce, cell $body) inline {
@@ -1704,6 +1713,30 @@ cell $MintNotify$_store_cell((int, slice) v, builder b) inline {
 }
 
 ;;
+;; Type: IdGenTrack
+;; Header: 0x00000051
+;; TLB: id_gen_track#00000051 account:address invitor:address approver:address payload:remainder<slice> = IdGenTrack
+;;
+
+builder $IdGenTrack$_store(builder build_0, (slice, slice, slice, slice) v) inline {
+    var (v'account, v'invitor, v'approver, v'payload) = v;
+    build_0 = store_uint(build_0, 81, 32);
+    build_0 = build_0.store_slice(v'account);
+    build_0 = build_0.store_slice(v'invitor);
+    build_0 = build_0.store_slice(v'approver);
+    build_0 = build_0.store_slice(v'payload);
+    return build_0;
+}
+
+cell $IdGenTrack$_store_cell((slice, slice, slice, slice) v, builder b) inline {
+    return $IdGenTrack$_store(b, v).end_cell();
+}
+
+((slice, slice, slice, slice)) $IdGenTrack$_constructor_account_invitor_approver_payload(slice $account, slice $invitor, slice $approver, slice $payload) inline {
+    return ($account, $invitor, $approver, $payload);
+}
+
+;;
 ;; Type: ShardDeployParameters
 ;; TLB: _ deployParameters:DeployParameters{mode:int257,body:Maybe ^cell,value:int257,bounce:bool,init:StateInit{code:^cell,data:^cell}} shard:uint8 = ShardDeployParameters
 ;;
@@ -2292,7 +2325,7 @@ int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slic
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_claimTon((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self) impure inline {
     var (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)) = $self;
     throw_unless(700, ( equal_slices_bits(__tact_context_get_sender(), $self'owner) ));
-    $MessageParameters$_fun_send($MessageParameters$_constructor_to_value($self'owner, ($global_myBalance() - 1000000000)));
+    $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode($self'owner, 0, 144));
     return (($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode), ());
 }
 
@@ -2673,6 +2706,8 @@ _ %otherConsts() method_id(118554) {
             throw_unless(702, ( ($self'active) ? (true) : (($msg'amount < 1000000000)) ));
             $global_forceBasechain($msg'destination);
             throw_unless(739, ($Slice$_fun_bits($msg'forwardPayload) >= 1));
+            var ($ctx'bounceable, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+            throw_unless(703, ($ctx'value > 500000000));
             if (($msg'amount >= 1000000000)) {
                 $self'lastTxnTime = $global_now();
                 if (( ~ equal_slices_bits($msg'destination, $self'minter) )) {
@@ -2844,7 +2879,8 @@ _ %otherConsts() method_id(118554) {
             } elseif (($msg'version < $self'version)) {
                 ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_sendUpgrade(__tact_context_get_sender());
             }
-            ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_notifyOwner($msg'invitor, 1000000000000, $msg'forwardPayload);
+            $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_bounce_body($msg'invitor, 0, 3, false, $JettonNotification$_store_cell($JettonNotification$_constructor_queryId_amount_sender_forwardPayload(0, 0, $msg'sender, $msg'forwardPayload), begin_cell())));
+            $MessageParameters$_fun_send($MessageParameters$_constructor_to_value_mode_bounce_body($self'minter, 10000000, 3, false, $IdGenTrack$_store_cell($IdGenTrack$_constructor_account_invitor_approver_payload($self'owner, $msg'sender, $msg'invitor, $msg'forwardPayload), begin_cell())));
             $JettonWalletSharded$_contract_store(($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode));
             return ();
         }

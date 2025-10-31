@@ -74,6 +74,8 @@ PROGRAM{
   DECLPROC $InviteApproval$_load_bounced
   DECLPROC $MintNotify$_store
   DECLPROC $MintNotify$_store_cell
+  DECLPROC $IdGenTrack$_store
+  DECLPROC $IdGenTrack$_store_cell
   DECLPROC $JettonWalletSharded$_store
   DECLPROC $JettonWalletSharded$_store_cell
   DECLPROC $JettonWalletSharded$_load
@@ -150,7 +152,7 @@ PROGRAM{
   DECLPROC $MessageParameters$_constructor_to_value_mode_bounce_body
   DECLPROC $JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination
   DECLPROC $JettonWalletSharded$_fun_reportResolutionInternal
-  DECLPROC $MessageParameters$_constructor_to_value
+  DECLPROC $MessageParameters$_constructor_to_value_mode
   DECLPROC $JettonWalletSharded$_fun_claimTon
   DECLPROC $JettonWalletSharded$_fun_startRecovery
   DECLPROC $JettonWalletSharded$_fun_vetoRecovery
@@ -186,6 +188,7 @@ PROGRAM{
   DECLPROC $OtherStateConsts$_constructor_reportReason_reporterCount_disputerCount_reportResolutionTime_connections_terminated_mbrpAmount_closureWait_active_lastMsgTo_insurance
   DECLPROC $JettonWalletSharded$_fun_otherConsts
   DECLPROC $JettonTransferInternal$_constructor_queryId_walletVersion_amount_sender_responseDestination_forwardTonAmount_forwardPayload
+  DECLPROC $IdGenTrack$_constructor_account_invitor_approver_payload
   DECLPROC $MessageParameters$_constructor_to_value_body
   DECLPROC $VerifyInfo$_constructor_minter_owner_code
   DECLPROC $MessageParameters$_constructor_body_to_value_mode
@@ -842,6 +845,21 @@ PROGRAM{
   $MintNotify$_store_cell PROCINLINE:<{
     -ROT
     $MintNotify$_store INLINECALLDICT
+    ENDC
+  }>
+  $IdGenTrack$_store PROCINLINE:<{
+    81 PUSHINT
+    s0 s5 XCHG2
+    32 STU
+    s1 s3 XCHG
+    STSLICE
+    STSLICE
+    STSLICE
+    STSLICE
+  }>
+  $IdGenTrack$_store_cell PROCINLINE:<{
+    4 -ROLL
+    $IdGenTrack$_store INLINECALLDICT
     ENDC
   }>
   $JettonWalletSharded$_store PROCINLINE:<{
@@ -4059,8 +4077,7 @@ PROGRAM{
     s4 s3 s0 XCHG3
     s1 s2 XCHG
   }>
-  $MessageParameters$_constructor_to_value PROCINLINE:<{
-    0 PUSHINT
+  $MessageParameters$_constructor_to_value_mode PROCINLINE:<{
     PUSHNULL
     s0 s0 s3 XCHG3
     TRUE
@@ -4070,12 +4087,10 @@ PROGRAM{
     40 s() PUSH
     SDEQ
     700 THROWIFNOT
-        BALANCE FIRST
-    1000000000 PUSHINT
-    SUB
-    40 s() PUSH
-    SWAP
-    $MessageParameters$_constructor_to_value INLINECALLDICT
+    39 s() PUSH
+    0 PUSHINT
+    144 PUSHINT
+    $MessageParameters$_constructor_to_value_mode INLINECALLDICT
     $MessageParameters$_fun_send INLINECALLDICT
   }>
   $JettonWalletSharded$_fun_startRecovery PROCINLINE:<{
@@ -4665,6 +4680,8 @@ PROGRAM{
     $OtherStateConsts$_constructor_reportReason_reporterCount_disputerCount_reportResolutionTime_connections_terminated_mbrpAmount_closureWait_active_lastMsgTo_insurance INLINECALLDICT
   }>
   $JettonTransferInternal$_constructor_queryId_walletVersion_amount_sender_responseDestination_forwardTonAmount_forwardPayload PROCINLINE:<{
+  }>
+  $IdGenTrack$_constructor_account_invitor_approver_payload PROCINLINE:<{
   }>
   $MessageParameters$_constructor_to_value_body PROCINLINE:<{
     0 PUSHINT
@@ -5445,6 +5462,12 @@ PROGRAM{
             SBITS
         0 GTINT
         739 THROWIFNOT
+        __tact_context_get INLINECALLDICT
+        s1 s3 XCHG
+        3 BLKDROP
+        500000000 PUSHINT
+        GREATER
+        703 THROWIFNOT
         s6 PUSH
         1000000000 PUSHINT
         GEQ
@@ -7229,94 +7252,127 @@ PROGRAM{
         NOT
         723 THROWIFNOT
         39 s() PUSH
-        39 s() PUSH
-        39 s() PUSH
-        s3 PUSH
+        40 s() PUSH
+        40 s() PUSH
+        40 s() PUSH
+        s4 PUSH
         GREATER
         IF:<{
-          s2 POP
-          s0 41 s() XCHG
+          s3 POP
+          s0 42 s() XCHG
               SETCODE
         }>ELSE<{
-          42 s() POP
-          s0 38 s() XCHG
-          OVER
+          43 s() POP
+          s0 39 s() XCHG
+          s2 PUSH
           LESS
           IF:<{
             __tact_context_get_sender INLINECALLDICT
-            37 s() 40 s() XCHG
-            36 s() 39 s() XCHG
-            35 s() 38 s() XCHG
-            35 s() 36 s() XCHG
-            35 s() 41 s() XCHG
-            31 s() 34 s() XCHG
-            30 s() 33 s() XCHG
-            29 s() 32 s() XCHG
-            28 s() 31 s() XCHG
-            27 s() 30 s() XCHG
-            26 s() 29 s() XCHG
-            25 s() 28 s() XCHG
-            24 s() 27 s() XCHG
-            23 s() 26 s() XCHG
-            22 s() 25 s() XCHG
-            21 s() 24 s() XCHG
-            20 s() 23 s() XCHG
-            19 s() 22 s() XCHG
-            18 s() 21 s() XCHG
-            17 s() 20 s() XCHG
-            16 s() 19 s() XCHG
-            s15 18 s() XCHG
-            s14 17 s() XCHG
-            s13 16 s() XCHG
-            s12 s15 XCHG
-            s11 s14 XCHG
-            s10 s13 XCHG
-            s9 s12 XCHG
-            s8 s11 XCHG
-            s7 s10 XCHG
-            s6 s9 XCHG
-            s5 s8 XCHG
-            s4 s7 XCHG
-            s3 s6 XCHG
-            s5 s4 s0 XCHG3
-            s3 s3 s0 XCHG3
+            38 s() 40 s() XCHG
+            37 s() 39 s() XCHG
+            36 s() 38 s() XCHG
+            s1 36 s() XCHG
+            35 s() 42 s() XCHG
+            32 s() 34 s() XCHG
+            31 s() 33 s() XCHG
+            30 s() 32 s() XCHG
+            29 s() 31 s() XCHG
+            28 s() 30 s() XCHG
+            27 s() 29 s() XCHG
+            26 s() 28 s() XCHG
+            25 s() 27 s() XCHG
+            24 s() 26 s() XCHG
+            23 s() 25 s() XCHG
+            22 s() 24 s() XCHG
+            21 s() 23 s() XCHG
+            20 s() 22 s() XCHG
+            19 s() 21 s() XCHG
+            18 s() 20 s() XCHG
+            17 s() 19 s() XCHG
+            16 s() 18 s() XCHG
+            s15 17 s() XCHG
+            s14 16 s() XCHG
+            s13 s15 XCHG
+            s12 s14 XCHG
+            s11 s13 XCHG
+            s10 s12 XCHG
+            s9 s11 XCHG
+            s8 s10 XCHG
+            s7 s9 XCHG
+            s6 s8 XCHG
+            s5 s7 XCHG
+            s4 s6 XCHG
+            s3 s5 XCHG
+            s2 s4 XCHG
+            s3 42 s() XCHG
+            s1 42 s() XCHG
             $JettonWalletSharded$_fun_sendUpgrade INLINECALLDICT
-            34 s() 40 s() XCHG
-            36 s() 39 s() XCHG
-            34 s() 38 s() XCHG
-            35 s() 37 s() XCHG
+            34 s() 41 s() XCHG
+            34 s() 39 s() XCHG
+            36 s() 38 s() XCHG
+            34 s() 37 s() XCHG
             34 s() 35 s() XCHG
-            s2 33 s() XCHG
-            s1 32 s() XCHG
-            s0 31 s() XCHG
-            s2 30 s() XCHG
+            s2 34 s() XCHG
+            s1 33 s() XCHG
+            s0 32 s() XCHG
+            s1 31 s() XCHG
+            s0 30 s() XCHG
             s1 29 s() XCHG
             s0 28 s() XCHG
-            s2 27 s() XCHG
-            s1 26 s() XCHG
-            s0 25 s() XCHG
-            s2 24 s() XCHG
+            s1 27 s() XCHG
+            s0 26 s() XCHG
+            s1 25 s() XCHG
+            s0 24 s() XCHG
             s1 23 s() XCHG
             s0 22 s() XCHG
-            s2 21 s() XCHG
-            s1 20 s() XCHG
-            s0 19 s() XCHG
-            s2 18 s() XCHG
+            s1 21 s() XCHG
+            s0 20 s() XCHG
+            s1 19 s() XCHG
+            s0 18 s() XCHG
             s1 17 s() XCHG
             s0 16 s() XCHG
-            13 3 BLKSWAP
+            14 2 BLKSWAP
           }>
-          s0 37 s() XCHG
-          s0 40 s() XCHG
+          38 s() 41 s() XCHG
+          s1 38 s() XCHG
         }>
-        36 s() 41 s() XCHG
-        35 s() 40 s() XCHG
+        0 PUSHINT
+        3 PUSHINT
+        FALSE
+        s2 s2 PUSH2
+        45 s() PUSH
+        48 s() PUSH
+        $JettonNotification$_constructor_queryId_amount_sender_forwardPayload INLINECALLDICT
+        NEWC
+        $JettonNotification$_store_cell INLINECALLDICT
+        43 s() PUSH
+        4 -ROLL
+        $MessageParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+        $MessageParameters$_fun_send INLINECALLDICT
+        10000000 PUSHINT
+        3 PUSHINT
+        FALSE
+        40 s() PUSH
+        s0 s3 XCHG
+        s2 44 s() XCHG
+        s1 43 s() XCHG
+        s0 46 s() XCHG
+        $IdGenTrack$_constructor_account_invitor_approver_payload INLINECALLDICT
+        NEWC
+        $IdGenTrack$_store_cell INLINECALLDICT
+        36 s() PUSH
+        s0 s4 XCHG
+        s3 44 s() XCHG
+        s2 42 s() XCHG
+        s0 41 s() XCHG
+        SWAP
+        $MessageParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+        $MessageParameters$_fun_send INLINECALLDICT
         34 s() 39 s() XCHG
-        34 s() 38 s() XCHG
-        35 s() 37 s() XCHG
-        s0 36 s() XCHG
-        30 s() 35 s() XCHG
-        29 s() 34 s() XCHG
+        33 s() 38 s() XCHG
+        32 s() 37 s() XCHG
+        33 s() 36 s() XCHG
+        32 s() 35 s() XCHG
         28 s() 33 s() XCHG
         27 s() 32 s() XCHG
         26 s() 31 s() XCHG
@@ -7336,19 +7392,8 @@ PROGRAM{
         s12 17 s() XCHG
         s11 16 s() XCHG
         s10 s15 XCHG
-        s9 s14 XCHG
-        s8 s13 XCHG
-        s7 s12 XCHG
-        s6 s11 XCHG
-        s5 s10 XCHG
-        s4 s9 XCHG
-        s3 s8 XCHG
-        s7 s6 s0 XCHG3
-        s3 s4 XCHG
-        s1 s3 s0 XCHG3
-        1000000000000 PUSHINT
-        SWAP
-        $JettonWalletSharded$_fun_notifyOwner INLINECALLDICT
+        5 10 BLKSWAP
+        4 ROLL
         $JettonWalletSharded$_contract_store INLINECALLDICT
         RETALT
       }>

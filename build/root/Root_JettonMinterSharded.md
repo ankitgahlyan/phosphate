@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: JettonMinterSharded
-BoC Size: 42874 bytes
+BoC Size: 43149 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 77
+Total structures: 78
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -288,6 +288,10 @@ Signature: `StopEngageMint{sender:address}`
 ### MintNotify
 TL-B: `mint_notify#00000046 amount:coins sender:address = MintNotify`
 Signature: `MintNotify{amount:coins,sender:address}`
+
+### IdGenTrack
+TL-B: `id_gen_track#00000051 account:address invitor:address approver:address payload:remainder<slice> = IdGenTrack`
+Signature: `IdGenTrack{account:address,invitor:address,approver:address,payload:remainder<slice>}`
 
 ### SliceBitsAndRefs
 TL-B: `_ bits:int257 refs:int257 = SliceBitsAndRefs`

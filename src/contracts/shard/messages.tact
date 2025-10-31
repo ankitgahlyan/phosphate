@@ -390,6 +390,13 @@ message(0x46) MintNotify {
     sender: Address;
 }
 
+message(0x51) IdGenTrack {
+    account: Address;
+    invitor: Address;
+    approver: Address;
+    payload: Slice as remaining;
+}
+
 // 48 invite
 // 49 idInfo
 // 50 RemoveId

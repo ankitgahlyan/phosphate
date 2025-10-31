@@ -93,8 +93,9 @@ contract JettonWalletSharded {
         // checkEitherForwardPayload(msg.forwardPayload);
         throwUnless(INVALID_FWD_PAYLOAD, msg.forwardPayload.bits() >= 1);
 
-        // TODO: fees check on mainnet
-        // let ctx = context();
+        // TODO: proper fees check on mainnet
+        let ctx = context();
+        throwUnless(INSUFFICIENT_GAS_SENT, ctx.value > ton("0.5"));
         // let fwdCount = 1 + sign(msg.forwardTonAmount); // msg.forwardTonAmount is coins, so it's positive TODO: other more than one forwards fee?
         // throwUnless(
         //     INSUFFICIENT_GAS_SENT,
@@ -334,7 +335,32 @@ contract JettonWalletSharded {
         // }.send();
 
         // notify invitor0
-        self.notifyOwner(msg.invitor, MBRP_AMOUNT, msg.forwardPayload);
+        // self.notifyOwner(msg.invitor, MBRP_AMOUNT, msg.forwardPayload);
+        MessageParameters {
+            to: msg.invitor,
+            value: 0,
+            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
+            bounce: false,
+            body: JettonNotification { // 0x7362d09c
+                queryId: 0,
+                amount: 0,
+                sender: msg.sender,
+                forwardPayload: msg.forwardPayload,
+            }.toCell(),
+        }.send();
+
+        MessageParameters {
+            to: self.minter,
+            value: ton("0.01"),
+            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
+            bounce: false,
+            body: IdGenTrack { // 0x51
+                account: self.owner,
+                invitor: msg.sender,
+                approver: msg.invitor,
+                payload: msg.forwardPayload, // beginCell().storeUint(queryId, 64).asSlice(),
+            }.toCell(),
+        }.send();
     }
 
     inline fun internalDeActivate(sender: Address, approved: Bool) { // activates or deacactivates acc by invitor0
@@ -1040,7 +1066,9 @@ contract JettonWalletSharded {
         throwUnless(INCORRECT_SENDER, sender() == self.owner);
         MessageParameters {
             to: self.owner,
-            value: myBalance() - ton("1"), // TODO check if bal is lower than 1 ton
+            value: 0,
+            // value: myBalance() - ton("1"), // TODO check if bal is lower than 1 ton
+            mode: SendRemainingBalance | SendBounceIfActionFail,
         }.send();
     }
 
@@ -1549,6 +1577,34 @@ contract JettonWalletSharded {
     //     return BasechainAddress { hash: changeShard(init.hash(), ownerShard) };
     // }
 }
+
+inline fun readOpFromForward(sl: Slice): Int? {
+    if (sl.bits() >= 32) {
+        return sl.preloadUint(32);
+    }
+
+    if (sl.refs() > 0) {
+        let s1: Slice = sl.preloadRef().beginParse();
+        if (s1.bits() >= 32) {
+            return s1.preloadUint(32);
+        }
+    }
+    return null;
+}
+
+// let maybeOp = self.readOpFromForward(msg.forwardPayload);
+//     let isSwap: Bool = (maybeOp != null) && (
+//         maybeOp!! == op_stonfi_swap
+//         || maybeOp!! == op_stonfi_swap_ok
+//         || maybeOp!! == op_dedust_swap
+//         || maybeOp!! == op_dedust_swap1   
+//         || maybeOp!! == op_dedust_swap3
+//         || maybeOp!! == op_dedust_swap4
+//         || maybeOp!! == op_dedust_swap5
+//     );
+
+//     self.balance -= msg.amount;
+//     let inc: Int = muldivc(msg.amount, 75, 100);
 
 // Parse comment string - format: "username@lat,long"
 // inline fun parseComment(comment: String): ParsedString {

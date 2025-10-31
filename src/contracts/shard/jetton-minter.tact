@@ -205,6 +205,11 @@ contract JettonMinterSharded {
         }
     }
 
+    receive(msg: IdGenTrack) { // for single place to query new accs
+        emit(msg.payload.asCell());
+        emit(msg.toCell());
+    }
+
     receive(msg: MintNotify) {
         self.totalSupply += msg.amount; // FIXME: checks
     }
