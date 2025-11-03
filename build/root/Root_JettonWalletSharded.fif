@@ -7336,10 +7336,11 @@ PROGRAM{
           38 s() 41 s() XCHG
           s1 38 s() XCHG
         }>
-        0 PUSHINT
+        5000000 PUSHINT
         3 PUSHINT
         FALSE
-        s2 s2 PUSH2
+        0 PUSHINT
+        DUP
         45 s() PUSH
         48 s() PUSH
         $JettonNotification$_constructor_queryId_amount_sender_forwardPayload INLINECALLDICT

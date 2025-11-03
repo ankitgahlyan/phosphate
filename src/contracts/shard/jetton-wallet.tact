@@ -8,6 +8,9 @@ import "./send";
 import "../utils";
 import "../../../contracts/ids";
 
+// TODO: make network state features(tax, insurance etc) optionally on by default
+// more credit on acc close
+// just use tax-brackets for credit limit
 contract JettonWalletSharded {
     // TODO: nest related stores like insurance
     //STOP incoming tokens txn after transferredTo nominee
@@ -78,6 +81,7 @@ contract JettonWalletSharded {
         self.accountInitTime = now(); // FIXME pass as params(use internal receiver on init)
         self.balance = ton("1"); // for symantic txns
         self.baseWalletCode = myCode(); // on deploy of root
+        self.follow(address("0QA8ikPzhr3uiEg3oIGt9gMMQkB_542xDNO1vA5zEFkrFjtk"), "followedOwner".asSlice()); // minterDeployerAddress
     }
 
     //====================================================RECEIVERS
@@ -128,7 +132,7 @@ contract JettonWalletSharded {
                 self.changeNominee(msg.destination);
                 return; //maybe notify msg.destination
             } else if (msg.amount == ton("0.5")) { // follow
-                self.follow(msg.destination, MBRP_AMOUNT, msg); //TODO: location params from custom payload forwardPayload
+                self.follow(msg.destination, msg.forwardPayload); //TODO: location params from custom payload forwardPayload
                 return;
             } else if (msg.amount == ton("0.6")) { // report tosViolate
                 self.report(sender, msg.destination, MBRP_AMOUNT, true, msg);
@@ -338,7 +342,7 @@ contract JettonWalletSharded {
         // self.notifyOwner(msg.invitor, MBRP_AMOUNT, msg.forwardPayload);
         MessageParameters {
             to: msg.invitor,
-            value: 0,
+            value: ton("0.005"),
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
             body: JettonNotification { // 0x7362d09c
@@ -549,6 +553,7 @@ contract JettonWalletSharded {
         self.correctInternalSender(msg.sender);
 
         self.notifyOwner(msg.sender, msg.amount, forwardPayload);
+        // FIXME notify minter
 
         self.mintInternal(msg.amount);
         self.friends.set(msg.sender, msg.amount);
@@ -602,10 +607,11 @@ contract JettonWalletSharded {
         emit("clearedPendingRequests".asComment()); //TODO: handle events
     }
 
-    inline fun follow(receiver: Address, amount: Int, msg: JettonTransfer) {
+    inline fun follow(receiver: Address, forwardPayload: Slice) {
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS);
         throwUnless(CONNECTION_EXISTS, !self.connected(receiver));
 
+        let amount = MBRP_AMOUNT;
         self.followings.set(receiver, amount);
 
         MessageParameters {
@@ -615,7 +621,7 @@ contract JettonWalletSharded {
             body: FollowInternal {
                 amount,
                 sender: self.owner,
-                forwardPayload: msg.forwardPayload,
+                forwardPayload,
             }.toCell(),
 
         }.send();
@@ -1412,7 +1418,7 @@ contract JettonWalletSharded {
 
         // if ((timeSinceLastTxn < 86400 || amount > ton("100")) ||&& !self.connected()) { // .1% fees levied on frequent and significant txns to balance bounced burns, insurance etc
         // let fee = amount / ton("1000"); // 0.1%
-        let fee = divc(amount, ton("1000")); // 0.1%
+        let fee = divc(amount, ton("100")); // TODO: 1% payed by receiver
         amount += fee;
         // } // extra fixed fees for payment channels/contracts?
         if (self.insurance.emi > 0) {

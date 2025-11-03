@@ -1,6 +1,6 @@
 # Tact compilation report
 Contract: JettonMinterSharded
-BoC Size: 43149 bytes
+BoC Size: 43153 bytes
 
 ## Structures (Structs and Messages)
 Total structures: 78
