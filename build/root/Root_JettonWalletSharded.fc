@@ -323,6 +323,9 @@ int $global_changeShard(int $hash, int $shard) impure inline;
 ;; $JettonWalletSharded$_fun_follow
 ((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell), ()) $JettonWalletSharded$_fun_follow((slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $self, slice $receiver, slice $forwardPayload) impure inline;
 
+;; $Cell$_fun_asSlice
+slice $Cell$_fun_asSlice(cell $self) impure inline;
+
 ;; $JettonWalletSharded$_contract_init
 (slice, slice, slice, slice, slice, slice, (slice, slice, slice, slice), int, int, int, cell, int, (int, int), cell, cell, cell, int, int, cell, cell, cell, cell, int, int, int, int, int, int, int, int, int, slice, int, int, int, cell) $JettonWalletSharded$_contract_init(slice $owner, slice $minter, int $balance) impure inline;
 
@@ -343,9 +346,6 @@ int $global_changeShard(int $hash, int $shard) impure inline;
 
 ;; $global_contractShardBasechainAddress
 (int) $global_contractShardBasechainAddress((cell, cell) $s) impure inline;
-
-;; $Cell$_fun_asSlice
-slice $Cell$_fun_asSlice(cell $self) impure inline;
 
 ;; $StateInit$_fun_hasSameBasechainAddressWithoutShard
 int $StateInit$_fun_hasSameBasechainAddressWithoutShard((cell, cell) $self, slice $address) impure inline;
@@ -803,7 +803,10 @@ int $Cell$_fun_hash(cell $self) impure asm """
     LDMSGADDR
 """;
 
-slice $String$_fun_asSlice(slice $self) impure asm "NOP";
+slice $Cell$_fun_asSlice(cell $self) impure inline {
+    var ($self) = $self;
+    return $Cell$_fun_beginParse($self);
+}
 
 int $global_divc(int $x, int $y) impure asm """
     DIVC
@@ -870,11 +873,6 @@ int $Slice$_fun_bits(slice $self) impure asm """
     SBITS
 """;
 
-slice $Cell$_fun_asSlice(cell $self) impure inline {
-    var ($self) = $self;
-    return $Cell$_fun_beginParse($self);
-}
-
 int $Context$_fun_readForwardFee((int, slice, int, slice) $self) impure asm """
     LDMSGADDR   // load dest:MsgAddressInt
     LDGRAMS     // load value:CurrencyCollection
@@ -912,9 +910,9 @@ slice __gen_slice_address_6bab888c3902386f162df2bb34177e700fa627a4303fe34527b725
     B{b5ee9c72410101010024000043800791487e70d7bdd10906f41035bec06188480ffcf1b6219a76b781ce620b2562d0b8e0d020} B>boc <s PUSHSLICE
 """;
 
-;; String "followedOwner"
-slice __gen_slice_string_ce9461de1d9f5914158b05255906a17ef190a04e761c689c64139683a983bddb() asm """
-    B{b5ee9c7241010101000f00001a666f6c6c6f7765644f776e65720d80274b} B>boc <s PUSHSLICE
+;; Cell eS3Ppx4eOxua9FhSBAtW8wQmYtn+/c4gK5leX0v25AQ=
+cell __gen_cell_cell_792dcfa71e1e3b1b9af45852040b56f3042662d9fefdce202b995e5f4bf6e404() asm """
+    B{b5ee9c7241010101001300002200000000666f6c6c6f7765644f776e65725a40e9e4} B>boc PUSHREF
 """;
 
 ;; Cell FXhlnOnULe0bQVSrPfmfPIgETJZFdH6Rv6gTXEOS+rI=
@@ -1996,7 +1994,7 @@ int $global_changeShard(int $hash, int $shard) impure inline {
     $self'accountInitTime = $global_now();
     $self'balance = 1000000000;
     $self'baseWalletCode = $global_myCode();
-    ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_follow(__gen_slice_address_6bab888c3902386f162df2bb34177e700fa627a4303fe34527b725f8da0f6257(), $String$_fun_asSlice(__gen_slice_string_ce9461de1d9f5914158b05255906a17ef190a04e761c689c64139683a983bddb()));
+    ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode)~$JettonWalletSharded$_fun_follow(__gen_slice_address_6bab888c3902386f162df2bb34177e700fa627a4303fe34527b725f8da0f6257(), $Cell$_fun_asSlice(__gen_cell_cell_792dcfa71e1e3b1b9af45852040b56f3042662d9fefdce202b995e5f4bf6e404()));
     return ($self'owner, $self'ownerAfterRecovery, $self'minter, $self'nominee, $self'invitor, $self'invitor0, ($self'id'username, $self'id'lattitude, $self'id'longitude, $self'id'address), $self'balance, $self'taxAsTxnFeePercent, $self'turnover, $self'debts, $self'debt, ($self'insurance'emi, $self'insurance'startStop), $self'invited, $self'friends, $self'closeFriendsAndVouched, $self'closeFriendsCount, $self'recoveryVouchersCount, $self'pendingRequests, $self'followers, $self'followings, $self'reports, $self'reportReason, $self'reporterCount, $self'disputerCount, $self'reportResolutionTime, $self'connections, $self'terminated, $self'active, $self'accountInitTime, $self'lastTxnTime, $self'lastMsgTo, $self'version, $self'mintable, $self'lastRewardClaimTime, $self'baseWalletCode);
 }
 

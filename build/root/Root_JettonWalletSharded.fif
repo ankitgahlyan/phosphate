@@ -105,6 +105,7 @@ PROGRAM{
   DECLPROC $JettonWalletSharded$_fun_getJettonWalletByOwner
   DECLPROC $FollowInternal$_constructor_amount_sender_forwardPayload
   DECLPROC $JettonWalletSharded$_fun_follow
+  DECLPROC $Cell$_fun_asSlice
   DECLPROC $JettonWalletSharded$_contract_init
   DECLPROC $JettonWalletSharded$_contract_load
   DECLPROC $JettonWalletSharded$_contract_store
@@ -112,7 +113,6 @@ PROGRAM{
   DECLPROC $BasechainAddress$_constructor_hash
   DECLPROC $global_newBasechainAddress
   DECLPROC $global_contractShardBasechainAddress
-  DECLPROC $Cell$_fun_asSlice
   DECLPROC $StateInit$_fun_hasSameBasechainAddressWithoutShard
   DECLPROC $ShardDeployParameters$_constructor_shard_deployParameters
   DECLPROC $DeployParameters$_fun_toShard
@@ -1446,6 +1446,9 @@ PROGRAM{
     s5 s4 s4 XCHG3
     s0 s2 XCHG
   }>
+  $Cell$_fun_asSlice PROCINLINE:<{
+        CTOS
+  }>
   $JettonWalletSharded$_contract_init PROCINLINE:<{
     DROP
         B{b5ee9c72410101010024000043800000000000000000000000000000000000000000000000000000000000000000104aec829d} B>boc <s PUSHSLICE
@@ -1484,7 +1487,8 @@ PROGRAM{
     1000000000 PUSHINT
         MYCODE
         B{b5ee9c72410101010024000043800791487e70d7bdd10906f41035bec06188480ffcf1b6219a76b781ce620b2562d0b8e0d020} B>boc <s PUSHSLICE
-        B{b5ee9c7241010101000f00001a666f6c6c6f7765644f776e65720d80274b} B>boc <s PUSHSLICE
+        B{b5ee9c7241010101001300002200000000666f6c6c6f7765644f776e65725a40e9e4} B>boc PUSHREF
+    $Cell$_fun_asSlice INLINECALLDICT
     s5 41 s() XCHG
     s5 40 s() XCHG
     s5 39 s() XCHG
@@ -1619,9 +1623,6 @@ PROGRAM{
         ENDC
         HASHCU
     $global_newBasechainAddress INLINECALLDICT
-  }>
-  $Cell$_fun_asSlice PROCINLINE:<{
-        CTOS
   }>
   $StateInit$_fun_hasSameBasechainAddressWithoutShard PROCINLINE:<{
         REWRITESTDADDR

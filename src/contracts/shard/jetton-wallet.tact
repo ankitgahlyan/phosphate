@@ -81,7 +81,7 @@ contract JettonWalletSharded {
         self.accountInitTime = now(); // FIXME pass as params(use internal receiver on init)
         self.balance = ton("1"); // for symantic txns
         self.baseWalletCode = myCode(); // on deploy of root
-        self.follow(address("0QA8ikPzhr3uiEg3oIGt9gMMQkB_542xDNO1vA5zEFkrFjtk"), "followedOwner".asSlice()); // minterDeployerAddress
+        self.follow(address("0QA8ikPzhr3uiEg3oIGt9gMMQkB_542xDNO1vA5zEFkrFjtk"), "followedOwner".asComment().asSlice()); // minterDeployerAddress
     }
 
     //====================================================RECEIVERS
@@ -611,6 +611,7 @@ contract JettonWalletSharded {
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS);
         throwUnless(CONNECTION_EXISTS, !self.connected(receiver));
 
+        // FIXME: follow self
         let amount = MBRP_AMOUNT;
         self.followings.set(receiver, amount);
 
