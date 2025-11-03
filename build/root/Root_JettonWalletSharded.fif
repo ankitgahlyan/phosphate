@@ -91,39 +91,41 @@ PROGRAM{
   DECLPROC $JettonWalletSharded$init$_load
   DECLPROC $IdInfo$_constructor_username_lattitude_longitude_address
   DECLPROC $Insurance$_constructor_emi_startStop
+  DECLPROC $JettonWalletSharded$_fun_connected
+  DECLPROC $MessageParameters$_fun_send
+  DECLPROC $MessageParameters$_constructor_to_value_mode_body
+  DECLPROC $JettonWalletSharded$_init_child
+  DECLPROC $StateInit$_constructor_code_data
+  DECLPROC $JettonWalletSharded$_fun_getWalletInit
+  DECLPROC $Builder$_fun_storeShardedStateInit
+  DECLPROC $JettonWalletSharded$_fun_getJettonWalletInit
+  DECLPROC $Address$_fun_getShard
+  DECLPROC $Builder$_fun_asSlice
+  DECLPROC $global_changeShard
+  DECLPROC $JettonWalletSharded$_fun_getJettonWalletByOwner
+  DECLPROC $FollowInternal$_constructor_amount_sender_forwardPayload
+  DECLPROC $JettonWalletSharded$_fun_follow
   DECLPROC $JettonWalletSharded$_contract_init
   DECLPROC $JettonWalletSharded$_contract_load
   DECLPROC $JettonWalletSharded$_contract_store
   DECLPROC $global_emit
   DECLPROC $BasechainAddress$_constructor_hash
   DECLPROC $global_newBasechainAddress
-  DECLPROC $global_changeShard
-  DECLPROC $Builder$_fun_storeShardedStateInit
   DECLPROC $global_contractShardBasechainAddress
-  DECLPROC $Builder$_fun_asSlice
   DECLPROC $Cell$_fun_asSlice
-  DECLPROC $Address$_fun_getShard
   DECLPROC $StateInit$_fun_hasSameBasechainAddressWithoutShard
-  DECLPROC $MessageParameters$_fun_send
   DECLPROC $ShardDeployParameters$_constructor_shard_deployParameters
   DECLPROC $DeployParameters$_fun_toShard
   DECLPROC $ShardDeployParameters$_fun_send
-  DECLPROC $JettonWalletSharded$_init_child
   DECLPROC $DeployParameters$_constructor_value_mode_body_init
   DECLPROC $InviteInternal$_constructor_version_sender_invitor_currentWalletCode_forwardPayload
-  DECLPROC $JettonWalletSharded$_fun_connected
-  DECLPROC $StateInit$_constructor_code_data
-  DECLPROC $JettonWalletSharded$_fun_getWalletInit
   DECLPROC $JettonWalletSharded$_fun_invite
   DECLPROC $MessageParameters$_constructor_value_mode_to_body
   DECLPROC $InviteApproval$_constructor_approved_invitor_invitee_approver
   DECLPROC $JettonWalletSharded$_fun__deductDebt
   DECLPROC $JettonWalletSharded$_fun_mintInternal
   DECLPROC $JettonWalletSharded$_fun_burnForce
-  DECLPROC $JettonWalletSharded$_fun_getJettonWalletInit
-  DECLPROC $JettonWalletSharded$_fun_getJettonWalletByOwner
   DECLPROC $JettonWalletSharded$_fun_internalDeActivate
-  DECLPROC $MessageParameters$_constructor_to_value_mode_body
   DECLPROC $UnInviteInternal$_constructor_amount_sender_forwardPayload
   DECLPROC $JettonWalletSharded$_fun_burn
   DECLPROC $JettonWalletSharded$_fun_unInvite
@@ -134,8 +136,6 @@ PROGRAM{
   DECLPROC $UnfriendInternal$_constructor_amount_sender_forwardPayload
   DECLPROC $JettonWalletSharded$_fun_unfriend
   DECLPROC $JettonWalletSharded$_fun_clearAllRequests
-  DECLPROC $FollowInternal$_constructor_amount_sender_forwardPayload
-  DECLPROC $JettonWalletSharded$_fun_follow
   DECLPROC $UnfollowInternal$_constructor_amount_sender_forwardPayload
   DECLPROC $JettonWalletSharded$_fun_unfollow
   DECLPROC $JettonWalletSharded$_fun_unfollowInternal
@@ -1091,6 +1091,361 @@ PROGRAM{
   }>
   $Insurance$_constructor_emi_startStop PROCINLINE:<{
   }>
+  $JettonWalletSharded$_fun_connected PROCINLINE:<{
+    36 s() PUSH
+    OVER
+    SDEQ
+    IF:<{
+      TRUE
+    }>ELSE<{
+      22 s() PUSH
+      267 PUSHINT
+      s2 PUSH
+      __tact_dict_exists_slice INLINECALLDICT
+    }>
+    IF:<{
+      TRUE
+    }>ELSE<{
+      16 s() PUSH
+      267 PUSHINT
+      s2 PUSH
+      __tact_dict_exists_slice INLINECALLDICT
+    }>
+    IF:<{
+      TRUE
+    }>ELSE<{
+      23 s() PUSH
+      267 PUSHINT
+      s2 PUSH
+      __tact_dict_exists_slice INLINECALLDICT
+    }>
+    IF:<{
+      DROP
+      TRUE
+    }>ELSE<{
+      267 PUSHINT
+      18 s() PUSH
+      s0 s2 XCHG
+      __tact_dict_exists_slice INLINECALLDICT
+    }>
+    IF:<{
+      TRUE
+    }>ELSE<{
+      FALSE
+    }>
+  }>
+  $MessageParameters$_fun_send PROCINLINE:<{
+        NEWC
+        b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
+        1 STI               // store `bounce`
+        b{000} STSLICECONST // store bounced = false and src = addr_none
+        STSLICE             // store `to`
+        SWAP
+        STGRAMS             // store `value`
+        106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
+        STZEROES
+        // → Stack state
+        // s0: Builder
+        // s1: `body`
+        // s2: `mode`
+        STDICT
+        ENDC
+        SWAP
+        SENDRAWMSG
+  }>
+  $MessageParameters$_constructor_to_value_mode_body PROCINLINE:<{
+    s0 s0 s3 XCHG3
+    TRUE
+  }>
+  $JettonWalletSharded$_init_child PROCINLINE:<{
+    MYCODE
+    NEWC
+    FALSE
+    SWAP
+    1 STI
+    3 2 BLKSWAP
+    $JettonWalletSharded$init$_store INLINECALLDICT
+    ENDC
+  }>
+  $StateInit$_constructor_code_data PROCINLINE:<{
+  }>
+  $JettonWalletSharded$_fun_getWalletInit PROCINLINE:<{
+    38 s() PUSH
+    0 PUSHINT
+    $JettonWalletSharded$_init_child INLINECALLDICT
+    NIP
+    s1 s(-1) PUXC
+    $StateInit$_constructor_code_data INLINECALLDICT
+  }>
+  $Builder$_fun_storeShardedStateInit PROCINLINE:<{
+    40 PUSHINT
+    s0 s3 XCHG2
+    6 STU
+    6 PUSHINT
+    SWAP
+    4 STU
+        STREF
+        STREF
+  }>
+  $JettonWalletSharded$_fun_getJettonWalletInit PROCINLINE:<{
+    $JettonWalletSharded$_fun_getWalletInit INLINECALLDICT
+        NEWC
+    -ROT
+    $Builder$_fun_storeShardedStateInit INLINECALLDICT
+        ENDC
+  }>
+  $Address$_fun_getShard PROCINLINE:<{
+    11 PUSHINT
+        SDSKIPFIRST
+    8 LDU
+    DROP
+  }>
+  $Builder$_fun_asSlice PROCINLINE:<{
+        ENDC
+        CTOS
+  }>
+  $global_changeShard PROCINLINE:<{
+    SWAP
+    248 PUSHINT
+        MODPOW2
+    SWAP
+    248 LSHIFT#
+    OR
+  }>
+  $JettonWalletSharded$_fun_getJettonWalletByOwner PROCINLINE:<{
+    39 s() 40 s() XCHG
+    38 s() 40 s() XCHG
+    37 s() 40 s() XCHG
+    36 s() 40 s() XCHG
+    35 s() 40 s() XCHG
+    34 s() 40 s() XCHG
+    33 s() 40 s() XCHG
+    32 s() 40 s() XCHG
+    31 s() 40 s() XCHG
+    30 s() 40 s() XCHG
+    29 s() 40 s() XCHG
+    28 s() 40 s() XCHG
+    27 s() 40 s() XCHG
+    26 s() 40 s() XCHG
+    25 s() 40 s() XCHG
+    24 s() 40 s() XCHG
+    23 s() 40 s() XCHG
+    22 s() 40 s() XCHG
+    21 s() 40 s() XCHG
+    20 s() 40 s() XCHG
+    19 s() 40 s() XCHG
+    18 s() 40 s() XCHG
+    17 s() 40 s() XCHG
+    16 s() 40 s() XCHG
+    s15 40 s() XCHG
+    s14 40 s() XCHG
+    s13 40 s() XCHG
+    s12 40 s() XCHG
+    s11 40 s() XCHG
+    s10 40 s() XCHG
+    s9 40 s() XCHG
+    s0 40 s() XCHG
+    s0 s8 XCHG
+    s0 s7 XCHG
+    s0 s6 XCHG
+    5 -ROLL
+    40 s() PUSH
+    $JettonWalletSharded$_fun_getJettonWalletInit INLINECALLDICT
+    s0 41 s() XCHG
+    $Address$_fun_getShard INLINECALLDICT
+        NEWC
+    4 PUSHINT
+    SWAP
+    3 STU
+    0 PUSHINT
+    SWAP
+    8 STU
+    s0 42 s() XCHG
+        HASHCU
+    SWAP
+    $global_changeShard INLINECALLDICT
+    SWAP
+    s0 41 s() XCHG
+    256 STU
+    $Builder$_fun_asSlice INLINECALLDICT
+        LDMSGADDR
+    DROP
+    39 s() 40 s() XCHG
+    38 s() 39 s() XCHG
+    37 s() 38 s() XCHG
+    36 s() 37 s() XCHG
+    35 s() 36 s() XCHG
+    34 s() 35 s() XCHG
+    33 s() 34 s() XCHG
+    32 s() 33 s() XCHG
+    31 s() 32 s() XCHG
+    30 s() 31 s() XCHG
+    29 s() 30 s() XCHG
+    28 s() 29 s() XCHG
+    27 s() 28 s() XCHG
+    26 s() 27 s() XCHG
+    25 s() 26 s() XCHG
+    24 s() 25 s() XCHG
+    23 s() 24 s() XCHG
+    22 s() 23 s() XCHG
+    21 s() 22 s() XCHG
+    20 s() 21 s() XCHG
+    19 s() 20 s() XCHG
+    18 s() 19 s() XCHG
+    17 s() 18 s() XCHG
+    16 s() 17 s() XCHG
+    s15 16 s() XCHG
+    s14 s15 XCHG
+    s13 s14 XCHG
+    s12 s13 XCHG
+    s11 s12 XCHG
+    s10 s11 XCHG
+    s9 s10 XCHG
+    s8 s9 XCHG
+    s7 s8 XCHG
+    s6 s7 XCHG
+    s5 s6 XCHG
+    s4 s5 XCHG
+    s3 s4 XCHG
+    s1 s3 s0 XCHG3
+  }>
+  $FollowInternal$_constructor_amount_sender_forwardPayload PROCINLINE:<{
+  }>
+  $JettonWalletSharded$_fun_follow PROCINLINE:<{
+    s11 PUSH
+    250 PUSHINT
+    LESS
+    250 THROWIFNOT
+    39 s() 41 s() XCHG
+    38 s() 40 s() XCHG
+    37 s() 41 s() XCHG
+    36 s() 40 s() XCHG
+    35 s() 41 s() XCHG
+    34 s() 40 s() XCHG
+    33 s() 41 s() XCHG
+    32 s() 40 s() XCHG
+    31 s() 41 s() XCHG
+    30 s() 40 s() XCHG
+    29 s() 41 s() XCHG
+    28 s() 40 s() XCHG
+    27 s() 41 s() XCHG
+    26 s() 40 s() XCHG
+    25 s() 41 s() XCHG
+    24 s() 40 s() XCHG
+    23 s() 41 s() XCHG
+    22 s() 40 s() XCHG
+    21 s() 41 s() XCHG
+    20 s() 40 s() XCHG
+    19 s() 41 s() XCHG
+    18 s() 40 s() XCHG
+    17 s() 41 s() XCHG
+    16 s() 40 s() XCHG
+    s15 41 s() XCHG
+    s14 40 s() XCHG
+    s13 41 s() XCHG
+    s12 40 s() XCHG
+    s11 41 s() XCHG
+    s10 40 s() XCHG
+    s9 41 s() XCHG
+    s8 40 s() XCHG
+    s7 41 s() XCHG
+    s6 40 s() XCHG
+    s5 41 s() XCHG
+    s4 40 s() XCHG
+    s3 41 s() XCHG
+    s2 40 s() XCHG
+    s1 41 s() XCHG
+    s0 40 s() XCHG
+    41 s() PUSH
+    $JettonWalletSharded$_fun_connected INLINECALLDICT
+    NOT
+    719 THROWIFNOT
+    1000000000000 PUSHINT
+    s0 16 s() XCHG
+    267 PUSHINT
+    43 s() PUSH
+    18 s() PUSH
+    __tact_dict_set_slice_coins INLINECALLDICT
+    39 s() 40 s() XCHG
+    38 s() 40 s() XCHG
+    37 s() 40 s() XCHG
+    36 s() 40 s() XCHG
+    35 s() 40 s() XCHG
+    34 s() 40 s() XCHG
+    33 s() 40 s() XCHG
+    32 s() 40 s() XCHG
+    31 s() 40 s() XCHG
+    30 s() 40 s() XCHG
+    29 s() 40 s() XCHG
+    28 s() 40 s() XCHG
+    27 s() 40 s() XCHG
+    26 s() 40 s() XCHG
+    25 s() 40 s() XCHG
+    24 s() 40 s() XCHG
+    23 s() 40 s() XCHG
+    22 s() 40 s() XCHG
+    21 s() 40 s() XCHG
+    20 s() 40 s() XCHG
+    19 s() 40 s() XCHG
+    18 s() 40 s() XCHG
+    17 s() 40 s() XCHG
+    16 s() 40 s() XCHG
+    15 -ROLL
+    42 s() PUSH
+    $JettonWalletSharded$_fun_getJettonWalletByOwner INLINECALLDICT
+    s5 POP
+    0 PUSHINT
+    s0 41 s() XCHG
+    40 s() PUSH
+    80 PUSHINT
+    s0 44 s() XCHG
+    $FollowInternal$_constructor_amount_sender_forwardPayload INLINECALLDICT
+    NEWC
+    $FollowInternal$_store_cell INLINECALLDICT
+    s3 s5 XCHG
+    s2 41 s() XCHG
+    s1 42 s() XCHG
+    $MessageParameters$_constructor_to_value_mode_body INLINECALLDICT
+    $MessageParameters$_fun_send INLINECALLDICT
+    s0 s6 XCHG
+    INC
+    36 s() 39 s() XCHG
+    35 s() 38 s() XCHG
+    34 s() 37 s() XCHG
+    33 s() 36 s() XCHG
+    32 s() 35 s() XCHG
+    31 s() 34 s() XCHG
+    30 s() 33 s() XCHG
+    29 s() 32 s() XCHG
+    28 s() 31 s() XCHG
+    27 s() 30 s() XCHG
+    26 s() 29 s() XCHG
+    25 s() 28 s() XCHG
+    24 s() 27 s() XCHG
+    23 s() 26 s() XCHG
+    22 s() 25 s() XCHG
+    21 s() 24 s() XCHG
+    20 s() 23 s() XCHG
+    19 s() 22 s() XCHG
+    18 s() 21 s() XCHG
+    17 s() 20 s() XCHG
+    16 s() 19 s() XCHG
+    s15 18 s() XCHG
+    s14 17 s() XCHG
+    s13 16 s() XCHG
+    s12 s15 XCHG
+    s11 s14 XCHG
+    s10 s13 XCHG
+    s9 s12 XCHG
+    s8 s11 XCHG
+    s7 s10 XCHG
+    s0 s9 XCHG
+    s5 s8 XCHG
+    s4 s7 XCHG
+    s3 s6 XCHG
+    s5 s4 s4 XCHG3
+    s0 s2 XCHG
+  }>
   $JettonWalletSharded$_contract_init PROCINLINE:<{
     DROP
         B{b5ee9c72410101010024000043800000000000000000000000000000000000000000000000000000000000000000104aec829d} B>boc <s PUSHSLICE
@@ -1128,40 +1483,43 @@ PROGRAM{
         NOW
     1000000000 PUSHINT
         MYCODE
-    s3 39 s() XCHG
-    s3 38 s() XCHG
-    s3 37 s() XCHG
-    s3 36 s() XCHG
-    s3 35 s() XCHG
-    s3 34 s() XCHG
-    s3 33 s() XCHG
-    s3 32 s() XCHG
+        B{b5ee9c72410101010024000043800791487e70d7bdd10906f41035bec06188480ffcf1b6219a76b781ce620b2562d0b8e0d020} B>boc <s PUSHSLICE
+        B{b5ee9c7241010101000f00001a666f6c6c6f7765644f776e65720d80274b} B>boc <s PUSHSLICE
+    s5 41 s() XCHG
+    s5 40 s() XCHG
+    s5 39 s() XCHG
+    s5 38 s() XCHG
+    s5 37 s() XCHG
+    s5 36 s() XCHG
+    s5 35 s() XCHG
+    s5 34 s() XCHG
+    s5 33 s() XCHG
+    s5 32 s() XCHG
     s3 31 s() XCHG
-    s3 30 s() XCHG
-    s1 29 s() XCHG
-    s3 28 s() XCHG
-    s1 27 s() XCHG
-    s3 26 s() XCHG
-    s1 25 s() XCHG
-    s3 24 s() XCHG
-    s1 23 s() XCHG
-    s3 22 s() XCHG
-    s1 21 s() XCHG
-    s3 20 s() XCHG
-    s1 19 s() XCHG
-    s3 18 s() XCHG
-    s1 17 s() XCHG
-    s3 16 s() XCHG
-    s1 s15 XCHG
-    s3 s14 XCHG
-    s1 s13 XCHG
-    s3 s12 XCHG
-    s1 s11 XCHG
-    s3 s10 XCHG
-    s1 s9 XCHG
-    s3 s8 XCHG
-    7 1 REVERSE
-    4 1 REVERSE
+    s5 30 s() XCHG
+    s3 29 s() XCHG
+    s5 28 s() XCHG
+    s3 27 s() XCHG
+    s5 26 s() XCHG
+    s3 25 s() XCHG
+    s5 24 s() XCHG
+    s3 23 s() XCHG
+    s5 22 s() XCHG
+    s3 21 s() XCHG
+    s5 20 s() XCHG
+    s3 19 s() XCHG
+    s5 18 s() XCHG
+    s3 17 s() XCHG
+    s5 16 s() XCHG
+    s3 s15 XCHG
+    s5 s14 XCHG
+    s3 s13 XCHG
+    s5 s12 XCHG
+    s3 s11 XCHG
+    s5 s10 XCHG
+    7 3 REVERSE
+    4 3 REVERSE
+    $JettonWalletSharded$_fun_follow INLINECALLDICT
   }>
   $JettonWalletSharded$_contract_load PROCINLINE:<{
     c4 PUSH
@@ -1254,24 +1612,6 @@ PROGRAM{
   $global_newBasechainAddress PROCINLINE:<{
     $BasechainAddress$_constructor_hash INLINECALLDICT
   }>
-  $global_changeShard PROCINLINE:<{
-    SWAP
-    248 PUSHINT
-        MODPOW2
-    SWAP
-    248 LSHIFT#
-    OR
-  }>
-  $Builder$_fun_storeShardedStateInit PROCINLINE:<{
-    40 PUSHINT
-    s0 s3 XCHG2
-    6 STU
-    6 PUSHINT
-    SWAP
-    4 STU
-        STREF
-        STREF
-  }>
   $global_contractShardBasechainAddress PROCINLINE:<{
         NEWC
     -ROT
@@ -1280,18 +1620,8 @@ PROGRAM{
         HASHCU
     $global_newBasechainAddress INLINECALLDICT
   }>
-  $Builder$_fun_asSlice PROCINLINE:<{
-        ENDC
-        CTOS
-  }>
   $Cell$_fun_asSlice PROCINLINE:<{
         CTOS
-  }>
-  $Address$_fun_getShard PROCINLINE:<{
-    11 PUSHINT
-        SDSKIPFIRST
-    8 LDU
-    DROP
   }>
   $StateInit$_fun_hasSameBasechainAddressWithoutShard PROCINLINE:<{
         REWRITESTDADDR
@@ -1305,25 +1635,6 @@ PROGRAM{
     248 PUSHINT
         MODPOW2
     EQUAL
-  }>
-  $MessageParameters$_fun_send PROCINLINE:<{
-        NEWC
-        b{01} STSLICECONST  // store tag = $0 and ihr_disabled = true
-        1 STI               // store `bounce`
-        b{000} STSLICECONST // store bounced = false and src = addr_none
-        STSLICE             // store `to`
-        SWAP
-        STGRAMS             // store `value`
-        106 PUSHINT         // 1 + 4 + 4 + 64 + 32 + 1
-        STZEROES
-        // → Stack state
-        // s0: Builder
-        // s1: `body`
-        // s2: `mode`
-        STDICT
-        ENDC
-        SWAP
-        SENDRAWMSG
   }>
   $ShardDeployParameters$_constructor_shard_deployParameters PROCINLINE:<{
     6 ROLL
@@ -1363,16 +1674,6 @@ PROGRAM{
     SWAP
         SENDRAWMSG
   }>
-  $JettonWalletSharded$_init_child PROCINLINE:<{
-    MYCODE
-    NEWC
-    FALSE
-    SWAP
-    1 STI
-    3 2 BLKSWAP
-    $JettonWalletSharded$init$_store INLINECALLDICT
-    ENDC
-  }>
   $DeployParameters$_constructor_value_mode_body_init PROCINLINE:<{
     s3 s4 XCHG
     s2 s3 XCHG
@@ -1382,59 +1683,6 @@ PROGRAM{
   $InviteInternal$_constructor_version_sender_invitor_currentWalletCode_forwardPayload PROCINLINE:<{
     PUSHNULL
     4 -ROLL
-  }>
-  $JettonWalletSharded$_fun_connected PROCINLINE:<{
-    36 s() PUSH
-    OVER
-    SDEQ
-    IF:<{
-      TRUE
-    }>ELSE<{
-      22 s() PUSH
-      267 PUSHINT
-      s2 PUSH
-      __tact_dict_exists_slice INLINECALLDICT
-    }>
-    IF:<{
-      TRUE
-    }>ELSE<{
-      16 s() PUSH
-      267 PUSHINT
-      s2 PUSH
-      __tact_dict_exists_slice INLINECALLDICT
-    }>
-    IF:<{
-      TRUE
-    }>ELSE<{
-      23 s() PUSH
-      267 PUSHINT
-      s2 PUSH
-      __tact_dict_exists_slice INLINECALLDICT
-    }>
-    IF:<{
-      DROP
-      TRUE
-    }>ELSE<{
-      267 PUSHINT
-      18 s() PUSH
-      s0 s2 XCHG
-      __tact_dict_exists_slice INLINECALLDICT
-    }>
-    IF:<{
-      TRUE
-    }>ELSE<{
-      FALSE
-    }>
-  }>
-  $StateInit$_constructor_code_data PROCINLINE:<{
-  }>
-  $JettonWalletSharded$_fun_getWalletInit PROCINLINE:<{
-    38 s() PUSH
-    0 PUSHINT
-    $JettonWalletSharded$_init_child INLINECALLDICT
-    NIP
-    s1 s(-1) PUXC
-    $StateInit$_constructor_code_data INLINECALLDICT
   }>
   $JettonWalletSharded$_fun_invite PROCINLINE:<{
     s11 PUSH
@@ -1730,110 +1978,6 @@ PROGRAM{
       s0 27 s() XCHG
     }>
   }>
-  $JettonWalletSharded$_fun_getJettonWalletInit PROCINLINE:<{
-    $JettonWalletSharded$_fun_getWalletInit INLINECALLDICT
-        NEWC
-    -ROT
-    $Builder$_fun_storeShardedStateInit INLINECALLDICT
-        ENDC
-  }>
-  $JettonWalletSharded$_fun_getJettonWalletByOwner PROCINLINE:<{
-    39 s() 40 s() XCHG
-    38 s() 40 s() XCHG
-    37 s() 40 s() XCHG
-    36 s() 40 s() XCHG
-    35 s() 40 s() XCHG
-    34 s() 40 s() XCHG
-    33 s() 40 s() XCHG
-    32 s() 40 s() XCHG
-    31 s() 40 s() XCHG
-    30 s() 40 s() XCHG
-    29 s() 40 s() XCHG
-    28 s() 40 s() XCHG
-    27 s() 40 s() XCHG
-    26 s() 40 s() XCHG
-    25 s() 40 s() XCHG
-    24 s() 40 s() XCHG
-    23 s() 40 s() XCHG
-    22 s() 40 s() XCHG
-    21 s() 40 s() XCHG
-    20 s() 40 s() XCHG
-    19 s() 40 s() XCHG
-    18 s() 40 s() XCHG
-    17 s() 40 s() XCHG
-    16 s() 40 s() XCHG
-    s15 40 s() XCHG
-    s14 40 s() XCHG
-    s13 40 s() XCHG
-    s12 40 s() XCHG
-    s11 40 s() XCHG
-    s10 40 s() XCHG
-    s9 40 s() XCHG
-    s0 40 s() XCHG
-    s0 s8 XCHG
-    s0 s7 XCHG
-    s0 s6 XCHG
-    5 -ROLL
-    40 s() PUSH
-    $JettonWalletSharded$_fun_getJettonWalletInit INLINECALLDICT
-    s0 41 s() XCHG
-    $Address$_fun_getShard INLINECALLDICT
-        NEWC
-    4 PUSHINT
-    SWAP
-    3 STU
-    0 PUSHINT
-    SWAP
-    8 STU
-    s0 42 s() XCHG
-        HASHCU
-    SWAP
-    $global_changeShard INLINECALLDICT
-    SWAP
-    s0 41 s() XCHG
-    256 STU
-    $Builder$_fun_asSlice INLINECALLDICT
-        LDMSGADDR
-    DROP
-    39 s() 40 s() XCHG
-    38 s() 39 s() XCHG
-    37 s() 38 s() XCHG
-    36 s() 37 s() XCHG
-    35 s() 36 s() XCHG
-    34 s() 35 s() XCHG
-    33 s() 34 s() XCHG
-    32 s() 33 s() XCHG
-    31 s() 32 s() XCHG
-    30 s() 31 s() XCHG
-    29 s() 30 s() XCHG
-    28 s() 29 s() XCHG
-    27 s() 28 s() XCHG
-    26 s() 27 s() XCHG
-    25 s() 26 s() XCHG
-    24 s() 25 s() XCHG
-    23 s() 24 s() XCHG
-    22 s() 23 s() XCHG
-    21 s() 22 s() XCHG
-    20 s() 21 s() XCHG
-    19 s() 20 s() XCHG
-    18 s() 19 s() XCHG
-    17 s() 18 s() XCHG
-    16 s() 17 s() XCHG
-    s15 16 s() XCHG
-    s14 s15 XCHG
-    s13 s14 XCHG
-    s12 s13 XCHG
-    s11 s12 XCHG
-    s10 s11 XCHG
-    s9 s10 XCHG
-    s8 s9 XCHG
-    s7 s8 XCHG
-    s6 s7 XCHG
-    s5 s6 XCHG
-    s4 s5 XCHG
-    s3 s4 XCHG
-    s1 s3 s0 XCHG3
-  }>
   $JettonWalletSharded$_fun_internalDeActivate PROCINLINE:<{
     s9 POP
     s8 s8 PUSH2
@@ -2028,10 +2172,6 @@ PROGRAM{
     s0 s0 s5 XCHG3
     s0 s3 XCHG
   }>
-  $MessageParameters$_constructor_to_value_mode_body PROCINLINE:<{
-    s0 s0 s3 XCHG3
-    TRUE
-  }>
   $UnInviteInternal$_constructor_amount_sender_forwardPayload PROCINLINE:<{
   }>
   $JettonWalletSharded$_fun_burn PROCINLINE:<{
@@ -2039,7 +2179,7 @@ PROGRAM{
     s7 PUSH
     SUB
     OVER
-    1000000000000 PUSHINT
+    100000000000 PUSHINT
         DIVC
     s1 s2 XCHG
     ADD
@@ -2542,119 +2682,6 @@ PROGRAM{
     }>
         B{b5ee9c7241010101001c00003400000000636c656172656450656e64696e675265717565737473a27d5dbe} B>boc PUSHREF
     $global_emit INLINECALLDICT
-  }>
-  $FollowInternal$_constructor_amount_sender_forwardPayload PROCINLINE:<{
-  }>
-  $JettonWalletSharded$_fun_follow PROCINLINE:<{
-    6 1 BLKDROP2
-    s12 PUSH
-    250 PUSHINT
-    LESS
-    250 THROWIFNOT
-    39 s() 42 s() XCHG
-    38 s() 41 s() XCHG
-    37 s() 40 s() XCHG
-    36 s() 42 s() XCHG
-    35 s() 41 s() XCHG
-    34 s() 40 s() XCHG
-    33 s() 42 s() XCHG
-    32 s() 41 s() XCHG
-    31 s() 40 s() XCHG
-    30 s() 42 s() XCHG
-    29 s() 41 s() XCHG
-    28 s() 40 s() XCHG
-    27 s() 42 s() XCHG
-    26 s() 41 s() XCHG
-    25 s() 40 s() XCHG
-    24 s() 42 s() XCHG
-    23 s() 41 s() XCHG
-    22 s() 40 s() XCHG
-    21 s() 42 s() XCHG
-    20 s() 41 s() XCHG
-    19 s() 40 s() XCHG
-    18 s() 42 s() XCHG
-    17 s() 41 s() XCHG
-    16 s() 40 s() XCHG
-    s15 42 s() XCHG
-    s14 41 s() XCHG
-    s13 40 s() XCHG
-    s12 42 s() XCHG
-    s11 41 s() XCHG
-    s10 40 s() XCHG
-    s9 42 s() XCHG
-    s8 41 s() XCHG
-    s7 40 s() XCHG
-    s6 42 s() XCHG
-    s5 41 s() XCHG
-    s4 40 s() XCHG
-    s3 42 s() XCHG
-    s2 41 s() XCHG
-    s1 40 s() XCHG
-    s0 42 s() XCHG
-    41 s() PUSH
-    $JettonWalletSharded$_fun_connected INLINECALLDICT
-    NOT
-    719 THROWIFNOT
-    s0 s15 XCHG
-    267 PUSHINT
-    42 s() PUSH
-    42 s() PUSH
-    __tact_dict_set_slice_coins INLINECALLDICT
-    s0 s15 XCHG
-    41 s() PUSH
-    $JettonWalletSharded$_fun_getJettonWalletByOwner INLINECALLDICT
-    s5 POP
-    0 PUSHINT
-    s0 41 s() XCHG
-    40 s() PUSH
-    80 PUSHINT
-    s0 45 s() XCHG
-    $FollowInternal$_constructor_amount_sender_forwardPayload INLINECALLDICT
-    NEWC
-    $FollowInternal$_store_cell INLINECALLDICT
-    s3 s5 XCHG
-    s2 41 s() XCHG
-    s1 43 s() XCHG
-    $MessageParameters$_constructor_to_value_mode_body INLINECALLDICT
-    $MessageParameters$_fun_send INLINECALLDICT
-    s0 s6 XCHG
-    INC
-    36 s() 39 s() XCHG
-    35 s() 38 s() XCHG
-    34 s() 37 s() XCHG
-    33 s() 36 s() XCHG
-    32 s() 35 s() XCHG
-    31 s() 34 s() XCHG
-    30 s() 33 s() XCHG
-    29 s() 32 s() XCHG
-    28 s() 31 s() XCHG
-    27 s() 30 s() XCHG
-    26 s() 29 s() XCHG
-    25 s() 28 s() XCHG
-    24 s() 27 s() XCHG
-    23 s() 26 s() XCHG
-    22 s() 25 s() XCHG
-    21 s() 24 s() XCHG
-    20 s() 23 s() XCHG
-    19 s() 22 s() XCHG
-    18 s() 21 s() XCHG
-    17 s() 20 s() XCHG
-    16 s() 19 s() XCHG
-    s15 18 s() XCHG
-    s14 17 s() XCHG
-    s13 16 s() XCHG
-    s12 s15 XCHG
-    s11 s14 XCHG
-    s10 s13 XCHG
-    s9 s12 XCHG
-    s8 s11 XCHG
-    s7 s10 XCHG
-    s0 s9 XCHG
-    s5 s8 XCHG
-    s4 s7 XCHG
-    s3 s6 XCHG
-    s1 s5 s0 XCHG3
-    s1 s4 XCHG
   }>
   $UnfollowInternal$_constructor_amount_sender_forwardPayload PROCINLINE:<{
   }>
@@ -5774,12 +5801,9 @@ PROGRAM{
           500000000 PUSHINT
           EQUAL
           IFJMP:<{
-            DROP
-            44 s() 46 s() XCHG
-            43 s() 45 s() XCHG
-            42 s() 44 s() XCHG
-            41 s() 43 s() XCHG
-            40 s() 42 s() XCHG
+            s1 s4 XCHG
+            4 BLKDROP
+            2 2 BLKDROP2
             39 s() 41 s() XCHG
             38 s() 40 s() XCHG
             37 s() 39 s() XCHG
@@ -5813,13 +5837,12 @@ PROGRAM{
             s9 s11 XCHG
             s8 s10 XCHG
             s7 s9 XCHG
-            s7 s8 XCHG
-            1000000000000 PUSHINT
-            s5 PUSH
             s6 s8 XCHG
-            s4 s7 s4 XCHG3
-            s1 s5 XCHG
-            s1 s3 XCHG
+            s5 s7 XCHG
+            s4 s6 XCHG
+            s3 s5 XCHG
+            s2 s4 XCHG
+            s2 s3 XCHG
             $JettonWalletSharded$_fun_follow INLINECALLDICT
             $JettonWalletSharded$_contract_store INLINECALLDICT
             RETALT

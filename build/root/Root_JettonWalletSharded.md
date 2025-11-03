@@ -1,6 +1,6 @@
 # Tact compilation report
 Contract: JettonWalletSharded
-BoC Size: 39072 bytes
+BoC Size: 39324 bytes
 
 ## Structures (Structs and Messages)
 Total structures: 78
