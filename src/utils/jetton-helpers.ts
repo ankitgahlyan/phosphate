@@ -147,7 +147,7 @@ export async function buildJettonMinterFromEnv(
     // case "feature-rich":
     //     return await JettonMinterFeatureRich.fromInit(0n, deployerAddress, content, true)
     // case "shard":
-    return await JettonMinterSharded.fromInit(0n, deployerAddress, content)
+    return await JettonMinterSharded.fromInit(0n, deployerAddress, content, deployerAddress)
     // }
 }
 export async function buildJettonWalletFromAddress(deployerAddress: Address) {
@@ -155,8 +155,8 @@ export async function buildJettonWalletFromAddress(deployerAddress: Address) {
 }
 
 export async function buildJettonWalletFromEnv(deployerAddress: Address, minterAddress: Address) {// FIXME: for upgrades only
-    return await JettonWalletSharded.fromInit(deployerAddress, minterAddress, 0n)
+    return await JettonWalletSharded.fromInit(deployerAddress, minterAddress, 0n, deployerAddress)
 }
 export async function buildJettonWalletOnlyFromEnv(deployerAddress: Address, minterAddress: Address) {// FIXME: for upgrades only
-    return await JettonWalletOnly.fromInit(deployerAddress, minterAddress, 0n)
+    return await JettonWalletOnly.fromInit(deployerAddress, minterAddress, 0n, deployerAddress)
 }

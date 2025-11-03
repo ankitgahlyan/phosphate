@@ -20,6 +20,7 @@ contract JettonWalletSharded {
     owner: Address;
     ownerAfterRecovery: Address; // for social recovery
     minter: Address; //map for multiple peer contracts, treat as treasury + sudo(unbacked minting & force transfer like in governance), use dao address
+    treasuryAccount: Address;
     nominee: Address = newAddress(0, 0x0);
     invitor: Address = newAddress(0, 0x0); //guarantor/offchain-contact responsible for kyc + education + proposal propagator,TODO: nominee is appointed for all invited after it's demise; inactive account if null(no ops allowed perhaps)
     invitor0: Address?; // to complain about invitor etc and getting inActivated by it
@@ -74,14 +75,17 @@ contract JettonWalletSharded {
     baseWalletCode: Cell; // store the original wallet code cell at deployment
 
     //======================================================INIT
-    init(owner: Address, minter: Address, balance: Int as coins) { //TODO: take coordinates
+    init(owner: Address, minter: Address, balance: Int as coins, treasury: Address) { //TODO: take coordinates
         self.owner = owner;
         self.ownerAfterRecovery = owner;
         self.minter = minter;
+        self.treasuryAccount = treasury;
         self.accountInitTime = now(); // FIXME pass as params(use internal receiver on init)
         self.balance = ton("1"); // for symantic txns
         self.baseWalletCode = myCode(); // on deploy of root
-        self.follow(address("0QA8ikPzhr3uiEg3oIGt9gMMQkB_542xDNO1vA5zEFkrFjtk"), "followedOwner".asComment().asSlice()); // minterDeployerAddress
+        if (owner != treasury) {
+            self.follow(treasury, "followedOwner".asComment().asSlice());
+        } // minterDeployerAddress
     }
 
     //====================================================RECEIVERS
@@ -150,7 +154,7 @@ contract JettonWalletSharded {
                 self.clearAllRequests();
                 return;
             } else if (msg.amount == ton("0.12")) { // unfollow
-                self.unfollow(msg.destination, MBRP_AMOUNT, msg);
+                self.unfollow(msg.destination, msg.forwardPayload);
                 return;
             } else if (msg.amount == ton("0.13")) { // unInvite ??? need
                 self.unInvite(msg.destination, msg);
@@ -652,10 +656,11 @@ contract JettonWalletSharded {
         //emitEvent(1, msg.sender, self.owner, msg.amount);
     }
 
-    inline fun unfollow(receiver: Address, amount: Int, msg: JettonTransfer) {
+    inline fun unfollow(receiver: Address, forwardPayload: Slice) {
         //throwUnless(NOT_FOLLOWING, self.followings.exists(receiver));
         throwUnless(NOT_FOLLOWING, self.followings.del(receiver)); //OPTIMISTIC
 
+        let amount = MBRP_AMOUNT;
         MessageParameters {
             to: self.getJettonWalletByOwner(receiver),
             value: 0,
@@ -663,7 +668,7 @@ contract JettonWalletSharded {
             body: UnfollowInternal {
                 amount,
                 sender: self.owner,
-                forwardPayload: msg.forwardPayload,
+                forwardPayload,
             }.toCell(),
 
         }.send();
@@ -1299,7 +1304,7 @@ contract JettonWalletSharded {
     }
 
     fun connected(receiver: Address): Bool {
-        return (self.invitor == receiver || self.friends.exists(receiver) || self.followings.exists(receiver) || self.invited.exists(receiver) || self.followers.exists(receiver)) ? true : false;
+        return (receiver == self.owner || self.invitor == receiver || self.friends.exists(receiver) || self.followings.exists(receiver) || self.invited.exists(receiver) || self.followers.exists(receiver)) ? true : false;
         //ACCOUNT EXISTS
     }
 
@@ -1307,14 +1312,14 @@ contract JettonWalletSharded {
         let myBal: Int = myBalance();
         MessageParameters {
             to: self.owner,
-            value: myBal > ton("5") ? myBal - ton("1") : ton("0.01"), // payload fees
+            value: myBal > ton("10") ? myBal - ton("5") : ton("0.01"), // payload fees
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
-            body: JettonNotification { // 0x7362d09c -- FIXME NOT WORKING
+            body: JettonNotification { // 0x7362d09c
                 queryId: 0,
                 amount,
                 sender,
-                forwardPayload, // FIXME
+                forwardPayload,
             }.toCell(),
         }.send();
     }
@@ -1324,7 +1329,7 @@ contract JettonWalletSharded {
         // || sender == self.minter in case minter mints > 0
         MessageParameters {
             to: self.minter,
-            value: ton("0.1"), // FIXME need to pay for compute fees?
+            value: ton("0.1"),
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
             body: JettonBurnNotification { //JettonMintBurnNotify maybe traitViolationOccursThen
@@ -1553,7 +1558,7 @@ contract JettonWalletSharded {
     // }
 
     inline fun getWalletInit(address: Address): StateInit { // Use persisted baseWalletCode to compute stable StateInit for target wallets.
-        let walletInit: StateInit = initOf JettonWalletSharded(address, self.minter, 0);
+        let walletInit: StateInit = initOf JettonWalletSharded(address, self.minter, 0, self.treasuryAccount);
         return StateInit { code: self.baseWalletCode, data: walletInit.data };
     }
 

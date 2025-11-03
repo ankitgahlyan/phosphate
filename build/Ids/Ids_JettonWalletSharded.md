@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: JettonWalletSharded
-BoC Size: 37495 bytes
+BoC Size: 37757 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 75
+Total structures: 76
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -285,9 +285,13 @@ Signature: `StopEngageMint{sender:address}`
 TL-B: `mint_notify#00000046 amount:coins sender:address = MintNotify`
 Signature: `MintNotify{amount:coins,sender:address}`
 
+### IdGenTrack
+TL-B: `id_gen_track#00000051 account:address invitor:address approver:address payload:remainder<slice> = IdGenTrack`
+Signature: `IdGenTrack{account:address,invitor:address,approver:address,payload:remainder<slice>}`
+
 ### JettonWalletSharded$Data
-TL-B: `_ owner:address ownerAfterRecovery:address minter:address nominee:address invitor:address invitor0:address id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
-Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,nominee:address,invitor:address,invitor0:address,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
+TL-B: `_ owner:address ownerAfterRecovery:address minter:address treasuryAccount:address nominee:address invitor:address invitor0:address id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
+Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,treasuryAccount:address,nominee:address,invitor:address,invitor0:address,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
 
 ### ShardDeployParameters
 TL-B: `_ deployParameters:DeployParameters{mode:int257,body:Maybe ^cell,value:int257,bounce:bool,init:StateInit{code:^cell,data:^cell}} shard:uint8 = ShardDeployParameters`
@@ -302,8 +306,8 @@ TL-B: `_ bits:int257 refs:int257 = SliceBitsAndRefs`
 Signature: `SliceBitsAndRefs{bits:int257,refs:int257}`
 
 ### Ids$Data
-TL-B: `_ root:address lat:^string long:^string users:dict<address, ^cell> jettonWalletInitialCode:^cell = Ids`
-Signature: `Ids{root:address,lat:^string,long:^string,users:dict<address, ^cell>,jettonWalletInitialCode:^cell}`
+TL-B: `_ root:address treasuryAccount:address lat:^string long:^string users:dict<address, ^cell> jettonWalletInitialCode:^cell = Ids`
+Signature: `Ids{root:address,treasuryAccount:address,lat:^string,long:^string,users:dict<address, ^cell>,jettonWalletInitialCode:^cell}`
 
 ## Get methods
 Total get methods: 6
@@ -377,6 +381,4 @@ JettonWalletSharded --> BaseTrait
 ```mermaid
 graph TD
 JettonWalletSharded
-JettonWalletSharded --> Ids
-Ids --> JettonWalletSharded
 ```

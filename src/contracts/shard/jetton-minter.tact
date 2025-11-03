@@ -31,6 +31,7 @@ contract JettonMinterSharded {
     treasurySurplus: Int as coins = 0;
     treasuryDeficits: Int as coins = 0;
     owner: Address;
+    treasuryAccount: Address;
     jettonContent: Cell;
     jettonWalletCode: Cell;
     jettonWalletInitialCode: Cell;
@@ -43,9 +44,10 @@ contract JettonMinterSharded {
     votes: map<Address, Int as uint20>;
     crowdFund: map<Int as uint10, Int as uint10>;
 
-    init(totalSupply: Int as coins, owner: Address, jettonContent: Cell) {
+    init(totalSupply: Int as coins, owner: Address, jettonContent: Cell, treasury: Address) {
         self.totalSupply = totalSupply;
         self.owner = owner;
+        self.treasuryAccount = treasury;
         self.jettonContent = jettonContent;
         self.jettonWalletCode = codeOf JettonWalletSharded;
         self.jettonWalletInitialCode = codeOf JettonWalletSharded;
@@ -285,7 +287,7 @@ contract JettonMinterSharded {
     }
 
     inline fun getWalletInit(address: Address): StateInit {
-        let walletInit: StateInit = initOf JettonWalletSharded(address, myAddress(), 0);
+        let walletInit: StateInit = initOf JettonWalletSharded(address, myAddress(), 0, self.treasuryAccount);
         return StateInit { code: self.jettonWalletInitialCode, data: walletInit.data };
     }
 

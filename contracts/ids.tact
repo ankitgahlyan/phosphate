@@ -16,15 +16,17 @@ import "../src/contracts/shard/shard-utils";
 
 contract Ids {
     root: Address;
+    treasuryAccount: Address;
     lat: String; // remove?. need just for init
     long: String;
     users: map<Address, Cell>;
     jettonWalletInitialCode: Cell;
     
-    init(lat: String, long: String, root: Address, jettonWalletInitialCode: Cell) {
+    init(lat: String, long: String, root: Address, treasury: Address, jettonWalletInitialCode: Cell) {
         self.lat = lat;
         self.long = long;
         self.root = root;
+        self.treasuryAccount = treasury;
         self.jettonWalletInitialCode = jettonWalletInitialCode;
     }
     
@@ -61,7 +63,7 @@ contract Ids {
     }
 
     inline fun getWalletInit(address: Address): StateInit {
-        let walletInit: StateInit = initOf JettonWalletSharded(address, self.root, 0);
+        let walletInit: StateInit = initOf JettonWalletSharded(address, self.root, 0, self.treasuryAccount);
         return StateInit { code: self.jettonWalletInitialCode, data: walletInit.data };
     }
 
