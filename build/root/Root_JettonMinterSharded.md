@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: JettonMinterSharded
-BoC Size: 44529 bytes
+BoC Size: 43673 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 78
+Total structures: 79
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -46,8 +46,8 @@ TL-B: `_ hash:Maybe int257 = BasechainAddress`
 Signature: `BasechainAddress{hash:Maybe int257}`
 
 ### JettonWalletSharded$Data
-TL-B: `_ owner:address ownerAfterRecovery:address minter:address treasuryAccount:address nominee:address invitor:address invitor0:address id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address} balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
-Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,treasuryAccount:address,nominee:address,invitor:address,invitor0:address,id:IdInfo{username:^string,lattitude:^string,longitude:^string,address:address},balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
+TL-B: `_ owner:address ownerAfterRecovery:address minter:address treasuryAccount:address nominee:address invitor:address invitor0:address id:^slice balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
+Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,treasuryAccount:address,nominee:address,invitor:address,invitor0:address,id:^slice,balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
 
 ### ParsedString
 TL-B: `_ username:^string lattitude:^string longitude:^string = ParsedString`
@@ -292,6 +292,10 @@ Signature: `MintNotify{amount:coins,sender:address}`
 ### IdGenTrack
 TL-B: `id_gen_track#00000051 account:address invitor:address approver:address payload:remainder<slice> = IdGenTrack`
 Signature: `IdGenTrack{account:address,invitor:address,approver:address,payload:remainder<slice>}`
+
+### InternalDeActivate
+TL-B: `internal_de_activate#00000052 amt:coins sender:address invitor:address invitor0:address = InternalDeActivate`
+Signature: `InternalDeActivate{amt:coins,sender:address,invitor:address,invitor0:address}`
 
 ### SliceBitsAndRefs
 TL-B: `_ bits:int257 refs:int257 = SliceBitsAndRefs`

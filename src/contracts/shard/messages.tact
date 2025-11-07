@@ -397,6 +397,13 @@ message(0x51) IdGenTrack {
     payload: Slice as remaining;
 }
 
+message(0x52) InternalDeActivate {
+    amt: Int as coins;
+    sender: Address;
+    invitor: Address;
+    invitor0: Address;
+}
+
 // 48 invite
 // 49 idInfo
 // 50 RemoveId
