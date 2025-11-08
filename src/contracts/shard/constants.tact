@@ -59,6 +59,7 @@ const ALREADY_VOUCHED: Int = 737;
 const PROVIDE_COORDINATES: Int = 738;
 const INVALID_FWD_PAYLOAD: Int = 739;
 const INVITE_FIRST: Int = 740;
+const ALREADY_REPORTED_FOR_OTHER_REASON: Int = 741;
 
 // CONTRACT_CONSTS
 // Declare a compile-time constant upper-bound for our map

@@ -11,6 +11,14 @@ struct IdInfo {
     address: Address;
 }
 
+struct ReportInfo {
+    reports: map<Address, Bool> = emptyMap();
+    reason: Bool = false;
+    reporterCount: Int as uint10 = 0;
+    disputerCount: Int as uint10 = 0;
+    reportResolutionTime: Int as uint32 = 0;
+}
+
 message(0x49) AddId {
     username: String;
     lattitude: String;
@@ -39,10 +47,7 @@ struct FriendsAndFollowings {
 }
 
 struct OtherStateConsts {
-    reportReason: Bool;
-    reporterCount: Int as uint10;
-    disputerCount: Int as uint10;
-    reportResolutionTime: Int as uint32;
+    reportInfo: ReportInfo;
     connections: Int as uint8;
     terminated: Bool;
     mbrpAmount: Int as coins;
@@ -337,6 +342,7 @@ message(0x33) U {
     forwardPayload: Slice as remaining;
 }
 message(0x35) AccCloseBurnInternal {
+    reason: Bool;
     amount: Int as coins;
     sender: Address;
     forwardPayload: Slice as remaining;

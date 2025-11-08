@@ -1,9 +1,9 @@
 # Tact compilation report
 Contract: JettonWalletSharded
-BoC Size: 39730 bytes
+BoC Size: 40568 bytes
 
 ## Structures (Structs and Messages)
-Total structures: 79
+Total structures: 80
 
 ### DataSize
 TL-B: `_ cells:int257 bits:int257 refs:int257 = DataSize`
@@ -46,8 +46,8 @@ TL-B: `_ hash:Maybe int257 = BasechainAddress`
 Signature: `BasechainAddress{hash:Maybe int257}`
 
 ### JettonWalletSharded$Data
-TL-B: `_ owner:address ownerAfterRecovery:address minter:address treasuryAccount:address nominee:address invitor:address invitor0:address id:^slice balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reports:dict<address, bool> reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
-Signature: `JettonWalletSharded{owner:address,ownerAfterRecovery:address,minter:address,treasuryAccount:address,nominee:address,invitor:address,invitor0:address,id:^slice,balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reports:dict<address, bool>,reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,baseWalletCode:^cell}`
+TL-B: `_ owner:address initialOwner:address ownerAfterRecovery:address minter:address treasuryAccount:address nominee:address invitor:address invitor0:address id:^slice balance:coins taxAsTxnFeePercent:int6 turnover:coins debts:dict<address, coins> debt:coins insurance:Insurance{emi:coins,startStop:uint42} invited:dict<address, coins> friends:dict<address, coins> closeFriendsAndVouched:dict<address, bool> closeFriendsCount:uint4 recoveryVouchersCount:uint4 pendingRequests:dict<address, coins> followers:dict<address, coins> followings:dict<address, coins> reportInfo:ReportInfo{reports:dict<address, bool>,reason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32} connections:uint8 terminated:bool active:bool accountInitTime:uint32 lastTxnTime:uint32 lastMsgTo:address version:uint10 mintable:bool lastRewardClaimTime:uint32 lastMonthlyAllowanceClaimTime:uint32 baseWalletCode:^cell = JettonWalletSharded`
+Signature: `JettonWalletSharded{owner:address,initialOwner:address,ownerAfterRecovery:address,minter:address,treasuryAccount:address,nominee:address,invitor:address,invitor0:address,id:^slice,balance:coins,taxAsTxnFeePercent:int6,turnover:coins,debts:dict<address, coins>,debt:coins,insurance:Insurance{emi:coins,startStop:uint42},invited:dict<address, coins>,friends:dict<address, coins>,closeFriendsAndVouched:dict<address, bool>,closeFriendsCount:uint4,recoveryVouchersCount:uint4,pendingRequests:dict<address, coins>,followers:dict<address, coins>,followings:dict<address, coins>,reportInfo:ReportInfo{reports:dict<address, bool>,reason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32},connections:uint8,terminated:bool,active:bool,accountInitTime:uint32,lastTxnTime:uint32,lastMsgTo:address,version:uint10,mintable:bool,lastRewardClaimTime:uint32,lastMonthlyAllowanceClaimTime:uint32,baseWalletCode:^cell}`
 
 ### ParsedString
 TL-B: `_ username:^string lattitude:^string longitude:^string = ParsedString`
@@ -56,6 +56,10 @@ Signature: `ParsedString{username:^string,lattitude:^string,longitude:^string}`
 ### IdInfo
 TL-B: `_ username:^string lattitude:^string longitude:^string address:address = IdInfo`
 Signature: `IdInfo{username:^string,lattitude:^string,longitude:^string,address:address}`
+
+### ReportInfo
+TL-B: `_ reports:dict<address, bool> reason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 = ReportInfo`
+Signature: `ReportInfo{reports:dict<address, bool>,reason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32}`
 
 ### AddId
 TL-B: `add_id#00000049 username:^string lattitude:^string longitude:^string address:address = AddId`
@@ -74,8 +78,8 @@ TL-B: `_ friends:Maybe ^cell followings:Maybe ^cell followers:Maybe ^cell invite
 Signature: `FriendsAndFollowings{friends:Maybe ^cell,followings:Maybe ^cell,followers:Maybe ^cell,invited:Maybe ^cell,pendingRequests:Maybe ^cell,debts:Maybe ^cell,reports:Maybe ^cell}`
 
 ### OtherStateConsts
-TL-B: `_ reportReason:bool reporterCount:uint10 disputerCount:uint10 reportResolutionTime:uint32 connections:uint8 terminated:bool mbrpAmount:coins closureWait:uint32 active:bool lastMsgTo:address insurance:^cell = OtherStateConsts`
-Signature: `OtherStateConsts{reportReason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32,connections:uint8,terminated:bool,mbrpAmount:coins,closureWait:uint32,active:bool,lastMsgTo:address,insurance:^cell}`
+TL-B: `_ reportInfo:ReportInfo{reports:dict<address, bool>,reason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32} connections:uint8 terminated:bool mbrpAmount:coins closureWait:uint32 active:bool lastMsgTo:address insurance:^cell = OtherStateConsts`
+Signature: `OtherStateConsts{reportInfo:ReportInfo{reports:dict<address, bool>,reason:bool,reporterCount:uint10,disputerCount:uint10,reportResolutionTime:uint32},connections:uint8,terminated:bool,mbrpAmount:coins,closureWait:uint32,active:bool,lastMsgTo:address,insurance:^cell}`
 
 ### InvitorNominee
 TL-B: `_ invitor:address nominee:address = InvitorNominee`
@@ -246,8 +250,8 @@ TL-B: `u#00000033 op:uint6 amount:Maybe coins sender:address receiver:address fo
 Signature: `U{op:uint6,amount:Maybe coins,sender:address,receiver:address,forwardPayload:remainder<slice>}`
 
 ### AccCloseBurnInternal
-TL-B: `acc_close_burn_internal#00000035 amount:coins sender:address forwardPayload:remainder<slice> = AccCloseBurnInternal`
-Signature: `AccCloseBurnInternal{amount:coins,sender:address,forwardPayload:remainder<slice>}`
+TL-B: `acc_close_burn_internal#00000035 reason:bool amount:coins sender:address forwardPayload:remainder<slice> = AccCloseBurnInternal`
+Signature: `AccCloseBurnInternal{reason:bool,amount:coins,sender:address,forwardPayload:remainder<slice>}`
 
 ### EnquireInvitor
 TL-B: `enquire_invitor#00000036 sender:address = EnquireInvitor`
