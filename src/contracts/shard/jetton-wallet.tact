@@ -123,9 +123,9 @@ contract JettonWalletSharded {
         // );
 
         if (msg.amount >= ton("1")) {
-            self.lastTxnTime = now(); // need in all receivers, not fooled by insignificant txn to track suspicious activity blah blah, for emi calculation
             if (msg.destination != sender) { // normal txn
                 self.burn(msg.amount);
+                self.lastTxnTime = now(); // need in all receivers, not fooled by insignificant txn to track suspicious activity blah blah, for emi calculation
             } else { // for getting funding for public works
                 self.applyGrant(sender, msg.amount);
                 return;
@@ -406,6 +406,7 @@ contract JettonWalletSharded {
             self.connections -= 1;
         }
         self.lastMsgTo = self.invitor;
+        notifyWallet(msg.sender, self.owner, msg.amt, self.id);
         notifyWallet(msg.sender, msg.invitor, msg.amt, self.id);
         notifyWallet(msg.sender, msg.invitor0, msg.amt, self.id);
 

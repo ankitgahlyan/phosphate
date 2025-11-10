@@ -1,6 +1,6 @@
 # Tact compilation report
 Contract: Ids
-BoC Size: 41439 bytes
+BoC Size: 41707 bytes
 
 ## Structures (Structs and Messages)
 Total structures: 80
