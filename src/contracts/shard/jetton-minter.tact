@@ -9,6 +9,7 @@ import "./shard-utils";
 import "./send";
 
 // TODO: multisig for upgrades, lottery for treasury, jobCoins as separate contract
+// TODO: minter as proxy for txn anonymity (mints to encrypted receiver)
 struct JettonMinterState {
     totalSupply: Int as coins;
     //treasurySurplus: Int as coins;

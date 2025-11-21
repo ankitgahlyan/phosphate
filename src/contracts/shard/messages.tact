@@ -13,7 +13,7 @@ struct IdInfo {
 
 struct ReportInfo {
     reports: map<Address, Bool> = emptyMap();
-    reason: Bool = false;
+    tosBreach: Bool = false;
     reporterCount: Int as uint10 = 0;
     disputerCount: Int as uint10 = 0;
     reportResolutionTime: Int as uint32 = 0;

@@ -24,13 +24,14 @@ contract JettonWalletSharded {
     treasuryAccount: Address;
     nominee: Address = newAddress(0, 0x0);
     invitor: Address = newAddress(0, 0x0); //guarantor/offchain-contact responsible for kyc + education + proposal propagator,TODO: nominee is appointed for all invited after it's demise; inactive account if null(no ops allowed perhaps)
-    invitor0: Address?; // to complain about invitor etc and getting inActivated by it
+    invitor0: Address?; // oversight on invitor and inActivated by it as reports handles max 250 msg
     id: Slice;
     // id: IdInfo = IdInfo { username: "", lattitude: "", longitude: "", address: newAddress(0, 0x0) };
 
     // Financial state
     balance: Int as coins; // TODO: as uint20 - 1billion, rest is wealth taxed to treasury, coz every fortunate(birth, marriage) & unfortunate(accidents,health,death) are covered by treasury credits
     taxAsTxnFeePercent: Int as int6 = 1; // FIXME: cascade upgrade propagation how?, separate such store as consts and versionCheck then peer upgrade
+    needNetworkFeatures: Bool = true; // enable tax for insurance and other perks
     turnover: Int as coins = 0; // for txnFee/taxes, votes in public works
     debts: map<Address, Int as coins>; //uint20>; //1,048,576, mbrp*maxConnections(friends+follower+following)
     debt: Int as coins = 0; // from accClosures(can't be bounced back), burn from invitor, invitor0 or all connections
@@ -83,7 +84,7 @@ contract JettonWalletSharded {
     baseWalletCode: Cell; // store the original wallet code cell at deployment
 
     //======================================================INIT
-    init(owner: Address, minter: Address, balance: Int as coins, treasury: Address) { //TODO: take coordinates
+    init(owner: Address, minter: Address, balance: Int as coins, treasury: Address) {
         self.owner = owner;
         self.initialOwner = owner;
         self.ownerAfterRecovery = owner;
@@ -259,7 +260,7 @@ contract JettonWalletSharded {
     //     self.invite()
     // }
 
-    inline fun invite(receiver: Address, forwardPayload: Slice) {
+    inline fun invite(receiver: Address, forwardPayload: Slice) { // TODO: send code for simple jetton also and change currentCode accordingly
         throwUnless(MAX_CONNECTIONS, self.connections < MAX_CONNECTIONS);
         throwUnless(CONNECTION_EXISTS, !self.connected(receiver));
 
@@ -757,11 +758,9 @@ contract JettonWalletSharded {
         throwUnless(ACCOUNT_INACTIVE, self.active);
         throwUnless(ALREADY_REPORTED, !self.reportInfo.reports.exists(msg.sender)); // alreadyReported & democracy
         // one type report at a time only
-        if (self.reportInfo.reporterCount > 0) { throwUnless(ALREADY_REPORTED_FOR_OTHER_REASON, self.reportInfo.reason == self.reportInfo.reason) }
+        if (self.reportInfo.reporterCount > 0) { throwUnless(ALREADY_REPORTED_FOR_OTHER_REASON, self.reportInfo.tosBreach == msg.reason) }
         else {
-            if (self.reportInfo.reason) { // default false
-                self.reportInfo.reason = self.reportInfo.reason;
-            }
+            self.reportInfo.tosBreach = msg.reason;
         }
         self.reportInfo.reports.set(msg.sender, true); // true for reports, false for disputes
         self.reportInfo.reporterCount += 1;
@@ -867,7 +866,7 @@ contract JettonWalletSharded {
                     to: self.getJettonWalletByOwner(addr),
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
-                    body: JettonTransferInternal {
+                    body: JettonTransferInternal { // FIXME: upgrades might cause troubles in forEachs
                         queryId: 0,
                         amount: reward,
                         walletVersion: self.version,
@@ -889,7 +888,7 @@ contract JettonWalletSharded {
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
                     body: AccCloseBurnInternal {
-                        reason: self.reportInfo.reason,
+                        reason: self.reportInfo.tosBreach,
                         amount,
                         sender: self.owner,
                         forwardPayload: msg.forwardPayload,
@@ -903,7 +902,7 @@ contract JettonWalletSharded {
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
                     body: AccCloseBurnInternal {
-                        reason: self.reportInfo.reason,
+                        reason: self.reportInfo.tosBreach,
                         amount,
                         sender: self.owner,
                         forwardPayload: msg.forwardPayload,
@@ -917,7 +916,7 @@ contract JettonWalletSharded {
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
                     body: AccCloseBurnInternal {
-                        reason: self.reportInfo.reason,
+                        reason: self.reportInfo.tosBreach,
                         amount: amount * 2, //2x mbrp
                         sender: self.owner,
                         forwardPayload: msg.forwardPayload,
@@ -932,7 +931,7 @@ contract JettonWalletSharded {
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
                     body: AccCloseBurnInternal { //TODO: mark inactive
-                        reason: self.reportInfo.reason,
+                        reason: self.reportInfo.tosBreach,
                         amount: 3 * amount, //3x mbrp
                         sender: self.owner,
                         forwardPayload: msg.forwardPayload,
@@ -947,7 +946,7 @@ contract JettonWalletSharded {
                 value: ton("0.001"),
                 mode: SendPayFwdFeesSeparately,
                 body: AccCloseBurnInternal { //TODO: mark inactive
-                    reason: self.reportInfo.reason,
+                    reason: self.reportInfo.tosBreach,
                     amount: 3 * MBRP_AMOUNT, //3x mbrp
                     sender: self.owner,
                     forwardPayload: msg.forwardPayload,
@@ -955,7 +954,7 @@ contract JettonWalletSharded {
                 }.toCell(),
             }.send();
 
-            if (!self.reportInfo.reason) { // or release funds in any case
+            if (!self.reportInfo.tosBreach) { // or release funds in any case
                 // INSURANCE PAY
                 let payback: Int = 0;
                 if (self.insurance.emi > 0 && now() - self.accountInitTime < ton("1261.440")) { // only < 40years old are paid
@@ -992,7 +991,7 @@ contract JettonWalletSharded {
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
                     body: AccCloseBurnInternal { //TODO: mark inactive
-                        reason: self.reportInfo.reason,
+                        reason: self.reportInfo.tosBreach,
                         amount,
                         sender: self.owner,
                         forwardPayload: msg.forwardPayload,
