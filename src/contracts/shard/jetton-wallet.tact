@@ -29,7 +29,7 @@ contract JettonWalletSharded {
     // id: IdInfo = IdInfo { username: "", lattitude: "", longitude: "", address: newAddress(0, 0x0) };
 
     // Financial state
-    balance: Int as coins; // TODO: as uint20 - 1billion, rest is wealth taxed to treasury, coz every fortunate(birth, marriage) & unfortunate(accidents,health,death) are covered by treasury credits
+    balance: Int as coins = ton("1"); // TODO: as uint20 - 1billion, rest is wealth taxed to treasury, coz every fortunate(birth, marriage) & unfortunate(accidents,health,death) are covered by treasury credits
     taxAsTxnFeePercent: Int as int6 = 1; // FIXME: cascade upgrade propagation how?, separate such store as consts and versionCheck then peer upgrade
     needNetworkFeatures: Bool = true; // enable tax for insurance and other perks
     turnover: Int as coins = 0; // for txnFee/taxes, votes in public works
@@ -84,7 +84,7 @@ contract JettonWalletSharded {
     baseWalletCode: Cell; // store the original wallet code cell at deployment
 
     //======================================================INIT
-    init(owner: Address, minter: Address, balance: Int as coins, treasury: Address) {
+    init(owner: Address, minter: Address, balance: Int as coins, treasury: Address) { // FIXME: remove bal, move other initialized fields to approval msg
         self.owner = owner;
         self.initialOwner = owner;
         self.ownerAfterRecovery = owner;
@@ -92,7 +92,6 @@ contract JettonWalletSharded {
         self.id = emptySlice();
         self.treasuryAccount = treasury;
         self.accountInitTime = now(); // FIXME pass as params(use internal receiver on init)
-        self.balance = ton("1"); // for symantic txns
         self.baseWalletCode = myCode(); // on deploy of root
         if (owner != treasury) {
             self.follow(treasury, "followedOwner".asComment().asSlice());
@@ -145,7 +144,7 @@ contract JettonWalletSharded {
                 self.changeNominee(msg.destination);
                 return; //maybe notify msg.destination
             } else if (msg.amount == ton("0.5")) { // follow
-                self.follow(msg.destination, msg.forwardPayload); //TODO: location params from custom payload forwardPayload
+                self.follow(msg.destination, msg.forwardPayload);
                 return;
             } else if (msg.amount == ton("0.6")) { // report tosViolate
                 self.report(msg.amount, true, sender, msg.destination, msg.forwardPayload);
@@ -181,7 +180,7 @@ contract JettonWalletSharded {
                 self.claimGrants();
                 return;
             } else if (msg.amount == ton("0.02")) { // forbidden. burn from reported's invitor in both cases (tosViolate or dead)
-                throwUnless(RESERVED_INTERNAL, false);
+                throw(RESERVED_INTERNAL);
             } else if (msg.amount == ton("0.98") || msg.amount == ton("0.101")) { // kind of burn
                 self.burn(ton("100")); // social recovery FIXME not here maybe refunded later if genuine recovery/noWorries going to your account
             } else if (msg.amount == ton("0.99")) {
@@ -213,6 +212,7 @@ contract JettonWalletSharded {
                 self.deActivate(msg.amount, msg.destination);
                 return;
             }
+            // TODO: allowances(fixedAmount) and subscription(fixedPeriod + Amount) features
             // no catch-all else return so other unhandled semantic txns are forwarded
         }
 
@@ -437,7 +437,7 @@ contract JettonWalletSharded {
 
     receive(msg: InviteApproval) {
         self.correctInternalSender(msg.invitee); // msg.approver == self.invitor
-        let amount = 2 * MBRP_AMOUNT;
+        let amount = 10 * MBRP_AMOUNT;
         if (msg.approved) {
             self.invited.set(msg.invitee, amount);
             self.mintInternal(amount); // 2x
@@ -448,7 +448,7 @@ contract JettonWalletSharded {
             self.connections -= 1;
         }
         notifyWallet(msg.invitee, self.owner, amount, "invite success".asComment().asSlice()); // FIXME: onUnInvite
-        self.notifyRoot(msg.approver, msg.approved, 3 * MBRP_AMOUNT);
+        self.notifyRoot(msg.approver, msg.approved, 11 * MBRP_AMOUNT);
         MessageParameters { // FIXME maybe notifs need to come from owners only
             to: msg.invitee,
             value: ton("0.01"),
@@ -475,18 +475,17 @@ contract JettonWalletSharded {
         }.send();
     }
 
-    inline fun unInvite(receiver: Address, msg: JettonTransfer) { // TODO: just use reports for control n inviter for whereabouts
+    inline fun unInvite(receiver: Address, msg: JettonTransfer) {
+        // let amount = self.invited.get(receiver);
         throwUnless(NOT_INVITOR, self.invited.del(receiver));
-        let amount = self.invited.get(receiver)!!; // TODO: move line up?
-        //self.burnForce(receiver, amount);
-        self.burn(amount);
+        self.burn(10 * MBRP_AMOUNT); // amount!!); // fails on low bal
 
         MessageParameters {
             to: self.getJettonWalletByOwner(receiver),
             value: 0,
             mode: SendRemainingValue | SendBounceIfActionFail,
             body: UnInviteInternal {
-                amount: amount / 2,
+                amount: MBRP_AMOUNT, // amount!! / 10,
                 sender: self.owner,
                 forwardPayload: msg.forwardPayload,
             }.toCell(),
@@ -498,7 +497,7 @@ contract JettonWalletSharded {
     }
 
     bounced(msg: bounced<UnInviteInternal>) {
-        let amount = 2 * msg.amount;
+        let amount = 10 * msg.amount;
         self.invited.set(self.lastMsgTo, amount);
         //self.mintInternal(amount);
         self.balance += amount;
@@ -508,7 +507,7 @@ contract JettonWalletSharded {
     receive(msg: UnInviteInternal) {
         let forwardPayload = msg.forwardPayload;
         self.correctInternalSender(msg.sender);
-        throwUnless(NOT_INVITOR, self.invitor == msg.sender); //redundant bothSide check for unBounced s
+        // throwUnless(NOT_INVITOR, self.invitor == msg.sender);
 
         notifyWallet(msg.sender, self.owner, msg.amount, forwardPayload);
 
@@ -747,7 +746,6 @@ contract JettonWalletSharded {
             }.toCell(),
 
         }.send();
-        // inform peers TODO:
     }
 
     bounced(msg: bounced<ReportInternal>) { self.balance += MBRP_AMOUNT }
@@ -756,7 +754,25 @@ contract JettonWalletSharded {
         self.correctInternalSender(msg.sender);
         //TODO: invitor auto disputes or noNeed (consider disputed implicitly)
         throwUnless(ACCOUNT_INACTIVE, self.active);
-        throwUnless(ALREADY_REPORTED, !self.reportInfo.reports.exists(msg.sender)); // alreadyReported & democracy
+        //throwUnless(ALREADY_REPORTED, !self.reportInfo.reports.exists(msg.sender)); // alreadyReported & democracy
+        if (self.reportInfo.reports.del(msg.sender)) { // del if exists + refund
+            MessageParameters {
+                to: sender(), // self.getJettonWalletByOwner(msg.sender),
+                value: 0,
+                mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
+                body: JettonTransferInternal {
+                    queryId: 0, //FIXME:
+                    amount: MBRP_AMOUNT,
+                    walletVersion: self.version,
+                    sender: self.owner,
+                    responseDestination: msg.sender,
+                    forwardTonAmount: 0,
+                    forwardPayload: msg.forwardPayload,
+                }.toCell(),
+            }.send();
+            self.reportInfo.reporterCount -= 1;
+            return;
+        }
         // one type report at a time only
         if (self.reportInfo.reporterCount > 0) { throwUnless(ALREADY_REPORTED_FOR_OTHER_REASON, self.reportInfo.tosBreach == msg.reason) }
         else {
@@ -811,6 +827,24 @@ contract JettonWalletSharded {
     receive(msg: DisputeInternal) {
         self.correctInternalSender(msg.sender);
         throwUnless(ACCOUNT_NOT_REPORTED, self.reportInfo.reporterCount > 0);
+        if (self.reportInfo.reports.del(msg.sender)) { // del if exists + refund
+            MessageParameters {
+                to: sender(), // self.getJettonWalletByOwner(msg.sender),
+                value: 0,
+                mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
+                body: JettonTransferInternal {
+                    queryId: 0, //FIXME:
+                    amount: MBRP_AMOUNT,
+                    walletVersion: self.version,
+                    sender: self.owner,
+                    responseDestination: msg.sender,
+                    forwardTonAmount: 0,
+                    forwardPayload: msg.forwardPayload,
+                }.toCell(),
+            }.send();
+            self.reportInfo.disputerCount -= 1;
+            return;
+        }
         self.reportInfo.reports.set(msg.sender, false);
         self.reportInfo.disputerCount += 1;
         self.reportInfo.reportResolutionTime = now() + CLOSURE_WAIT;

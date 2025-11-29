@@ -11,7 +11,7 @@ const Basechain: Int = 0;
 const walletStateInitCells: Int = 300; // 30, 283
 const walletStateInitBits: Int = 2_50_000; // 20_000, 2_19_987
 
-const MBRP_AMOUNT: Int = ton("1000"); // NOTE: store as consts to upgrade with code now minter updates, any const update also updates version but should not
+const MBRP_AMOUNT: Int = ton("5000"); // NOTE: store as consts to upgrade with code now minter updates, any const update also updates version but should not
 const CLOSURE_WAIT: Int = 86400; // 1 day
 
 asm fun setCode(newCode: Cell) { SETCODE }
