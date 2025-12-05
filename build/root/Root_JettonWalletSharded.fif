@@ -4777,6 +4777,11 @@ PROGRAM{
         47 s() PUSH
         SDEQ
         700 THROWIFNOT
+            NOW
+        s13 PUSH
+        60 ADDCONST
+        GREATER
+        735 THROWIFNOT
         s14 PUSH
         IF:<{
           TRUE
@@ -7235,69 +7240,18 @@ PROGRAM{
         s0 s2 XCHG
         s1 44 s() XCHG
         $global_notifyWallet INLINECALLDICT
-        39 s() 40 s() XCHG
-        38 s() 39 s() XCHG
-        37 s() 38 s() XCHG
-        36 s() 37 s() XCHG
-        35 s() 36 s() XCHG
-        34 s() 35 s() XCHG
-        33 s() 34 s() XCHG
-        32 s() 33 s() XCHG
-        31 s() 32 s() XCHG
-        30 s() 31 s() XCHG
-        29 s() 30 s() XCHG
-        28 s() 29 s() XCHG
-        27 s() 28 s() XCHG
-        26 s() 27 s() XCHG
-        25 s() 26 s() XCHG
-        24 s() 25 s() XCHG
-        23 s() 24 s() XCHG
-        22 s() 23 s() XCHG
-        21 s() 22 s() XCHG
-        20 s() 21 s() XCHG
-        19 s() 20 s() XCHG
-        18 s() 19 s() XCHG
-        17 s() 18 s() XCHG
-        16 s() 17 s() XCHG
-        s15 16 s() XCHG
-        s14 s15 XCHG
-        s13 s14 XCHG
-        s12 s13 XCHG
-        s11 s12 XCHG
-        s10 s11 XCHG
-        9 ROLL
-        43 s() PUSH
-        42 s() PUSH
-        55000000000000 PUSHINT
-        $JettonWalletSharded$_fun_notifyRoot INLINECALLDICT
-        10000000 PUSHINT
-        3 PUSHINT
-        FALSE
-        0 PUSHINT
-        5000000000000 PUSHINT
-            B{b5ee9c7241010101001600002800000000696e766974656420617070726f7665643daa324b} B>boc PUSHREF
-        $Cell$_fun_asSlice INLINECALLDICT
-        46 s() PUSH
-        SWAP
-        $JettonNotification$_constructor_queryId_amount_sender_forwardPayload INLINECALLDICT
-        NEWC
-        $JettonNotification$_store_cell INLINECALLDICT
-        46 s() PUSH
-        4 -ROLL
-        $MessageParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
-        $MessageParameters$_fun_send INLINECALLDICT
         10000000 PUSHINT
         s0 42 s() XCHG
         3 PUSHINT
         FALSE
-        43 s() PUSH
+        42 s() PUSH
         s0 s2 XCHG
         s1 46 s() XCHG
         s0 47 s() XCHG
         $InviteApproval$_constructor_approved_invitor_invitee_approver INLINECALLDICT
         NEWC
         $InviteApproval$_store_cell INLINECALLDICT
-        38 s() PUSH
+        37 s() PUSH
         s0 s4 XCHG
         s3 43 s() XCHG
         s2 45 s() XCHG
@@ -7305,32 +7259,42 @@ PROGRAM{
         SWAP
         $MessageParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
         $MessageParameters$_fun_send INLINECALLDICT
-        37 s() 40 s() XCHG
-        36 s() 39 s() XCHG
-        35 s() 38 s() XCHG
-        34 s() 37 s() XCHG
-        33 s() 36 s() XCHG
-        32 s() 35 s() XCHG
-        31 s() 34 s() XCHG
-        30 s() 33 s() XCHG
-        29 s() 32 s() XCHG
-        28 s() 31 s() XCHG
-        27 s() 30 s() XCHG
-        26 s() 29 s() XCHG
-        25 s() 28 s() XCHG
-        24 s() 27 s() XCHG
-        23 s() 26 s() XCHG
-        22 s() 25 s() XCHG
-        21 s() 24 s() XCHG
-        20 s() 23 s() XCHG
-        19 s() 22 s() XCHG
-        18 s() 21 s() XCHG
-        17 s() 20 s() XCHG
-        16 s() 19 s() XCHG
-        s15 18 s() XCHG
-        s14 17 s() XCHG
-        s13 16 s() XCHG
-        3 13 BLKSWAP
+        36 s() 40 s() XCHG
+        35 s() 39 s() XCHG
+        34 s() 38 s() XCHG
+        33 s() 37 s() XCHG
+        32 s() 36 s() XCHG
+        31 s() 35 s() XCHG
+        30 s() 34 s() XCHG
+        29 s() 33 s() XCHG
+        28 s() 32 s() XCHG
+        27 s() 31 s() XCHG
+        26 s() 30 s() XCHG
+        25 s() 29 s() XCHG
+        24 s() 28 s() XCHG
+        23 s() 27 s() XCHG
+        22 s() 26 s() XCHG
+        21 s() 25 s() XCHG
+        20 s() 24 s() XCHG
+        19 s() 23 s() XCHG
+        18 s() 22 s() XCHG
+        17 s() 21 s() XCHG
+        16 s() 20 s() XCHG
+        s15 19 s() XCHG
+        s14 18 s() XCHG
+        s13 17 s() XCHG
+        s12 16 s() XCHG
+        s11 s15 XCHG
+        s10 s14 XCHG
+        s9 s13 XCHG
+        s8 s12 XCHG
+        s7 s11 XCHG
+        s9 s10 XCHG
+        s5 s9 XCHG
+        s4 s8 XCHG
+        s3 s7 XCHG
+        s6 s4 s4 XCHG3
+        s5 s1 s5 XCHG3
         $JettonWalletSharded$_contract_store INLINECALLDICT
         RETALT
       }>
@@ -8063,7 +8027,7 @@ PROGRAM{
           0 PUSHINT
           17 PUSHINT
           OVER
-          5000000000000 PUSHINT
+          4900000000000 PUSHINT
           s3 s2 s3 XC2PU
           s8 PUSH
           s0 s3 XCHG
@@ -8080,6 +8044,9 @@ PROGRAM{
           s1 44 s() XCHG
           $MessageParameters$_constructor_to_value_mode_body INLINECALLDICT
           $MessageParameters$_fun_send INLINECALLDICT
+          s0 27 s() XCHG
+          100000000000 PUSHINT
+          ADD
           s0 s9 XCHG
           DEC
           36 s() 40 s() XCHG
@@ -8091,7 +8058,7 @@ PROGRAM{
           30 s() 34 s() XCHG
           29 s() 33 s() XCHG
           28 s() 32 s() XCHG
-          27 s() 31 s() XCHG
+          s9 31 s() XCHG
           26 s() 30 s() XCHG
           25 s() 29 s() XCHG
           24 s() 28 s() XCHG
@@ -8115,10 +8082,8 @@ PROGRAM{
           s5 s9 XCHG
           s4 s8 XCHG
           s3 s7 XCHG
-          s0 s6 s6 XCHG3
-          s0 s5 XCHG
-          s0 s4 XCHG
-          s0 s3 XCHG
+          s6 s1 s4 XCHG3
+          s5 s5 s3 XCHG3
           $JettonWalletSharded$_contract_store INLINECALLDICT
           RETALT
         }>
@@ -8255,7 +8220,7 @@ PROGRAM{
           0 PUSHINT
           17 PUSHINT
           OVER
-          5000000000000 PUSHINT
+          4900000000000 PUSHINT
           s3 s2 s3 XC2PU
           s9 PUSH
           s0 s3 XCHG
@@ -8272,6 +8237,9 @@ PROGRAM{
           s1 44 s() XCHG
           $MessageParameters$_constructor_to_value_mode_body INLINECALLDICT
           $MessageParameters$_fun_send INLINECALLDICT
+          s0 28 s() XCHG
+          100000000000 PUSHINT
+          ADD
           s0 s9 XCHG
           DEC
           37 s() 40 s() XCHG
@@ -8283,7 +8251,7 @@ PROGRAM{
           31 s() 34 s() XCHG
           30 s() 33 s() XCHG
           29 s() 32 s() XCHG
-          28 s() 31 s() XCHG
+          s9 31 s() XCHG
           27 s() 30 s() XCHG
           26 s() 29 s() XCHG
           25 s() 28 s() XCHG
@@ -8309,7 +8277,7 @@ PROGRAM{
           s4 s7 XCHG
           s3 s6 XCHG
           s5 s4 s0 XCHG3
-          s1 s2 XCHG
+          s3 s3 s0 XCHG3
           $JettonWalletSharded$_contract_store INLINECALLDICT
           RETALT
         }>

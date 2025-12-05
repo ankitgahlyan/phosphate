@@ -103,6 +103,7 @@ contract JettonWalletSharded {
         let sender = sender(); //TODO: Check whole callChain if var is used? thrice?
 
         throwUnless(INCORRECT_SENDER, sender == self.owner);
+        throwUnless(WAIT_MORE, now() > self.lastTxnTime + 60); // for safe bounces
         // throwUnless(ACCOUNT_TERMINATED, !self.terminated); // TODO: use inactive, need for bounced from debts
         throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount < ton("1")); // whatIf transact with old/buggy baseCode, ultimate aim is spend tokens
         // throwUnless(ACCOUNT_INACTIVE, self.active || msg.amount == ton("0.101")); // for social recovery by new/inactive/uninvited self account
@@ -448,19 +449,6 @@ contract JettonWalletSharded {
             self.connections -= 1;
         }
         notifyWallet(msg.invitee, self.owner, amount, "invite success".asComment().asSlice()); // FIXME: onUnInvite
-        self.notifyRoot(msg.approver, msg.approved, 11 * MBRP_AMOUNT);
-        MessageParameters { // FIXME maybe notifs need to come from owners only
-            to: msg.invitee,
-            value: ton("0.01"),
-            mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
-            bounce: false,
-            body: JettonNotification { // 0x7362d09c -- Remind the invitee
-                queryId: 0,
-                amount: MBRP_AMOUNT, // msg.approved ? MBRP_AMOUNT : - MBRP_AMOUNT,
-                sender: self.owner,
-                forwardPayload: "invited approved".asComment().asSlice(),
-            }.toCell(),
-        }.send();
         MessageParameters {
             to: self.minter,
             value: ton("0.01"),
@@ -761,8 +749,8 @@ contract JettonWalletSharded {
                 value: 0,
                 mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
                 body: JettonTransferInternal {
-                    queryId: 0, //FIXME:
-                    amount: MBRP_AMOUNT,
+                    queryId: 0,
+                    amount: MBRP_AMOUNT - ton("100"),
                     walletVersion: self.version,
                     sender: self.owner,
                     responseDestination: msg.sender,
@@ -770,6 +758,7 @@ contract JettonWalletSharded {
                     forwardPayload: msg.forwardPayload,
                 }.toCell(),
             }.send();
+            self.balance += ton("100");
             self.reportInfo.reporterCount -= 1;
             return;
         }
@@ -834,7 +823,7 @@ contract JettonWalletSharded {
                 mode: SendPayFwdFeesSeparately | SendBounceIfActionFail,
                 body: JettonTransferInternal {
                     queryId: 0, //FIXME:
-                    amount: MBRP_AMOUNT,
+                    amount: MBRP_AMOUNT - ton("100"),
                     walletVersion: self.version,
                     sender: self.owner,
                     responseDestination: msg.sender,
@@ -842,6 +831,7 @@ contract JettonWalletSharded {
                     forwardPayload: msg.forwardPayload,
                 }.toCell(),
             }.send();
+            self.balance += ton("100");
             self.reportInfo.disputerCount -= 1;
             return;
         }
