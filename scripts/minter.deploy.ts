@@ -6,7 +6,7 @@ import { prepareTactDeployment } from "@tact-lang/deployer";
 import { content } from '../src/utils/jetton-helpers';
 import "dotenv/config"
 
-(async () => {
+export async function run() {
     const deployer = process.env.DEPLOYER;
     if (deployer === undefined) {
         console.error("deployer address is not provided, please add it to .env file")
@@ -19,7 +19,7 @@ import "dotenv/config"
     // Parameters
     const testnet = true;
     const packageName = 'Root_JettonMinterSharded.pkg';
-    const init = await JettonMinterSharded.init(0n, deployerAddress, content);
+    const init = await JettonMinterSharded.init(0n, deployerAddress, content, deployerAddress);
     // Load required data
     const address = contractAddress(0, init);
     const data = init.data.toBoc();
@@ -43,4 +43,4 @@ import "dotenv/config"
     console.log(prepare);
     console.log();
     console.log("============================================================================================");
-})();
+}

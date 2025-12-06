@@ -1,3 +1,2 @@
-yarn deduplicate
 yarn lint
 yarn lint:es

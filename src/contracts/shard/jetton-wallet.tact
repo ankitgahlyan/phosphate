@@ -180,6 +180,9 @@ contract JettonWalletSharded {
             } else if (msg.amount == ton("0.17")) {
                 self.claimGrants();
                 return;
+            } else if (msg.amount == ton("0.18")) {
+                self.changeId(msg.forwardPayload);
+                return;
             } else if (msg.amount == ton("0.02")) { // forbidden. burn from reported's invitor in both cases (tosViolate or dead)
                 throw(RESERVED_INTERNAL);
             } else if (msg.amount == ton("0.98") || msg.amount == ton("0.101")) { // kind of burn
@@ -358,7 +361,7 @@ contract JettonWalletSharded {
             bounce: false,
             body: JettonNotification { // 0x7362d09c
                 queryId: 0,
-                amount: 0,
+                amount: ton("0.1"), // invite
                 sender: msg.sender,
                 forwardPayload: msg.forwardPayload,
             }.toCell(),
@@ -369,7 +372,7 @@ contract JettonWalletSharded {
             value: ton("0.01"),
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
-            body: IdGenTrack { // 0x51
+            body: IdGenTrack { // 0x51 FIXME: merge with inviteApproval
                 account: self.owner,
                 invitor: msg.sender,
                 approver: msg.invitor,
@@ -409,6 +412,7 @@ contract JettonWalletSharded {
         }
         self.lastMsgTo = self.invitor;
         notifyWallet(msg.sender, self.owner, msg.amt, self.id);
+        // approver's invitors informed
         notifyWallet(msg.sender, msg.invitor, msg.amt, self.id);
         notifyWallet(msg.sender, msg.invitor0, msg.amt, self.id);
 
@@ -441,7 +445,7 @@ contract JettonWalletSharded {
         let amount = 10 * MBRP_AMOUNT;
         if (msg.approved) {
             self.invited.set(msg.invitee, amount);
-            self.mintInternal(amount); // 2x
+            self.mintInternal(amount); // 10x
             self.connections += 1;
         } else { // FIXME: get amount from store when reversing connection
             let _ = self.invited.del(msg.invitee);
@@ -1463,6 +1467,11 @@ contract JettonWalletSharded {
         // FIXME
         throwUnless(INCORRECT_SENDER, new != newAddress(0, 0x0)); // used zeroA just for misti
         throwUnless(ACCOUNT_INACTIVE, self.active);
+    }
+
+    inline fun changeId(newId: Slice) {
+        self.id = newId;
+        // TODO: inform minter
     }
 
     inline fun applyGrant(sender: Address, amount: Int) {
