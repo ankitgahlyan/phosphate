@@ -93,9 +93,6 @@ contract JettonWalletSharded {
         self.treasuryAccount = treasury;
         self.accountInitTime = now(); // FIXME pass as params(use internal receiver on init)
         self.baseWalletCode = myCode(); // on deploy of root
-        if (owner != treasury) {
-            self.follow(treasury, "followedOwner".asComment().asSlice());
-        } // minterDeployerAddress
     }
 
     //====================================================RECEIVERS
@@ -859,7 +856,7 @@ contract JettonWalletSharded {
         }.send();
     }
 
-    receive(msg: ResolutionInternal) { // FIXME: 1.5x as insurance claim on genuine acc close
+    receive(msg: ResolutionInternal) {
         self.correctInternalSender(msg.sender);
         // notifyWallet(msg.sender, self.owner, msg.amount, msg.forwardPayload);
         throwUnless(NO_PENDING_REQUEST, self.reportInfo.reportResolutionTime > 0); // TODO: need some binary (&) compare magic
@@ -908,7 +905,7 @@ contract JettonWalletSharded {
         }
 
         if (reportWinCloseAcc) {
-            // burn minted mbrp from followers/followings/invited, 2x friends, 3x invitor
+            // burn minted mbrp from followers/followings/invited, 2x friends, 3x invitor and punish invitor in case of tosViolate
 
             foreach (addr, amount in self.followings) {
                 MessageParameters {
@@ -916,7 +913,7 @@ contract JettonWalletSharded {
                     value: ton("0.001"),
                     mode: SendPayFwdFeesSeparately,
                     body: AccCloseBurnInternal {
-                        reason: self.reportInfo.tosBreach,
+                        reason: self.reportInfo.tosBreach, // FIXME: needed?
                         amount,
                         sender: self.owner,
                         forwardPayload: msg.forwardPayload,
@@ -968,14 +965,14 @@ contract JettonWalletSharded {
                 }.send();
                 // set their invitor null
             }
-            // burn 3x from invitor
+            // burn 10x from invitor
             MessageParameters {
                 to: self.getJettonWalletByOwner(self.invitor),
                 value: ton("0.001"),
                 mode: SendPayFwdFeesSeparately,
                 body: AccCloseBurnInternal { //TODO: mark inactive
                     reason: self.reportInfo.tosBreach,
-                    amount: 3 * MBRP_AMOUNT, //3x mbrp
+                    amount: 10 * MBRP_AMOUNT, //10x mbrp
                     sender: self.owner,
                     forwardPayload: msg.forwardPayload,
 
@@ -983,22 +980,13 @@ contract JettonWalletSharded {
             }.send();
 
             if (!self.reportInfo.tosBreach) { // or release funds in any case
-                // INSURANCE PAY
-                let payback: Int = 0;
-                if (self.insurance.emi > 0 && now() - self.accountInitTime < ton("1261.440")) { // only < 40years old are paid
-                    let emi = self.insurance.emi;
-                    payback = muldivc(8, (self.accountInitTime + self.insurance.startStop), 10) * emi;
-                }
-
-                // pay 2x as insurance backed by taxes
-                payback += self.connections * MBRP_AMOUNT;
                 MessageParameters {
                     to: self.getJettonWalletByOwner(self.nominee),
                     value: 0,
                     mode: SendPayFwdFeesSeparately,
                     body: JettonTransferInternal {
                         queryId: 0, //FIXME:
-                        amount: self.balance + payback,
+                        amount: self.balance,
                         walletVersion: self.version,
                         sender: self.owner,
                         responseDestination: msg.sender,
@@ -1006,9 +994,19 @@ contract JettonWalletSharded {
                         forwardPayload: msg.forwardPayload,
                     }.toCell(),
                 }.send();
+            } else { // punish invitor for tosViolate
+                MessageParameters {
+                    to: self.getJettonWalletByOwner(self.invitor),
+                    value: ton("0.001"),
+                    mode: SendPayFwdFeesSeparately,
+                    body: AccCloseBurnInternal { //TODO: mark inactive
+                        reason: self.reportInfo.tosBreach,
+                        amount: MBRP_AMOUNT,
+                        sender: self.owner,
+                        forwardPayload: msg.forwardPayload,
 
-                // notify minter to update deficits
-                self.notifyRoot(self.owner, false, payback);
+                    }.toCell(),
+                }.send();
             }
             // settle debts
             // inform minter about unaccouted debt
@@ -1027,9 +1025,11 @@ contract JettonWalletSharded {
                     }.toCell(),
                 }.send();
             }
+            // inform minter about unaccounted debt to adjust its ledger
+            // self.notifyRoot();
             // OR set nominee as owner + new connectStakes/credits , stop incoming
             self.terminated = true;
-        } else {
+        } else { // dispute wins
             // reset report-related state
             self.reportInfo = ReportInfo {};
         }
@@ -1322,7 +1322,7 @@ contract JettonWalletSharded {
 
     inline fun correctInternalSender(sender: Address) {
         let wallet: StateInit = self.getWalletInit(sender);
-        if (!(wallet.hasSameBasechainAddressWithoutShard(sender()))) {
+        if (!(wallet.hasSameBasechainAddressWithoutShard(sender()))) { // FIXME: fixWithInit
             throwUnless(INCORRECT_SENDER, self.minter == sender());
             if (!self.active) {
                 self.active = true;
@@ -1445,22 +1445,21 @@ contract JettonWalletSharded {
     }
 
     inline fun burn(amount: Int) {
-        let timeSinceLastTxn = now() - self.lastTxnTime;
+        // let timeSinceLastTxn = now() - self.lastTxnTime;
 
         // if ((timeSinceLastTxn < 86400 || amount > ton("100")) ||&& !self.connected()) { // .1% fees levied on frequent and significant txns to balance bounced burns, insurance etc
         // let fee = amount / ton("1000"); // 0.1%
-        let fee = divc(amount, ton("100")); // TODO: 1% payed by receiver
-        amount += fee;
+        amount += divc(amount, ton("100")); // TODO: 1% payed by receiver ?
         // } // extra fixed fees for payment channels/contracts?
-        if (self.insurance.emi > 0) {
-            let emi = self.insurance.emi;
-            let pay = muldivc(emi, timeSinceLastTxn, ton("2.628")); // time as ton
-            amount += pay;
-        }
+        // if (self.insurance.emi > 0) {
+        //     let emi = self.insurance.emi;
+        //     let pay = muldivc(emi, timeSinceLastTxn, ton("2.628")); // time as ton
+        //     amount += pay;
+        // }
 
         self.balance -= amount;
         throwUnless(INSUFFICIENT_BALANCE, self.balance >= 0);
-        self.turnover += amount;
+        // self.turnover += amount;
     }
 
     inline fun changeInvitor(new: Address) {
@@ -1587,18 +1586,14 @@ contract JettonWalletSharded {
     //     return StateInit { code: self.baseIdsCode, data: idsInit.data };
     // }
 
-    inline fun getWalletInit(address: Address): StateInit { // Use persisted baseWalletCode to compute stable StateInit for target wallets.
+    fun getWalletInit(address: Address): StateInit { // Use persisted baseWalletCode to compute stable StateInit for target wallets.
         let walletInit: StateInit = initOf JettonWalletSharded(address, self.minter, 0, self.treasuryAccount);
         return StateInit { code: self.baseWalletCode, data: walletInit.data };
     }
 
-    inline fun getJettonWalletInit(address: Address): Cell {
-        let init = self.getWalletInit(address);
-        return beginCell().storeShardedStateInit(init).endCell();
-    }
-
-    inline fun getJettonWalletByOwner(jettonWalletOwner: Address): Address {
-        let init = self.getJettonWalletInit(jettonWalletOwner);
+    fun getJettonWalletByOwner(jettonWalletOwner: Address): Address {
+        // let init = getJettonWalletInit(jettonWalletOwner);
+        let init = beginCell().storeShardedStateInit(self.getWalletInit(jettonWalletOwner)).endCell();
 
         let ownerShard = jettonWalletOwner.getShard();
 
@@ -1610,15 +1605,20 @@ contract JettonWalletSharded {
 
         return expectedAddr.loadAddress();
     }
-
-    // inline fun getJettonBasechainWalletByOwner(jettonWalletOwner: Address): BasechainAddress {
-    //     let init = self.getJettonWalletInit(jettonWalletOwner);
-
-    //     let ownerShard = jettonWalletOwner.getShard();
-
-    //     return BasechainAddress { hash: changeShard(init.hash(), ownerShard) };
-    // }
 }
+
+// inline fun getJettonWalletInit(address: Address, minter: Address, treasury: Address, initCode: Cell): Cell {
+//     let init = getWalletInit(address, minter, treasury, initCode);
+//     return beginCell().storeShardedStateInit(init).endCell();
+// }
+
+// inline fun getJettonBasechainWalletByOwner(jettonWalletOwner: Address): BasechainAddress {
+//     let init = self.getJettonWalletInit(jettonWalletOwner);
+
+//     let ownerShard = jettonWalletOwner.getShard();
+
+//     return BasechainAddress { hash: changeShard(init.hash(), ownerShard) };
+// }
 
 inline fun readOpFromForward(sl: Slice): Int? {
     if (sl.bits() >= 32) {
