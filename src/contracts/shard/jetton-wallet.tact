@@ -163,7 +163,7 @@ contract JettonWalletSharded {
                 self.unfollow(msg.destination, msg.forwardPayload);
                 return;
             } else if (msg.amount == ton("0.13")) { // unInvite ??? need
-                self.unInvite(msg.destination, msg);
+                self.unInvite(msg.destination, msg.forwardPayload);
                 return; // centralised approach, use report tosViolate instead that'll freeze account instantly
             } else if (msg.amount == ton("0.14")) { // unFriend
                 self.unfriend(msg.destination, msg);
@@ -464,7 +464,7 @@ contract JettonWalletSharded {
         }.send();
     }
 
-    inline fun unInvite(receiver: Address, msg: JettonTransfer) {
+    inline fun unInvite(receiver: Address, forwardPayload: Slice) {
         // let amount = self.invited.get(receiver);
         throwUnless(NOT_INVITOR, self.invited.del(receiver));
         self.burn(10 * MBRP_AMOUNT); // amount!!); // fails on low bal
@@ -476,7 +476,7 @@ contract JettonWalletSharded {
             body: UnInviteInternal {
                 amount: MBRP_AMOUNT, // amount!! / 10,
                 sender: self.owner,
-                forwardPayload: msg.forwardPayload,
+                forwardPayload,
             }.toCell(),
 
         }.send();
@@ -494,15 +494,11 @@ contract JettonWalletSharded {
     }
 
     receive(msg: UnInviteInternal) {
-        let forwardPayload = msg.forwardPayload;
         self.correctInternalSender(msg.sender);
-        // throwUnless(NOT_INVITOR, self.invitor == msg.sender);
-
-        notifyWallet(msg.sender, self.owner, msg.amount, forwardPayload);
-
         self.active = false;
-        //maybe no burns if coz someone will reinvite eventually, don't mint THEN
         self.burnForce(msg.sender, msg.amount);
+        notifyWallet(msg.sender, self.owner, msg.amount, msg.forwardPayload);
+        self.notifyRoot(msg.sender, false, 11 * MBRP_AMOUNT);
     }
 
     inline fun friendRequest(receiver: Address, amount: Int, payload: Slice) {
@@ -1026,7 +1022,7 @@ contract JettonWalletSharded {
                 }.send();
             }
             // inform minter about unaccounted debt to adjust its ledger
-            // self.notifyRoot();
+            // self.notifyRoot(msg.sender, false, self.debts); // not a burn just notif for ledger adjust
             // OR set nominee as owner + new connectStakes/credits , stop incoming
             self.terminated = true;
         } else { // dispute wins
@@ -1357,10 +1353,10 @@ contract JettonWalletSharded {
             value: ton("0.1"),
             mode: SendPayFwdFeesSeparately | SendIgnoreErrors,
             bounce: false,
-            body: JettonBurnNotification { //JettonMintBurnNotify maybe traitViolationOccursThen
-                queryId: 0, // FIXME used to notify users & show correctly in explorers
+            body: JettonBurnNotification { //JettonMintBurnNotify
+                queryId: 0,
                 amount,
-                sender: self.owner, // mint to or burn from FIXME: 724 , 9
+                sender: self.owner,
                 responseDestination: mint ? approver : null,
             }.toCell(),
         }.send();
@@ -1448,8 +1444,8 @@ contract JettonWalletSharded {
         // let timeSinceLastTxn = now() - self.lastTxnTime;
 
         // if ((timeSinceLastTxn < 86400 || amount > ton("100")) ||&& !self.connected()) { // .1% fees levied on frequent and significant txns to balance bounced burns, insurance etc
-        // let fee = amount / ton("1000"); // 0.1%
-        amount += divc(amount, ton("100")); // TODO: 1% payed by receiver ?
+        let fee = amount / ton("100"); // 1%
+        amount += fee; // divc(amount, ton("100"));
         // } // extra fixed fees for payment channels/contracts?
         // if (self.insurance.emi > 0) {
         //     let emi = self.insurance.emi;
@@ -1458,8 +1454,9 @@ contract JettonWalletSharded {
         // }
 
         self.balance -= amount;
-        throwUnless(INSUFFICIENT_BALANCE, self.balance >= 0);
+        throwUnless(INSUFFICIENT_BALANCE, self.balance >= 0 || self.owner == self.treasuryAccount); // treasuryBalCanGoNegative #var
         // self.turnover += amount;
+        self.notifyRoot(self.owner, false, fee); // FIXME: or send periodically for less load on minter
     }
 
     inline fun changeInvitor(new: Address) {

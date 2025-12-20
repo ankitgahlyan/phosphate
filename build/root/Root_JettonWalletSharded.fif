@@ -128,6 +128,8 @@ PROGRAM{
   DECLPROC $JettonWalletSharded$_fun_deActivate
   DECLPROC $MessageParameters$_constructor_to_value_mode_body
   DECLPROC $UnInviteInternal$_constructor_amount_sender_forwardPayload
+  DECLPROC $JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination
+  DECLPROC $JettonWalletSharded$_fun_notifyRoot
   DECLPROC $JettonWalletSharded$_fun_burn
   DECLPROC $JettonWalletSharded$_fun_unInvite
   DECLPROC $FriendRequestInternal$_constructor_amount_sender_forwardPayload
@@ -169,7 +171,6 @@ PROGRAM{
   DECLPROC $JettonWalletSharded$_fun_insurance
   DECLPROC $JettonWalletSharded$_fun_correctInternalSender
   DECLPROC $JettonWalletSharded$_fun_syncVersion
-  DECLPROC $JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination
   DECLPROC $JettonWalletSharded$_fun_changeInvitor
   DECLPROC $JettonWalletSharded$_fun_changeId
   DECLPROC $ApplyGrant$_constructor_sender_amount
@@ -1900,20 +1901,55 @@ PROGRAM{
   }>
   $UnInviteInternal$_constructor_amount_sender_forwardPayload PROCINLINE:<{
   }>
+  $JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination PROCINLINE:<{
+  }>
+  $JettonWalletSharded$_fun_notifyRoot PROCINLINE:<{
+    100000000 PUSHINT
+    3 PUSHINT
+    FALSE
+    0 PUSHINT
+    s0 s5 XCHG
+    IF:<{
+    }>ELSE<{
+      PUSHNULL
+      s6 POP
+    }>
+    s4 s3 s0 XCHG3
+    46 s() PUSH
+    s0 s6 XCHG2
+    $JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination INLINECALLDICT
+    NEWC
+    $JettonBurnNotification$_store_cell INLINECALLDICT
+    41 s() PUSH
+    s4 s4 XCHG2
+    $MessageParameters$_constructor_to_value_mode_bounce_body INLINECALLDICT
+    $MessageParameters$_fun_send INLINECALLDICT
+  }>
   $JettonWalletSharded$_fun_burn PROCINLINE:<{
     DUP
     100000000000 PUSHINT
-        DIVC
+    DIV
+    TUCK
     ADD
-    s1 32 s() XCHG
+    s1 33 s() XCHG
     SUB
     DUP
     -1 GTINT
+    IF:<{
+      TRUE
+    }>ELSE<{
+      41 s() PUSH
+      38 s() PUSH
+      SDEQ
+    }>
     709 THROWIFNOT
-    s0 31 s() XCHG
+    FALSE
+    42 s() PUSH
+    s0 s2 XCHG
+    s0 34 s() XCHG
+    $JettonWalletSharded$_fun_notifyRoot INLINECALLDICT
   }>
   $JettonWalletSharded$_fun_unInvite PROCINLINE:<{
-    6 1 BLKDROP2
     s1 s(-1) PUXC
     s0 26 s() XCHG
     267 PUSHINT
@@ -3440,8 +3476,6 @@ PROGRAM{
     }>ELSE<{
       DROP
     }>
-  }>
-  $JettonBurnNotification$_constructor_queryId_amount_sender_responseDestination PROCINLINE:<{
   }>
   $JettonWalletSharded$_fun_changeInvitor PROCINLINE:<{
         B{b5ee9c72410101010024000043800000000000000000000000000000000000000000000000000000000000000000104aec829d} B>boc <s PUSHSLICE
@@ -5327,12 +5361,9 @@ PROGRAM{
           130000000 PUSHINT
           EQUAL
           IFJMP:<{
-            DROP
-            45 s() 47 s() XCHG
-            44 s() 46 s() XCHG
-            43 s() 45 s() XCHG
-            42 s() 44 s() XCHG
-            41 s() 43 s() XCHG
+            s1 s4 XCHG
+            4 BLKDROP
+            2 2 BLKDROP2
             40 s() 42 s() XCHG
             39 s() 41 s() XCHG
             38 s() 40 s() XCHG
@@ -5363,12 +5394,15 @@ PROGRAM{
             s13 s15 XCHG
             s12 s14 XCHG
             s11 s13 XCHG
-            s4 PUSH
-            s11 s13 XCHG
             s10 s12 XCHG
             s9 s11 XCHG
             s8 s10 XCHG
-            7 -ROLL
+            s7 s9 XCHG
+            s6 s8 XCHG
+            s5 s7 XCHG
+            s4 s6 XCHG
+            s3 s5 XCHG
+            s2 s4 XCHG
             $JettonWalletSharded$_fun_unInvite INLINECALLDICT
             $JettonWalletSharded$_contract_store INLINECALLDICT
             RETALT
@@ -7272,13 +7306,16 @@ PROGRAM{
         s0 43 s() XCHG
         42 s() PUSH
         $JettonWalletSharded$_fun_correctInternalSender INLINECALLDICT
-        s8 POP
-        41 s() PUSH
-        SWAP
-        40 s() PUSH
-        SWAP
+        FALSE
+        s9 POP
         42 s() PUSH
-        SWAP
+        42 s() PUSH
+        $JettonWalletSharded$_fun_burnForce INLINECALLDICT
+        42 s() PUSH
+        s0 s2 XCHG
+        41 s() PUSH
+        s0 s2 XCHG
+        s1 43 s() XCHG
         s0 45 s() XCHG
         $global_notifyWallet INLINECALLDICT
         38 s() 41 s() XCHG
@@ -7307,21 +7344,10 @@ PROGRAM{
         s15 18 s() XCHG
         s14 17 s() XCHG
         s13 16 s() XCHG
-        s12 s15 XCHG
-        s11 s14 XCHG
-        s10 s13 XCHG
-        s9 s12 XCHG
-        s8 s11 XCHG
-        s7 s10 XCHG
+        3 13 BLKSWAP
         FALSE
-        s0 s10 XCHG
-        s6 s9 XCHG
-        s5 s8 XCHG
-        s4 s7 XCHG
-        s3 s6 XCHG
-        s5 s4 s0 XCHG3
-        s1 s2 XCHG
-        $JettonWalletSharded$_fun_burnForce INLINECALLDICT
+        55000000000000 PUSHINT
+        $JettonWalletSharded$_fun_notifyRoot INLINECALLDICT
         $JettonWalletSharded$_contract_store INLINECALLDICT
         RETALT
       }>
